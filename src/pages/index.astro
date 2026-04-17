@@ -70,17 +70,38 @@ import Sidebar from '../components/Sidebar.astro';
     color: #1c1f23;
   }
 
+  @media (max-width: 768px) {
+    .projects-grid {
+      position: static;
+      padding: 5rem 1.5rem 2rem;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 2rem;
+    }
 
+    .project-thumb {
+      width: 100%;
+    }
+
+    .project-card {
+      width: 100%;
+    }
+  }
 </style>
 
 
 <script>
   function bindVideoCards() {
+    const isTouch = window.matchMedia('(hover: none)').matches;
     document.querySelectorAll('.project-card').forEach((card) => {
       const video = card.querySelector('video');
       if (!video) return;
-      card.addEventListener('mouseenter', () => video.play());
-      card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+      if (isTouch) {
+        video.play();
+      } else {
+        card.addEventListener('mouseenter', () => video.play());
+        card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+      }
     });
   }
   bindVideoCards();

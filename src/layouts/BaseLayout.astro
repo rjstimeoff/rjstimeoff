@@ -27,6 +27,9 @@ const { title = 'rjrivera — portfolio' } = Astro.props;
   <body>
     <canvas id="sand-canvas" transition:persist></canvas>
     <p class="sidebar-bio" transition:persist><span class="bio-word">I</span> <span class="bio-word">build</span> <span class="bio-word">things,</span> <span class="bio-word">and</span> <span class="bio-word">I</span> <span class="bio-word">obsess</span> <span class="bio-word">over</span> <span class="bio-word">how</span> <span class="bio-word">people</span> <span class="bio-word">experience</span> <span class="bio-word">them.</span></p>
+    <nav class="mobile-nav">
+      <a href="/" class="mobile-nav-name">RJ Rivera</a>
+    </nav>
     <slot />
   </body>
 </html>
@@ -57,6 +60,36 @@ const { title = 'rjrivera — portfolio' } = Astro.props;
     word-spacing: 1.2em;
     line-height: 1.7;
     pointer-events: none;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    #sand-canvas { display: none; }
+    .sidebar-bio { display: none; }
+
+    .mobile-nav {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1rem 1.5rem;
+      background: #ffffff;
+      border-bottom: 1px solid #f0f0f0;
+      align-items: center;
+    }
+
+    .mobile-nav-name {
+      font-family: Garamond, 'EB Garamond', Georgia, serif;
+      font-size: 1rem;
+      color: #1c1f23;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+    }
   }
 </style>
 
