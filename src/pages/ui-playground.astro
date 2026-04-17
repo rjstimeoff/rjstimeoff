@@ -1,0 +1,220 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+---
+
+<ProjectLayout title="UI Playground — rjrivera">
+  <div class="project-header">
+    <h1 class="project-title">UI Playground</h1>
+    <div class="project-tags">
+      <span>Tool Design</span>
+      <span>Front End</span>
+      <span>Interaction Design</span>
+    </div>
+  </div>
+
+  <div class="project-hero">
+    <img src="/ui_playground_hero.png" alt="UI Playground" />
+  </div>
+
+  <p class="project-intro">UI Playground is a sandbox I built for prototyping UI elements in isolation, recording clean demos, and exporting the code for each element.</p>
+
+  <p class="project-body">Other tools exist for these functions: a UI sandbox, a demo recording tool, etc. I just didn't feel like paying for them...</p>
+
+  <p class="project-body">The tool is connected to Claude Code, prompt and build your element(s) there, and UI Playground acts as your live view. You can save your elements to a library and export its code for use in another project. My favorite part is the focus/record mode — pick a background, add a watermark, and have a clean environment to record your elements in action... pretty sweet.</p>
+
+  <div class="video-block">
+    <p class="video-caption">A walkthrough of the core workflow..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1183218786?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <div class="video-block">
+    <p class="video-caption">Saving a new element to the gallery..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1183218806?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="gallery-caption">Logo, backgrounds built with Midjourney, and inspo art also built with Midjourney.</p>
+
+  <div class="media-gallery">
+    <div class="media-item">
+      <img src="/playground_logo.png" alt="UI Playground logo draft" />
+    </div>
+    <div class="media-item span-2">
+      <img src="/playground_pnw_bg.png" alt="PNW mountain background" />
+    </div>
+    <div class="media-item span-2">
+      <img src="/playground_waves_bg.png" alt="Waves background" />
+    </div>
+    <div class="media-item">
+      <img src="/playground_art.jpg" alt="UI Playground art" />
+    </div>
+  </div>
+
+</ProjectLayout>
+
+<script>
+  const vimeoScript = document.createElement('script');
+  vimeoScript.src = 'https://player.vimeo.com/api/player.js';
+  vimeoScript.onload = () => {
+    document.querySelectorAll('iframe').forEach(iframe => {
+      const player = new Vimeo.Player(iframe);
+      player.play();
+    });
+  };
+  document.head.appendChild(vimeoScript);
+</script>
+
+<style>
+  .project-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-title {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    color: #1c1f23;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .project-tags span {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: #999;
+    font-style: italic;
+  }
+
+  .project-hero {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .project-hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .project-intro {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #1c1f23;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    max-width: 680px;
+    margin-top: 0.75rem;
+  }
+
+  .project-body {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #1c1f23;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    max-width: 680px;
+    margin-top: 3rem;
+  }
+
+  .video-caption {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #999;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.35rem;
+  }
+
+  .video-block {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+  }
+
+  .vimeo-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .vimeo-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .gallery-caption {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #999;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    margin-top: 6rem;
+  }
+
+  .media-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .media-item {
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .media-item.span-2 { grid-column: span 2; }
+
+  .media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Logo — playful spin + scale */
+  .media-item:nth-child(1):hover img {
+    transform: scale(1.06) rotate(4deg);
+  }
+
+  /* Mountain — slow cinematic zoom into the mist */
+  .media-item:nth-child(2) img {
+    transition: transform 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .media-item:nth-child(2):hover img {
+    transform: scale(1.1);
+  }
+
+  /* Waves — image drifts upward like a wave rising */
+  .media-item:nth-child(3):hover img {
+    transform: scale(1.04) translateY(-10px);
+  }
+
+  /* Robot — slow zoom out, like pulling back to reveal the scene */
+  .media-item:nth-child(4) img {
+    transform: scale(1.08);
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .media-item:nth-child(4):hover img {
+    transform: scale(1);
+  }
+</style>

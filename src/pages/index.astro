@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+---
+
+<BaseLayout>
+  <main>
+
+    <Sidebar />
+
+    <section class="projects-grid">
+      <a class="project-card" href="/about">
+        <video class="project-thumb" src="/about.mov" muted loop playsinline></video>
+        <span class="project-title">My Life Story and Contact Info</span>
+      </a>
+      <a class="project-card" href="/bird-dog">
+        <video class="project-thumb" src="/bird-dog.mov" muted loop playsinline></video>
+        <span class="project-title">Bird Dog</span>
+      </a>
+      <a class="project-card" href="/ui-playground">
+        <video class="project-thumb" src="/ui-playground.mov" muted loop playsinline></video>
+        <span class="project-title">UI Playground</span>
+      </a>
+    </section>
+
+
+  </main>
+</BaseLayout>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+
+  .projects-grid {
+    position: fixed;
+    top: 0;
+    left: 320px;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    align-content: flex-start;
+    pointer-events: none;
+  }
+
+  .project-card {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    pointer-events: auto;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .project-thumb {
+    width: 380px;
+    height: auto;
+    display: block;
+    background: #e8e8e8;
+  }
+
+  .project-title {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: #1c1f23;
+  }
+
+
+</style>
+
+
+<script>
+  function bindVideoCards() {
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const video = card.querySelector('video');
+      if (!video) return;
+      card.addEventListener('mouseenter', () => video.play());
+      card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+    });
+  }
+  bindVideoCards();
+  document.addEventListener('astro:page-load', bindVideoCards);
+</script>
+

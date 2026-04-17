@@ -1,0 +1,101 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+---
+
+<ProjectLayout title="About — rjrivera">
+  <div class="about-wrapper">
+    <div class="about-photo">
+      <img class="label" src="/this_is_me.png" alt="This is me!" />
+      <img class="photo" src="/rj_photo.jpg" alt="RJ Rivera" />
+    </div>
+    <div class="about-text">
+      <img class="who-label" src="/who_i_am.png" alt="Who I am, and what I do." />
+      <p class="about-bio">RJ doesn't fit into one category — creative technologist, product manager, product designer, strategist... and that's the point.</p>
+      <p class="about-bio">He spent five years inside the federal government turning complexity into clarity, and pioneering AI products — and now he builds products and projects that he loves.</p>
+      <p class="about-bio">His goal is simple: work on hard problems with people who care about craft.</p>
+    </div>
+  </div>
+  <div class="contact-links">
+    <a href="https://www.linkedin.com/in/raul-j-rivera/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:rj@rjstimeoff.com">rj@rjstimeoff.com</a>
+  </div>
+</ProjectLayout>
+
+<style>
+  .about-wrapper {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20vh;
+  }
+
+  .about-photo {
+    position: relative;
+    margin-left: 10rem;
+    flex-shrink: 0;
+    width: 180px;
+  }
+
+  .about-photo .photo {
+    width: 180px;
+    height: auto;
+    display: block;
+  }
+
+  .about-photo .label {
+    position: absolute;
+    width: 200px;
+    top: -148px;
+    left: -115px;
+    pointer-events: none;
+  }
+
+  .about-text {
+    margin-left: auto;
+    margin-right: 12rem;
+    margin-top: -10rem;
+  }
+
+  .about-text .who-label {
+    width: 560px;
+    height: auto;
+    display: block;
+    margin-left: -6rem;
+    margin-top: -2.5rem;
+  }
+
+  .about-bio {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.85rem;
+    color: #999;
+    letter-spacing: 0.02em;
+    word-spacing: 0.35em;
+    line-height: 1.8;
+    max-width: 380px;
+    margin-top: 1rem;
+  }
+
+  .about-bio:first-of-type {
+    margin-top: -9.98rem;
+  }
+
+  .contact-links {
+    position: fixed;
+    bottom: 18rem;
+    left: 51%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .contact-links a {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.85rem;
+    color: #999;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  .contact-links a:hover {
+    color: #1c1f23;
+  }
+</style>

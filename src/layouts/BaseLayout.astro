@@ -1,0 +1,248 @@
+---
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+}
+const { title = 'rjrivera — portfolio' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Portfolio of rjrivera" />
+    <title>{title}</title>
+    <ClientRouter />
+    <style>
+      @font-face {
+        font-family: 'GeistPixel';
+        src: url('/GeistPixel-Square.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="sand-canvas" transition:persist></canvas>
+    <p class="sidebar-bio" transition:persist><span class="bio-word">I</span> <span class="bio-word">build</span> <span class="bio-word">things,</span> <span class="bio-word">and</span> <span class="bio-word">I</span> <span class="bio-word">obsess</span> <span class="bio-word">over</span> <span class="bio-word">how</span> <span class="bio-word">people</span> <span class="bio-word">experience</span> <span class="bio-word">them.</span></p>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+
+  #sand-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .sidebar-bio {
+    position: fixed;
+    top: 25vh;
+    left: 3rem;
+    z-index: 10;
+    width: 200px;
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #999;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    word-spacing: 1.2em;
+    line-height: 1.7;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  // ── Sand simulation ───────────────────────────────────────
+  const CELL = 4;
+  const MAX_GRAINS = 6000;
+  let grainCount = 0;
+
+  const canvas = document.getElementById('sand-canvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d');
+
+  let cols = 0, rows = 0;
+  let grid: Uint8Array;
+  let imageData: ImageData;
+  let pixels: Uint8ClampedArray;
+
+  const idx = (c: number, r: number) => r * cols + c;
+
+  // Text collision zones — rebuilt each frame from live DOM rects
+  let textZones: { c0: number; c1: number; r: number }[] = [];
+
+  function buildTextZones() {
+    textZones = [];
+    document.querySelectorAll('.bio-word').forEach((word) => {
+      const rect = (word as HTMLElement).getBoundingClientRect();
+      if (rect.width === 0) return;
+      textZones.push({
+        c0: Math.floor(rect.left / CELL),
+        c1: Math.ceil(rect.right / CELL),
+        r:  Math.floor(rect.top / CELL),
+      });
+    });
+  }
+
+  function isTextSolid(c: number, r: number): boolean {
+    for (let i = 0; i < textZones.length; i++) {
+      const z = textZones[i];
+      if (r === z.r && c >= z.c0 && c <= z.c1) return true;
+    }
+    return false;
+  }
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols = Math.floor(canvas.width / CELL);
+    rows = Math.floor(canvas.height / CELL);
+    grid = new Uint8Array(cols * rows);
+    imageData = ctx.createImageData(canvas.width, canvas.height);
+    pixels = imageData.data;
+    grainCount = 0;
+  }
+
+  const blocked = (c: number, r: number) => grid[idx(c, r)] || isTextSolid(c, r);
+
+  function update() {
+    for (let r = rows - 2; r >= 0; r--) {
+      const leftToRight = Math.random() > 0.5;
+      for (let ci = 0; ci < cols; ci++) {
+        const c = leftToRight ? ci : cols - 1 - ci;
+        const val = grid[idx(c, r)];
+        if (!val || isTextSolid(c, r)) continue;
+
+        // 1. Try straight down
+        if (!blocked(c, r + 1)) {
+          grid[idx(c, r + 1)] = val;
+          grid[idx(c, r)] = 0;
+          continue;
+        }
+
+        // 2. Blocked below — check if it's text or another grain
+        const hitText = isTextSolid(c, r + 1);
+
+        const diagLeft  = c > 0        && !blocked(c - 1, r + 1);
+        const diagRight = c < cols - 1 && !blocked(c + 1, r + 1);
+
+        if (diagLeft && diagRight) {
+          const dc = Math.random() > 0.5 ? -1 : 1;
+          grid[idx(c + dc, r + 1)] = val; grid[idx(c, r)] = 0;
+        } else if (diagLeft) {
+          grid[idx(c - 1, r + 1)] = val; grid[idx(c, r)] = 0;
+        } else if (diagRight) {
+          grid[idx(c + 1, r + 1)] = val; grid[idx(c, r)] = 0;
+        } else if (hitText) {
+          // Blocked by text on all downward paths — slide sideways to find a gap
+          const slideLeft  = c > 0        && !blocked(c - 1, r);
+          const slideRight = c < cols - 1 && !blocked(c + 1, r);
+          if (slideLeft && slideRight) {
+            const dc = Math.random() > 0.5 ? -1 : 1;
+            grid[idx(c + dc, r)] = val; grid[idx(c, r)] = 0;
+          } else if (slideLeft) {
+            grid[idx(c - 1, r)] = val; grid[idx(c, r)] = 0;
+          } else if (slideRight) {
+            grid[idx(c + 1, r)] = val; grid[idx(c, r)] = 0;
+          }
+        }
+      }
+    }
+  }
+
+  const PALETTE: ([number, number, number] | null)[] = [
+    null,
+    [0,   80,  255],
+    [100, 160, 255],
+    [10,  10,  10],
+    [0,   220, 20],
+    [120, 255, 120],
+    [10,  10,  10],
+    [220, 0,   220],
+    [255, 120, 255],
+    [10,  10,  10],
+    [0,   200, 220],
+  ];
+
+  function render() {
+    pixels.fill(0);
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const val = grid[idx(c, r)];
+        if (!val) continue;
+        const color = PALETTE[val] || PALETTE[1];
+        const baseX = c * CELL;
+        const baseY = r * CELL;
+        for (let pr = 0; pr < CELL; pr++) {
+          for (let pc = 0; pc < CELL; pc++) {
+            const px = ((baseY + pr) * canvas.width + (baseX + pc)) * 4;
+            pixels[px]     = color[0];
+            pixels[px + 1] = color[1];
+            pixels[px + 2] = color[2];
+            pixels[px + 3] = 255;
+          }
+        }
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  let isHovering = false;
+  let mouseX = 0, mouseY = 0;
+  let currentColor = 1;
+
+  setInterval(() => { currentColor = (currentColor % 10) + 1; }, 1200);
+
+  function spawnAt(x: number, y: number) {
+    if (grainCount >= MAX_GRAINS) return;
+    const c = Math.floor(x / CELL);
+    const r = Math.floor(y / CELL);
+    const dc = Math.floor(Math.random() * 7) - 3;
+    const dr = Math.floor(Math.random() * 3) - 1;
+    const nc = c + dc;
+    const nr = r + dr;
+    if (nc >= 0 && nc < cols && nr >= 0 && nr < rows && !grid[idx(nc, nr)]) {
+      grid[idx(nc, nr)] = currentColor;
+      grainCount++;
+    }
+  }
+
+  function bindSidebar() {
+    const btn = document.querySelector('.home-btn');
+    if (!btn) return;
+    btn.addEventListener('mousemove', (e) => {
+      isHovering = true;
+      mouseX = (e as MouseEvent).clientX;
+      mouseY = (e as MouseEvent).clientY;
+    });
+    btn.addEventListener('mouseleave', () => { isHovering = false; });
+  }
+
+  function loop() {
+    if (isHovering && Math.random() > 0.55) spawnAt(mouseX, mouseY);
+    buildTextZones();
+    update(); update();
+    render();
+    requestAnimationFrame(loop);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  bindSidebar();
+
+  // Re-bind sidebar after each page transition
+  document.addEventListener('astro:page-load', () => {
+    isHovering = false;
+    bindSidebar();
+  });
+
+  requestAnimationFrame(loop);
+</script>
