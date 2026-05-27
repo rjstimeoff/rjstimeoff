@@ -1,0 +1,553 @@
+---
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+---
+
+<ProjectLayout title="Stripe Landing Page Redesign (Unofficial) — rjrivera">
+  <div class="project-header">
+    <h1 class="project-title">Stripe Landing Page Redesign (Unofficial)</h1>
+    <div class="project-tags">
+      <span>Web Design</span>
+      <span>Front End</span>
+      <span>Animation</span>
+    </div>
+  </div>
+
+  <div class="ba-slider" id="ba-slider" style="--pos: 50%; position: relative; aspect-ratio: 1998 / 1060; overflow: hidden;">
+    <img class="ba-img ba-after" src="/stripe-mine.png" alt="My Stripe landing page redesign" draggable="false" width="1999" height="1070" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+    <img class="ba-img ba-before" src="/stripe-original.png" alt="Stripe's current landing page" draggable="false" width="1998" height="1060" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left;" />
+    <div class="ba-divider"></div>
+    <button class="ba-handle" type="button" aria-label="Drag to compare the original and the redesign">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-4 6 4 6M15 6l4 6-4 6"/></svg>
+    </button>
+    <span class="ba-label ba-label-left">Original</span>
+    <span class="ba-label ba-label-right">Redesign</span>
+  </div>
+
+  <img class="visit-note" src="/click_to_visit.png" alt="Click to visit the site" width="480" height="150" style="width: 480px; height: 150px; object-fit: cover; object-position: center 40%;" />
+
+  <a class="hero-omnibox" href="https://stripe-redesign.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Open the live redesign at stripe-redesign.vercel.app">
+    <svg class="omnibox-lock" viewBox="0 0 16 16" fill="currentColor"><path d="M11 7V5a3 3 0 0 0-6 0v2H4v7h8V7h-1zm-4-2a1 1 0 0 1 2 0v2H7V5z"/></svg>
+    <span class="omnibox-url">stripe-redesign.vercel.app</span>
+    <svg class="omnibox-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+
+  <p class="project-intro">I’ve fallen in love with web design, and crafting/tailoring a web experience that users will resonate with and enjoy. I take a lot of pride in capturing the essence of the company, person, whatever I’m designing the website for.</p>
+
+  <p class="project-body">After building Bird Dog and UI Playground, and realizing how much I loved product/web design, and I really wanted a challenge. I wanted to take something that was widely considered “perfect” or “the gold standard” and see if I could do better… and I think I did.</p>
+
+  <p class="project-body">I knew that in the tech/startup space - Stripe was considered THE BEST website/landing page. I had seen plenty of videos online of design walkthroughs etc. of Stripe’s website, and witnessed all of the tech nerds drooling over it. So I went to their site to take a closer look, and wouldn’t you know… they just launched a fresh redesign… perfect timing. And now my challenge just became even harder, but onwards I went.</p>
+
+  <!-- Demo 1 -->
+  <div class="video-block">
+    <p class="video-caption">Stripe's current landing page..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1195796116?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="project-body">So above is Stripe’s fresh new landing page… what is widely considered to be the gold standard for a SaaS landing page. If you’re not in the know, startup founders’ kryptonite is making a landing page that converts, it’s like a big deal… for real.</p>
+
+  <p class="project-body">My initial reaction to the site was genuinely that it was way too overwhelming and that I had no idea what Stripe actually was/did after scrolling through. Obviously I know what Stripe is, but when I try to look through the lens of someone with little to no prior knowledge of the company, I was shocked at how little the site actually serviced them. It is an endless pit of attention grabbing animations (impressive animations tho) and information dumps, etc.</p>
+
+  <p class="project-body">The main issue in this regard is that Stripe has become something HUGE. They have so many products and offerings (good for them) that it’s almost impossible to make a landing page that can communicate all of it effectively, and identify what YOU as the user are even looking for. It’s a mess.</p>
+
+  <p class="project-body">The other main issue, and this one is particularly interesting, is that Stripe becoming the gold standard for a SaaS landing page has started to actually become an issue for them. Other SaaS companies have taken notes from the Stripe playbook (blurple, logo carousels, animations, etc.) — so much so that every SaaS nowadays has a landing page that looks like an offspring of Stripe’s… My thinking was “Stripe’s landing page looks no different than a small, new SaaS startup’s landing page…”</p>
+
+  <p class="project-body">The last issue I have energy to write about right now is similar to what I just said - A company as big and successful as Stripe SHOULD NOT HAVE A WEBSITE THAT LOOKS LIKE ANY OTHER STARTUP! I mean seriously, Stripe’s whole landing page is full of things that say “look at me!” “Look at what I can do!” “Spend money on me!” - Cmon… we’re past that now.</p>
+
+  <p class="project-body">And don’t even get me started on that horrible footer.</p>
+
+  <!-- Demo 2 -->
+  <div class="video-block">
+    <p class="video-caption">Scroll through of my redesign..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1195796991?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="project-body">Okay, now that all of that is off my chest, we can get into my redesign.</p>
+
+  <p class="project-body">There are a few “pillars” I wanted to work around:</p>
+
+  <ol class="project-list">
+    <li>Make the landing page simpler, but still capture Stripe’s playfulness.</li>
+    <li>Emphasize the human element! Stripe has what no fresh SaaS has… they have MILLIONS of users who use their product(s) every day in so many cool and different ways - let’s highlight that.</li>
+    <li>Trim the fat. We don’t want a bottomless pit of info and animations. Reduce it to what is necessary to communicate what Stripe is, how Stripe can help you, and convert the user.</li>
+    <li>Whisper, don’t shout. A company like Stripe does not need to flaunt logos every chance they get, or show off every single product feature they can think of. Yes, you want to convince a potential customer, but these things almost have an opposite effect when you reach a certain level of growth… ya know?</li>
+  </ol>
+
+  <p class="project-body">I think the final product came out really good. Take the time to open the actual site and scroll through it! There’s some fun little easter eggs.</p>
+
+  <!-- Demo 3 -->
+  <div class="video-block">
+    <p class="video-caption">Hero section..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1195797423?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="project-body">The hero section was naturally the first idea that I had worked out in my head before even starting. Stripe’s actual hero section is notoriously cool, especially with the wave animation. But I really wanted to communicate something more… human? As I mentioned before, one of Stripe’s most powerful assets is that they have millions of REAL users who use their products every day. Highlighting “Stripe moments” felt like a good way to connect to a potential user. Maybe they could see themselves reflected in one of the clips.</p>
+
+  <p class="project-body">I love the animation of the “Get started” button - I really took a liking to Stripe’s parallelogram logo and wanted to incorporate it in some fun ways.</p>
+
+  <p class="project-body">I put the “Trusted By” section tucked away on the bottom right because this is where the concept of “whisper, don’t shout” comes into play. It’s there, people will see it and be impressed, but it doesn’t need to do the work for us.</p>
+
+  <!-- Demo 4 -->
+  <div class="video-block">
+    <p class="video-caption">Why Stripe? Section..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1195798006?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="project-body">The “Why Stripe?” Section took me the longest, even though it looks the simplest visually. I had originally built out a section very similar to Stripe’s bento style section under their hero, with a bunch of animated cards. That sucked. And that is where this airy, light design framework was really born from. I started with a more true rendition of Stripe’s design, and then ended up going the complete opposite direction, and I’m happy I did.</p>
+
+  <p class="project-body">The job of this section is to literally answer “why Stripe?”</p>
+
+  <p class="project-body">It can be applied to whatever you’re building: a SaaS, an on demand product, e-commerce, etc.</p>
+
+  <p class="project-body">It works at 10 customers, and it works at 10 million.</p>
+
+  <p class="project-body">And we know you’re worried about the things that might go wrong… but we already thought of those and handle them ourselves.</p>
+
+  <p class="project-body">This was all meant to almost read the user’s mind… “will this work for X?” “what happens if Y?” “Can it handle Z?” I tried to answer all of those questions before the user can even finish their thought.</p>
+
+  <p class="project-body">I love the airy design of this section. The mix of images, editorial style text, and animations (that were incredibly hard to build lol) all tie in together really well. I also really enjoy the scroll triggered color fill of the globe, and how the GDP stat line sort of slots right in at the bottom.</p>
+
+  <!-- Demo 5 -->
+  <div class="video-block">
+    <p class="video-caption">Integration section..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1195798294?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="project-body">The integration section was a surprising win - I really struggled to think of an idea/concept for this section. All I knew was that I wanted to communicate that with one simple integration, you had access to a whole suite of products.</p>
+
+  <p class="project-body">After mulling ideas over for a day or two, I decided to just go to the source. Even though I had criticisms of Stripe’s site, there were some really well done elements and sections. One section in particular that I loved was “The backbone of global commerce” section… I always scrolled back to that one. So I essentially rebuilt that section in my version and turned it into a nice editorial style section.</p>
+
+  <p class="project-body">The particle animations surprisingly weren’t too hard to build and they are pretty close to the quality of Stripe’s. I decided to just pick one backdrop that I really liked and run with that - and I landed on this “sunrise” color palette.</p>
+
+  <p class="project-body">The funny part is that when building this section I accidentally made the canvas too small… the whole thing was supposed to be full bleed across the page, but it came out as this sort of rectangle framed onto the page, and I thought it was beautiful. A happy mistake.</p>
+
+  <p class="project-body">Last was to add in the text elements, which was the cherry on top. I feel like I got a lot of inspiration from a mix of places like Apple, OpenAI, and modern print editorials/magazines. It’s tough to pinpoint, but the text elements sort of just came to me, I sketched it out, and felt it was perfect.</p>
+
+  <!-- Demo 6 -->
+  <div class="video-block">
+    <p class="video-caption">Final CTA section and footer..</p>
+    <div class="vimeo-wrapper">
+      <iframe src="https://player.vimeo.com/video/1195798596?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <p class="project-body">Okay finally we’re at the end. This section is supposed to wrap it all up and act as the final CTA (call to action) for the user. We had our initial CTA in the hero, but maybe they weren’t convinced and wanted to scroll… this is where we try to convert if they feel like we earned their trust.</p>
+
+  <p class="project-body">I sort of had an idea of a “sandwich” style layout for the site that I feel like I don’t see often. Most sites have a hero, sections to scroll through, and then a lousy closing section. What if we added in a really nice closing hero? I love it, and I don’t know why it isn’t more common.</p>
+
+  <p class="project-body">On Stripe’s site I also really enjoyed the images they had made for some of the notable companies using Stripe. They were realistic images with the parallelogram shape snuck in there. This one in particular was made for Hertz, but I decided to use it as the hero image and frame the CTA inside the logo.</p>
+
+  <p class="project-body">You’ll also notice the brazen logo carousel… I did feel like we should include a more obvious, trust-building, carousel somewhere in the landing page. I tucked it away in the main hero, and I did end up feeling that a larger carousel felt right at the bottom of the page.</p>
+
+  <p class="project-body">And the footer… I didn’t do much work on the footer, but it’s at least better than that encyclopedia that Stripe has on their site.</p>
+
+  <!--
+    Optional image gallery (drop stills into public/, then reference them):
+    <div class="media-gallery">
+      <div class="media-item"><img src="/stripe-...png" alt="..." /></div>
+    </div>
+  -->
+</ProjectLayout>
+
+<style>
+  .project-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .project-title {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    font-weight: normal;
+    letter-spacing: 0.08em;
+    color: #1c1f23;
+  }
+
+  .project-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .project-tags span {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: #999;
+    font-style: italic;
+  }
+
+  /* Before/after comparison slider */
+  .ba-slider {
+    width: 100%;
+    margin: 2rem 0 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #e4e6e8;
+    cursor: ew-resize;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+  }
+
+  .ba-before {
+    /* Original sits on top, clipped to the left of the divider */
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+    z-index: 2;
+  }
+
+  .ba-after {
+    z-index: 1;
+  }
+
+  .ba-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 2px;
+    margin-left: -1px;
+    background: #fff;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 50%;
+    left: var(--pos);
+    transform: translate(-50%, -50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5f6368;
+    cursor: ew-resize;
+    z-index: 4;
+  }
+
+  .ba-handle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .ba-label {
+    position: absolute;
+    bottom: 14px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px 11px;
+    border-radius: 999px;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .ba-label-left { left: 14px; }
+  .ba-label-right { right: 14px; }
+
+  .visit-note {
+    display: block;
+    margin: 3rem 0 -1rem 1rem;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  /* Hero omnibox — a clickable Chrome-style URL bar linking to the live site */
+  .hero-omnibox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 3.5rem;
+    padding: 22px 30px;
+    background: #f1f3f4;
+    border: 1px solid #e4e6e8;
+    border-radius: 999px;
+    text-decoration: none;
+    overflow: hidden;
+    transition: background 0.25s ease, box-shadow 0.3s ease, transform 0.25s ease;
+  }
+
+  .hero-omnibox:hover {
+    background: #eceef0;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .omnibox-lock {
+    width: 17px;
+    height: 17px;
+    color: #5f6368;
+    flex-shrink: 0;
+  }
+
+  .omnibox-url {
+    flex: 1;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 1.1rem;
+    color: #202124;
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .omnibox-arrow {
+    width: 20px;
+    height: 20px;
+    color: #5f6368;
+    flex-shrink: 0;
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  .hero-omnibox:hover .omnibox-arrow {
+    transform: translateX(5px);
+    color: #202124;
+  }
+
+  /* Shimmer sweep on hover — feels like it's about to navigate */
+  .hero-omnibox::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 55%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+  }
+
+  .hero-omnibox:hover::after {
+    animation: omnibox-shimmer 0.9s ease;
+  }
+
+  @keyframes omnibox-shimmer {
+    from { left: -60%; }
+    to { left: 130%; }
+  }
+
+  .project-intro {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #1c1f23;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    max-width: 900px;
+    margin-top: 0.75rem;
+  }
+
+  .project-body {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #1c1f23;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    max-width: 900px;
+    margin-top: 3rem;
+  }
+
+  .project-list {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #1c1f23;
+    letter-spacing: 0.02em;
+    line-height: 1.7;
+    max-width: 900px;
+    margin-top: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .project-list li {
+    margin-bottom: 0.9rem;
+    padding-left: 0.35rem;
+  }
+
+  .video-caption {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    color: #999;
+    font-style: italic;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.35rem;
+  }
+
+  .video-block {
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+  }
+
+  .vimeo-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1920 / 1036;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 2px dashed #cfcfcf;
+  }
+
+  .vimeo-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    transform: scale(1.012);
+  }
+
+  .media-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .media-item {
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .media-item.span-2 { grid-column: span 2; }
+
+  .media-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+</style>
+
+<script>
+  // Each demo stays muted and paused until it's ~60% in the viewport,
+  // then plays from the start; pauses again when scrolled out of view.
+  if (document.querySelector('iframe')) {
+    const vimeoScript = document.createElement('script');
+    vimeoScript.src = 'https://player.vimeo.com/api/player.js';
+    vimeoScript.onload = () => {
+      const players = new Map();
+      document.querySelectorAll('iframe').forEach(iframe => {
+        // @ts-ignore
+        const player = new Vimeo.Player(iframe);
+        player.setVolume(0);
+        player.pause().catch(() => {});
+        players.set(iframe, player);
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const player = players.get(entry.target);
+          if (!player) return;
+          if (entry.isIntersecting) {
+            player.play().catch(() => {});
+          } else {
+            player.pause().then(() => player.setCurrentTime(0)).catch(() => {});
+          }
+        });
+      }, { threshold: 0.6 });
+
+      players.forEach((_, iframe) => observer.observe(iframe));
+    };
+    document.head.appendChild(vimeoScript);
+  }
+</script>
+
+<script>
+  // Before/after slider: drag the divider to wipe between original and redesign.
+  // Plays a hint nudge on load, then periodically while idle, so it reads as draggable.
+  function initBASlider() {
+    const slider = document.getElementById('ba-slider');
+    if (!slider || slider.dataset.baInit) return;
+    slider.dataset.baInit = '1';
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let dragging = false;
+    let lastInteraction = 0;
+    let tweenRAF = null;
+    let idleTimer = null;
+    const IDLE_INTERVAL = 6000;
+
+    const setPosRaw = (pct) => slider.style.setProperty('--pos', pct + '%');
+    const getPos = () => parseFloat(getComputedStyle(slider).getPropertyValue('--pos')) || 50;
+
+    const setPosFromX = (clientX) => {
+      const rect = slider.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      setPosRaw(Math.max(0, Math.min(100, pct)));
+    };
+
+    const stopTween = () => { if (tweenRAF) { cancelAnimationFrame(tweenRAF); tweenRAF = null; } };
+
+    const tweenTo = (target, duration, done) => {
+      stopTween();
+      const start = getPos();
+      const startT = performance.now();
+      const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+      const step = (now) => {
+        const t = Math.min(1, (now - startT) / duration);
+        setPosRaw(start + (target - start) * ease(t));
+        if (t < 1) tweenRAF = requestAnimationFrame(step);
+        else { tweenRAF = null; if (done) done(); }
+      };
+      tweenRAF = requestAnimationFrame(step);
+    };
+
+    // The hint: slide left to reveal the redesign, then ease back to center.
+    const nudge = () => {
+      if (dragging || reduceMotion) return;
+      tweenTo(33, 750, () => {
+        setTimeout(() => { if (!dragging) tweenTo(50, 750); }, 400);
+      });
+    };
+
+    const scheduleIdle = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        if (!dragging && Date.now() - lastInteraction > IDLE_INTERVAL - 200) nudge();
+        scheduleIdle();
+      }, IDLE_INTERVAL);
+    };
+
+    const onInteract = () => { lastInteraction = Date.now(); stopTween(); };
+
+    slider.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      onInteract();
+      try { slider.setPointerCapture(e.pointerId); } catch (_) {}
+      setPosFromX(e.clientX);
+    });
+    slider.addEventListener('pointermove', (e) => { if (dragging) { setPosFromX(e.clientX); lastInteraction = Date.now(); } });
+    slider.addEventListener('pointerup', () => { dragging = false; lastInteraction = Date.now(); });
+    slider.addEventListener('pointercancel', () => { dragging = false; lastInteraction = Date.now(); });
+
+    // Play the hint right away, then keep nudging while idle.
+    setTimeout(nudge, 500);
+    scheduleIdle();
+  }
+  initBASlider();
+  document.addEventListener('astro:page-load', initBASlider);
+</script>

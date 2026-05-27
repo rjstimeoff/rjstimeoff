@@ -21,6 +21,10 @@ import Sidebar from '../components/Sidebar.astro';
         <video class="project-thumb" src="/ui-playground.mov" muted loop playsinline></video>
         <span class="project-title">UI Playground</span>
       </a>
+      <a class="project-card" href="/stripe-redesign">
+        <video class="project-thumb" src="/stripe-redesign.mov" muted loop playsinline></video>
+        <span class="project-title">Stripe Landing Page Redesign (Unofficial)</span>
+      </a>
     </section>
 
 
@@ -39,12 +43,13 @@ import Sidebar from '../components/Sidebar.astro';
     right: 0;
     bottom: 0;
     z-index: 10;
-    padding: 3rem;
+    padding: 3rem 3rem 5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 3rem;
     align-content: flex-start;
-    pointer-events: none;
+    overflow-y: auto;
+    pointer-events: auto;
   }
 
   .project-card {
