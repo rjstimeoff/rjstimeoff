@@ -443,37 +443,65 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
 </style>
 
 <script>
-  // Each demo stays muted and paused until it's ~60% in the viewport,
-  // then plays from the start; pauses again when scrolled out of view.
-  if (document.querySelector('iframe')) {
-    const vimeoScript = document.createElement('script');
-    vimeoScript.src = 'https://player.vimeo.com/api/player.js';
-    vimeoScript.onload = () => {
-      const players = new Map();
-      document.querySelectorAll('iframe').forEach(iframe => {
-        // @ts-ignore
-        const player = new Vimeo.Player(iframe);
-        player.setVolume(0);
-        player.pause().catch(() => {});
-        players.set(iframe, player);
-      });
+  // Each demo stays muted and plays only while ~half in view, restarting from 0.
+  // Rebuilt on every navigation so it always re-attaches after a page transition,
+  // and play() waits for the player to be ready (handles restored-scroll returns).
+  function initVimeoDemos() {
+    const iframes = document.querySelectorAll('.vimeo-wrapper iframe');
+    if (!iframes.length) return;
+
+    const attach = () => {
+      // Reuse players across visits; tear down any previous observer.
+      // @ts-ignore
+      const reg = (window.__vimeoPlayers = window.__vimeoPlayers || new WeakMap());
+      // @ts-ignore
+      if (window.__vimeoObserver) window.__vimeoObserver.disconnect();
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          const player = players.get(entry.target);
+          const player = reg.get(entry.target);
           if (!player) return;
           if (entry.isIntersecting) {
-            player.play().catch(() => {});
+            player.ready().then(() => player.setVolume(0)).then(() => player.play()).catch(() => {});
           } else {
             player.pause().then(() => player.setCurrentTime(0)).catch(() => {});
           }
         });
-      }, { threshold: 0.6 });
+      }, { threshold: 0.5 });
+      // @ts-ignore
+      window.__vimeoObserver = observer;
 
-      players.forEach((_, iframe) => observer.observe(iframe));
+      iframes.forEach(iframe => {
+        let player = reg.get(iframe);
+        if (!player) {
+          // @ts-ignore
+          player = new Vimeo.Player(iframe);
+          player.setVolume(0);
+          reg.set(iframe, player);
+        }
+        observer.observe(iframe);
+      });
     };
-    document.head.appendChild(vimeoScript);
+
+    // @ts-ignore — reuse the API if it loaded on a previous visit.
+    if (window.Vimeo && window.Vimeo.Player) {
+      attach();
+    } else {
+      let api = document.getElementById('vimeo-api');
+      if (!api) {
+        api = document.createElement('script');
+        api.id = 'vimeo-api';
+        api.src = 'https://player.vimeo.com/api/player.js';
+        document.head.appendChild(api);
+      }
+      api.addEventListener('load', attach, { once: true });
+    }
   }
+
+  const runVimeoInit = () => requestAnimationFrame(() => initVimeoDemos());
+  runVimeoInit();
+  document.addEventListener('astro:page-load', runVimeoInit);
+  window.addEventListener('pageshow', (e) => { if (e.persisted) runVimeoInit(); });
 </script>
 
 <script>
