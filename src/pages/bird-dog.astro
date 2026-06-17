@@ -59,27 +59,27 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
     <div class="tab-panels">
       <div class="tab-panel active" data-panel="0">
         <div class="vimeo-wrapper">
-          <iframe src="https://player.vimeo.com/video/1183089656?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <iframe loading="lazy" src="https://player.vimeo.com/video/1183089656?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
       <div class="tab-panel" data-panel="1">
         <div class="vimeo-wrapper">
-          <iframe src="https://player.vimeo.com/video/1183089722?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <iframe loading="lazy" src="https://player.vimeo.com/video/1183089722?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
       <div class="tab-panel" data-panel="2">
         <div class="vimeo-wrapper">
-          <iframe src="https://player.vimeo.com/video/1183089680?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <iframe loading="lazy" src="https://player.vimeo.com/video/1183089680?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
       <div class="tab-panel" data-panel="3">
         <div class="vimeo-wrapper">
-          <iframe src="https://player.vimeo.com/video/1183089760?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <iframe loading="lazy" src="https://player.vimeo.com/video/1183089760?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
       <div class="tab-panel" data-panel="4">
         <div class="vimeo-wrapper">
-          <iframe src="https://player.vimeo.com/video/1183089781?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          <iframe loading="lazy" src="https://player.vimeo.com/video/1183089781?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -114,17 +114,39 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
     const urlDisplay = document.getElementById('url-display');
     const players = [];
 
-    panels.forEach((panel, i) => {
-      const iframe = panel.querySelector('iframe');
-      if (iframe) players[i] = new Vimeo.Player(iframe);
-    });
+    // Create a Vimeo player on demand so we don't boot all five on page load.
+    const getPlayer = (i) => {
+      if (!players[i]) {
+        const iframe = panels[i] && panels[i].querySelector('iframe');
+        if (iframe) {
+          players[i] = new Vimeo.Player(iframe);
+          players[i].setVolume(0);
+        }
+      }
+      return players[i];
+    };
 
-    if (players[0]) players[0].play();
+    const activeIndex = () => [...panels].findIndex(p => p.classList.contains('active'));
+
+    // Only play the active demo once the browser mock scrolls into view.
+    let inView = false;
+    const section = document.querySelector('.tab-panels');
+    if (section) {
+      new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          inView = entry.isIntersecting;
+          const p = getPlayer(activeIndex());
+          if (!p) return;
+          if (inView) p.play().catch(() => {});
+          else p.pause().catch(() => {});
+        });
+      }, { threshold: 0.4 }).observe(section);
+    }
 
     buttons.forEach((btn, i) => {
       btn.addEventListener('click', () => {
-        const activeIndex = [...panels].findIndex(p => p.classList.contains('active'));
-        if (players[activeIndex]) players[activeIndex].pause();
+        const cur = getPlayer(activeIndex());
+        if (cur) cur.pause().catch(() => {});
 
         buttons.forEach(b => b.classList.remove('active'));
         panels.forEach(p => p.classList.remove('active'));
@@ -133,7 +155,8 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
         panels[i].classList.add('active');
 
         if (urlDisplay) urlDisplay.textContent = btn.dataset.url;
-        if (players[i]) players[i].play();
+        const next = getPlayer(i);
+        if (next && inView) next.play().catch(() => {});
       });
     });
   };

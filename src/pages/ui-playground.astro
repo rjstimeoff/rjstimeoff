@@ -25,14 +25,14 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
   <div class="video-block">
     <p class="video-caption">A walkthrough of the core workflow..</p>
     <div class="vimeo-wrapper">
-      <iframe src="https://player.vimeo.com/video/1183218786?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      <iframe loading="lazy" src="https://player.vimeo.com/video/1183218786?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
 
   <div class="video-block">
     <p class="video-caption">Saving a new element to the gallery..</p>
     <div class="vimeo-wrapper">
-      <iframe src="https://player.vimeo.com/video/1183218806?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      <iframe loading="lazy" src="https://player.vimeo.com/video/1183218806?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -56,15 +56,63 @@ import ProjectLayout from '../layouts/ProjectLayout.astro';
 </ProjectLayout>
 
 <script>
-  const vimeoScript = document.createElement('script');
-  vimeoScript.src = 'https://player.vimeo.com/api/player.js';
-  vimeoScript.onload = () => {
-    document.querySelectorAll('iframe').forEach(iframe => {
-      const player = new Vimeo.Player(iframe);
-      player.play();
-    });
-  };
-  document.head.appendChild(vimeoScript);
+  // Each demo stays muted and plays only while in view, so we don't boot every
+  // Vimeo player at once on load. Rebuilt on navigation; reuses players across visits.
+  function initVimeoDemos() {
+    const iframes = document.querySelectorAll('.vimeo-wrapper iframe');
+    if (!iframes.length) return;
+
+    const attach = () => {
+      // @ts-ignore
+      const reg = (window.__vimeoPlayers = window.__vimeoPlayers || new WeakMap());
+      // @ts-ignore
+      if (window.__vimeoObserver) window.__vimeoObserver.disconnect();
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const player = reg.get(entry.target);
+          if (!player) return;
+          if (entry.isIntersecting) {
+            player.ready().then(() => player.setVolume(0)).then(() => player.play()).catch(() => {});
+          } else {
+            player.pause().then(() => player.setCurrentTime(0)).catch(() => {});
+          }
+        });
+      }, { threshold: 0.5 });
+      // @ts-ignore
+      window.__vimeoObserver = observer;
+
+      iframes.forEach(iframe => {
+        let player = reg.get(iframe);
+        if (!player) {
+          // @ts-ignore
+          player = new Vimeo.Player(iframe);
+          player.setVolume(0);
+          reg.set(iframe, player);
+        }
+        observer.observe(iframe);
+      });
+    };
+
+    // @ts-ignore — reuse the API if it loaded on a previous visit.
+    if (window.Vimeo && window.Vimeo.Player) {
+      attach();
+    } else {
+      let api = document.getElementById('vimeo-api');
+      if (!api) {
+        api = document.createElement('script');
+        api.id = 'vimeo-api';
+        api.src = 'https://player.vimeo.com/api/player.js';
+        document.head.appendChild(api);
+      }
+      api.addEventListener('load', attach, { once: true });
+    }
+  }
+
+  const runVimeoInit = () => requestAnimationFrame(() => initVimeoDemos());
+  runVimeoInit();
+  document.addEventListener('astro:page-load', runVimeoInit);
+  window.addEventListener('pageshow', (e) => { if (e.persisted) runVimeoInit(); });
 </script>
 
 <style>
