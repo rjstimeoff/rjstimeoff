@@ -1,0 +1,102 @@
+---
+// Single type/reference page for the whole foundations exploration. Standalone /type.
+// Body = Satoshi (locked). Open decision = the whimsical LEAD face for `timeoff`
+// (MART ref: whimsical lead + editorial serif backup + Satoshi body).
+// Keep all type exploration here — don't spin up new pages per decision.
+const lead = [
+  { name: 'Gambetta',            stack: "'Gambetta', serif",                note: 'calligraphic charm — whimsical but refined', weight: 500 },
+  { name: 'Fraunces',            stack: "'Fraunces', serif",                note: 'soft "wonky" old-style — character + editorial in one', weight: 500 },
+  { name: 'Bricolage Grotesque', stack: "'Bricolage Grotesque', sans-serif", note: 'quirky grotesque — playful but sharp/now', weight: 500 },
+  { name: 'Pally',               stack: "'Pally', sans-serif",              note: 'friendly rounded — softest, most fun', weight: 500 },
+  { name: 'Stardom',             stack: "'Stardom', serif",                 note: 'fashionable eccentric display — chic, a little strange', weight: 400 },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>timeoff — type reference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700&display=swap" rel="stylesheet" />
+    <link href="https://api.fontshare.com/v2/css?f[]=gambetta@400,500,600&f[]=pally@400,500,700&f[]=stardom@400&f[]=satoshi@400,500&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="page-head">
+      <span>timeoff — type reference</span>
+      <span class="muted">body = Satoshi (locked) · choosing the whimsical lead for "timeoff"</span>
+    </header>
+
+    <!-- ——— DIY dotted "Tanja-style" treatment: SVG text, no fill, dotted stroke ——— -->
+    <section class="dotted-block">
+      <div class="spec-label"><span class="num">Dotted treatment (DIY)</span><span class="muted">no fill + round dotted stroke on the letter outlines — Tanja look, free</span></div>
+
+      <!-- elegant italic serif -->
+      <svg class="dotted" viewBox="0 0 1100 220" role="img" aria-label="timeoff">
+        <text x="50%" y="158" text-anchor="middle" font-family="'Fraunces', serif" font-style="italic" font-size="170" font-weight="500"
+          fill="none" stroke="#ece9e2" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.5 11">timeoff</text>
+      </svg>
+
+      <!-- calligraphic -->
+      <svg class="dotted" viewBox="0 0 1100 220" role="img" aria-label="timeoff">
+        <text x="50%" y="158" text-anchor="middle" font-family="'Gambetta', serif" font-size="170" font-weight="500"
+          fill="none" stroke="#ece9e2" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.5 10">timeoff</text>
+      </svg>
+
+      <!-- clean rounded sans, denser dots -->
+      <svg class="dotted" viewBox="0 0 1100 220" role="img" aria-label="timeoff">
+        <text x="50%" y="155" text-anchor="middle" font-family="'Pally', sans-serif" font-size="150" font-weight="500"
+          fill="none" stroke="#ece9e2" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0.5 8">timeoff</text>
+      </svg>
+
+      <!-- "still, then alive": hover solidifies the dots into the word -->
+      <svg class="dotted alive" viewBox="0 0 1100 220" role="img" aria-label="timeoff">
+        <text x="50%" y="158" text-anchor="middle" font-family="'Fraunces', serif" font-style="italic" font-size="170" font-weight="500"
+          stroke="#ece9e2" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0.5 11">timeoff</text>
+      </svg>
+      <p class="sub">↑ hover the last one — dots fill into the word (a taste of "still, then alive")</p>
+    </section>
+
+    {lead.map((c) => (
+      <section class="spec">
+        <div class="spec-label">
+          <span class="num">{c.name}</span>
+          <span class="muted">{c.note}</span>
+        </div>
+        <h1 class="wordmark" style={`font-family: ${c.stack}; font-weight: ${c.weight}`}>timeoff</h1>
+        <p class="sub">A design &amp; product studio — body stays Satoshi underneath.</p>
+      </section>
+    ))}
+
+    <style>
+      :root { --bg: #131210; --bg-glow: #1c1a16; --fg: #ece9e2; --muted: #7d776c; --line: #2a2722; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        background: radial-gradient(120% 90% at 50% 0%, var(--bg-glow) 0%, var(--bg) 55%);
+        color: var(--fg); -webkit-font-smoothing: antialiased; font-family: 'Satoshi', sans-serif;
+        padding: 5rem clamp(1.5rem, 6vw, 6rem) 8rem; min-height: 100vh;
+      }
+      .page-head {
+        display: flex; justify-content: space-between; align-items: baseline; gap: 2rem;
+        font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg);
+        padding-bottom: 1.4rem; border-bottom: 1px solid var(--line); margin-bottom: 4.5rem;
+      }
+      .muted { color: var(--muted); }
+      .spec { padding: 3rem 0; border-bottom: 1px solid var(--line); }
+      .spec-label {
+        display: flex; gap: 1.2rem; align-items: baseline; margin-bottom: 1.6rem;
+        font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      }
+      .spec-label .num { color: var(--fg); }
+      .wordmark { font-size: clamp(3.4rem, 13vw, 8rem); line-height: 0.9; color: var(--fg); }
+      .sub { font-size: 0.95rem; color: var(--muted); margin-top: 1.2rem; }
+
+      .dotted-block { padding: 1rem 0 3rem; border-bottom: 1px solid var(--line); margin-bottom: 1rem; }
+      .dotted { display: block; width: 100%; height: auto; margin: 0.5rem 0; }
+      /* hover-alive: dots solidify into a filled word */
+      .dotted.alive text { fill: transparent; transition: fill 0.6s ease, stroke-dasharray 0.6s ease; cursor: default; }
+      .dotted.alive:hover text { fill: #ece9e2; stroke-dasharray: 0.5 2; }
+    </style>
+  </body>
+</html>
