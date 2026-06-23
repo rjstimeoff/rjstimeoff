@@ -16,6 +16,16 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Persisted-label handoff: if we arrived from a click on the top-left nav,
+      // force that label to its enlarged size immediately (before paint) so the
+      // big word appears continuous through the page swap — only the text/color
+      // (rendered fresh per page) change. Native :hover takes back over on move.
+      if (sessionStorage.getItem('navTL')) {
+        document.documentElement.classList.add('pre-tl');
+        sessionStorage.removeItem('navTL');
+      }
+    </script>
   </head>
   <body>
     <main class="hero">
@@ -31,9 +41,10 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
     </button>
 
     <h1 class="statement">Timeoff<br />a design &amp; product<br />studio by RJ Rivera<br />born in NYC</h1>
+    <h1 class="statement ghost" aria-hidden="true">Timeoff<br />a design &amp; product<br />studio by RJ Rivera<br />born in NYC</h1>
 
     <nav class="chrome" aria-label="site">
-      <a class="label tl work grow" href="#">Work</a>
+      <a class="label tl work grow" href="/work">Work</a>
       <a class="label tr info grow" href="#">Information</a>
       <span class="label br">Est. 2026</span>
     </nav>
@@ -51,6 +62,7 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
       @property --sqH { syntax: '<number>'; inherits: false; initial-value: 1; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { height: 100%; }
+      html { background: var(--bg); }   /* dark base so there's no white flash on load */
       body {
         min-height: 100vh;
         background: var(--bg);
@@ -149,6 +161,18 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
       body:has(.work:hover) .statement { --sqV: 0.93; }
       body:has(.info:hover) .statement { --sqV: 0.93; --sqH: 0.97; }
 
+      /* A faint flat-white copy stacked exactly over the blended statement.
+         The base layer keeps the mix-blend-difference shimmer; this ghost adds
+         a uniform white wash on top so the letters read brighter/whiter.
+         Shares .statement so it squishes in perfect sync; just no blend. */
+      .statement.ghost {
+        mix-blend-mode: normal;
+        color: #fff;
+        opacity: 0.2;
+        z-index: 3;
+        pointer-events: none;
+      }
+
       .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
       .label {
         position: fixed;
@@ -181,6 +205,21 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
       }
       .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }  /* primary — loudest */
       .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }  /* longer word, kept a notch smaller */
+
+      /* forced-enlarged on arrival (set by the is:inline head script), instant
+         and untweened so the persisted TL label appears already-big — matches
+         the .work:hover state exactly so the handoff is seamless. */
+      html.pre-tl .grow { transition: none; }
+      html.pre-tl .work {
+        font-size: clamp(2.4rem, 6vw, 5.6rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      /* ...and pre-apply the Work-hover squish to the statement, instantly. Returning
+         to home still-hovering the TL label, the bottom text arrives already squished
+         instead of snapping into it on the first cursor jiggle. Hands back to native
+         :hover on pointermove (which drops .pre-tl) exactly like the label does. */
+      html.pre-tl .statement { transition: none; --sqV: 0.93; }
 
       .tl { top: 1.9rem; left: 2.2rem; }
       .tr { top: 1.9rem; right: 2.2rem; }
@@ -247,6 +286,25 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
       }
       render();
       requestAnimationFrame(tick);
+
+      // top-left nav: flag the persisted-enlarge handoff, then navigate normally
+      document.querySelector('a.work')?.addEventListener('click', () => {
+        sessionStorage.setItem('navTL', '1');
+      });
+      // Hand the persisted enlarge + squish back to native :hover only once the
+      // pointer actually LEAVES the top-left label. While you stay parked on it
+      // (e.g. you returned from /work still hovering), pre-tl holds the big word
+      // AND the bottom-statement squish frozen — so there's no :has recompute to
+      // snap on the first jiggle. Moving off the label eases everything out.
+      const tlLabel = document.querySelector('a.work');
+      const releasePreTL = () => document.documentElement.classList.remove('pre-tl');
+      if (tlLabel) {
+        tlLabel.addEventListener('pointerleave', releasePreTL, { once: true });
+        // if the very first move is already off the label, hand back right away
+        window.addEventListener('pointermove', (e) => {
+          if (!tlLabel.contains(e.target as Node)) releasePreTL();
+        }, { once: true });
+      }
     </script>
   </body>
 </html>

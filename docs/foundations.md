@@ -207,8 +207,37 @@ The "welcomed into a world" homepage. Full-bleed painterly hero + quiet corner c
 - Assets: `public/ballerina.mp4` (re-encoded all-intra `-g 1` + `fps=12` for smooth scrub), `public/dog.png`.
   Source mp4s come from image→video tool; re-encode for scrub-smoothness on ingest.
 
+## /work page — build progress (FIRST PASS BUILT)
+The project index, reached from the homepage `Work` label. Reference: StudioSmall's Projects page
+(RJ's pick) — but adapted, not copied.
+- **Light page (inverts from the dark home).** Full-bleed painterly backdrop `public/work-bg.png`
+  (soft blue-white oil texture) on a light base `#eef0ec`. This answers the long-open light-vs-dark
+  call: the Work page goes LIGHT while home stays dark — the StudioSmall inversion, but with RJ's
+  own painting instead of flat cream. Color from the work pops against it.
+- **Chrome:** `Home` TL (→ `/timeoff`) · `Information` TR (parked at `#`). Same grow-on-hover system
+  as the homepage, but **red** ink (`--fg: #d6352a`), weight 600 at rest. No `Est. 2026` here. Filter
+  taxonomy deliberately CUT (only ~4 projects, all web/product — a taxonomy would fake breadth).
+- **Grid:** four square tiles, 2×2, centered with air, floating on the painting via a soft shadow.
+  Tiles = `clamp(200px,23vw,320px)`, `aspect-ratio:1/1`, `object-fit:cover` (square crop of landscape
+  demos — RJ chose "keep them square for now"). Projects: Bird Dog · Stripe Redesign · UI Playground
+  · JPL Redesign (About dropped from Work). Red uppercase Inter labels beneath.
+- **Still, then alive** = reused from the current homepage: each tile is a frozen first frame; hover
+  plays its `<video muted loop>`, mouseleave pauses + resets to 0. Touch: autoplay all.
+- ★ **Seamless cross-page label handoff (the signature move — RJ "woahhhhh, impressive").** Home⇄Work
+  is a plain navigation, but the enlarged TL nav label appears to PERSIST across the swap while only
+  its text+color change (Work↔Home, white↔red), instantly. Mechanism: click sets a `sessionStorage`
+  flag → destination's `is:inline` head script adds `html.pre-tl` before paint → CSS forces that label
+  to its `:hover` size untweened (already-big, no grow-in) → one-shot `pointermove` hands back to native
+  `:hover`. Each page renders its own correct label for free; only the *enlarged state* is persisted.
+- **Page transitions stay plain.** Tried an animated dissolve AND a slight fade-in/crossfade — both
+  rejected ("too much" / "feels broken"). The continuity above is the ONLY cross-page motion. Matching
+  per-page `html` bg colors prevent white flash.
+- **Next on /work:** art-direct the resting tile frames (raw screenshots = the screens-vs-interiors
+  trap); decide square-vs-landscape long-term; build the `Information` destination.
+
 ## Open decisions log
-- [ ] Warm charcoal vs cool ink-blue base
-- [ ] Wordmark: serif vs grotesque
-- [ ] Exact motion flavor beyond "drift"
-- [ ] Project imagery treatment (art-directed crops — the screens-vs-interiors problem)
+- [x] Warm charcoal vs cool ink-blue base → **home = warm charcoal `#131210`; work page = light painterly**
+- [ ] Wordmark: serif vs grotesque (homepage statement is Inter 800; no separate wordmark yet)
+- [ ] Exact motion flavor beyond "drift" (home = cursor-scrub; work = hover-to-play tiles)
+- [ ] Project imagery treatment (art-directed crops — the screens-vs-interiors problem) — STILL THE BIG ONE
+- [ ] `Information` page (parked at `#` on both home + work)
