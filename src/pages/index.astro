@@ -1,119 +1,342 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Sidebar from '../components/Sidebar.astro';
+// Timeoff homepage — "welcomed into a world" concept.
+// Full-bleed painterly hero + quiet chrome. No statement, no scroll-bait.
+// "Still, then alive": each hero is a choppy painting-loop, frozen until the cursor
+// scrubs it. Toggle cycles the set. To add a painting: drop its .mp4 in /public and
+// add the path here.
+const media = ['/ballerina.mp4', '/dog.mp4'];
 ---
-
-<BaseLayout>
-  <main>
-
-    <Sidebar />
-
-    <section class="projects-grid">
-      <a class="project-card" href="/about">
-        <video class="project-thumb" src="/about.mov" muted loop playsinline></video>
-        <span class="project-title">My Life Story and Contact Info</span>
-      </a>
-      <a class="project-card" href="/bird-dog">
-        <video class="project-thumb" src="/bird-dog.mov" muted loop playsinline></video>
-        <span class="project-title">Bird Dog</span>
-      </a>
-      <a class="project-card" href="/ui-playground">
-        <video class="project-thumb" src="/ui-playground.mov" muted loop playsinline></video>
-        <span class="project-title">UI Playground</span>
-      </a>
-      <a class="project-card" href="/stripe-redesign">
-        <video class="project-thumb" src="/stripe-redesign.mov" muted loop playsinline></video>
-        <span class="project-title">Stripe Landing Page Redesign (Unofficial)</span>
-      </a>
-      <a class="project-card" href="/jpl-redesign">
-        <video class="project-thumb" src="/jpl-redesign.mp4" muted loop playsinline></video>
-        <span class="project-title">Jesse Parris-Lamb Website Redesign (Unofficial)</span>
-      </a>
-    </section>
-
-
-  </main>
-</BaseLayout>
-
-<style>
-  main {
-    min-height: 100vh;
-  }
-
-  .projects-grid {
-    position: fixed;
-    top: 0;
-    left: 320px;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
-    padding: 3rem 3rem 5rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3rem;
-    align-content: flex-start;
-    overflow-y: auto;
-    pointer-events: auto;
-  }
-
-  .project-card {
-    display: inline-flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    pointer-events: auto;
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .project-thumb {
-    width: 380px;
-    height: auto;
-    display: block;
-    background: #e8e8e8;
-  }
-
-  .project-title {
-    font-family: Garamond, 'EB Garamond', Georgia, serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    color: #1c1f23;
-  }
-
-  @media (max-width: 768px) {
-    .projects-grid {
-      position: static;
-      padding: 5rem 1.5rem 2rem;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      gap: 2rem;
-    }
-
-    .project-thumb {
-      width: 100%;
-    }
-
-    .project-card {
-      width: 100%;
-    }
-  }
-</style>
-
-
-<script>
-  function bindVideoCards() {
-    const isTouch = window.matchMedia('(hover: none)').matches;
-    document.querySelectorAll('.project-card').forEach((card) => {
-      const video = card.querySelector('video');
-      if (!video) return;
-      if (isTouch) {
-        video.play();
-      } else {
-        card.addEventListener('mouseenter', () => video.play());
-        card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Timeoff</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Mobile gate: the redesign is desktop-only — phones get the simplified site at /classic.
+      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+        window.location.replace('/classic');
       }
-    });
-  }
-  bindVideoCards();
-  document.addEventListener('astro:page-load', bindVideoCards);
-</script>
+    </script>
+    <script is:inline>
+      // Persisted-label handoff: if we arrived from a click on the top-left nav,
+      // force that label to its enlarged size immediately (before paint) so the
+      // big word appears continuous through the page swap — only the text/color
+      // (rendered fresh per page) change. Native :hover takes back over on move.
+      if (sessionStorage.getItem('navTL')) {
+        document.documentElement.classList.add('pre-tl');
+        sessionStorage.removeItem('navTL');
+      }
+      // same handoff for the top-right (Information) nav
+      if (sessionStorage.getItem('navTR')) {
+        document.documentElement.classList.add('pre-tr');
+        sessionStorage.removeItem('navTR');
+      }
+    </script>
+  </head>
+  <body>
+    <main class="hero">
+      {media.map((src, idx) => (
+        <video class="layer" data-idx={idx} muted playsinline preload="auto">
+          <source src={src} type="video/mp4" />
+        </video>
+      ))}
+    </main>
 
+    <button class="bg-toggle" id="bgToggle" type="button" aria-label="switch background">
+      <span class="cur">01</span><span class="sep">/</span><span class="tot">02</span>
+    </button>
+
+    <h1 class="statement">RJ Rivera<br />a designer and builder<br />based in NYC</h1>
+    <h1 class="statement ghost" aria-hidden="true">RJ Rivera<br />a designer and builder<br />based in NYC</h1>
+
+    <nav class="chrome" aria-label="site">
+      <a class="label tl work grow" href="/work">Work</a>
+      <a class="label tr info grow" href="/information">Information</a>
+      <span class="label br">Est. 2026</span>
+    </nav>
+
+    <style>
+      :root {
+        --bg: #131210;
+        --fg: #ece9e2;
+        --muted: #b9b3a8;     /* chrome over imagery — needs to stay legible */
+      }
+      /* Registered so they INTERPOLATE. Animating these scalars (not the whole
+         transform matrix) keeps the squish axis fixed — a straight directional
+         compression instead of the arc you get from matrix-decomposition tweening. */
+      @property --sqV { syntax: '<number>'; inherits: false; initial-value: 1; }
+      @property --sqH { syntax: '<number>'; inherits: false; initial-value: 1; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { height: 100%; }
+      html { background: var(--bg); }   /* dark base so there's no white flash on load */
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+
+      .hero { position: fixed; inset: 0; }
+      .layer {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        opacity: 0;
+      }
+      .layer.show { opacity: 1; }
+
+      .bg-toggle {
+        position: fixed;
+        top: 1.9rem;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.6rem 0.8rem;       /* bigger hit target */
+        font-family: inherit;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        color: #fff;
+        mix-blend-mode: difference;
+        display: inline-flex;
+        gap: 0.42em;
+        transition: letter-spacing 0.3s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .bg-toggle .sep { opacity: 0.45; }
+      .bg-toggle .cur { transition: opacity 0.25s ease; }
+      .bg-toggle:hover { letter-spacing: 0.3em; }
+      .bg-toggle:active { transform: translateX(-50%) scale(0.9); }
+      .bg-toggle.tick .cur { opacity: 0; }   /* brief flash on switch */
+      /* subtle vignette so corner chrome stays readable over any image */
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(8,7,6,0.55) 100%),
+          linear-gradient(to bottom, rgba(8,7,6,0.35) 0%, transparent 22%, transparent 78%, rgba(8,7,6,0.45) 100%);
+        pointer-events: none;
+      }
+
+      .wordmark {
+        position: relative;
+        z-index: 1;
+        font-weight: 400;
+        font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+        letter-spacing: 0.42em;
+        text-indent: 0.42em;
+        color: var(--fg);
+        text-shadow: 0 1px 24px rgba(0,0,0,0.5);
+      }
+
+      .statement {
+        position: fixed;
+        left: 2.2rem;
+        bottom: 1.9rem;
+        z-index: 2;
+        font-weight: 800;
+        font-size: clamp(3.4rem, 8vw, 7.5rem);
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+        color: #fff;
+        mix-blend-mode: difference;   /* inverts against the image — always legible */
+        transform-origin: left bottom;
+        /* Composite both presses on fixed axes; each hover drives only its own scalar.
+           At rest both scalars are 1 → scaleX(1) and scaleY(1) → identity. */
+        --sqV: 1;       /* vertical squish amount (1 = none) */
+        --sqH: 1;       /* horizontal squish amount (1 = none) */
+        transform: scaleX(var(--sqH)) scaleY(var(--sqV));
+        transition:
+          --sqV 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+          --sqH 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      /* reactive squish — clean axis compression, anchored bottom-left (no shear).
+         Work presses straight down: one strong axis (scaleY 0.93). Information keeps the
+         strong VERTICAL squish (letters get shorter, same feel as Work) but adds only a
+         GENTLE horizontal compression — the disproportion (V < H) is what makes it read
+         as a squish rather than a uniform shrink, while the slight H pull + bottom-left
+         origin still draws it into the corner. */
+      body:has(.work:hover) .statement { --sqV: 0.93; }
+      body:has(.info:hover) .statement { --sqV: 0.93; --sqH: 0.97; }
+
+      /* A faint flat-white copy stacked exactly over the blended statement.
+         The base layer keeps the mix-blend-difference shimmer; this ghost adds
+         a uniform white wash on top so the letters read brighter/whiter.
+         Shares .statement so it squishes in perfect sync; just no blend. */
+      .statement.ghost {
+        mix-blend-mode: normal;
+        color: #fff;
+        opacity: 0.2;
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+      .label {
+        position: fixed;
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #fff;
+        mix-blend-mode: difference;
+      }
+      /* The two nav labels (Work / Information) grow on hover — a system, not a
+         one-off. Each swells from a tiny tracked micro-label to near-statement scale.
+         The gesture lives in the easing: a long, weighted expo-out so it *unfurls*
+         rather than snaps; weight tweens up to 800 (variable Inter) and tracking
+         tightens to match the bottom-left statement exactly. Each is pinned to its
+         own corner, so Work grows down-right and Information grows down-left. */
+      .grow {
+        pointer-events: auto;           /* re-enable over .chrome (which is none) */
+        text-decoration: none;
+        white-space: nowrap;
+        line-height: 1;                 /* keep the top edge pinned as it grows */
+        will-change: font-size;
+        transition:
+          font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+          letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1),
+          font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .grow:hover {
+        font-weight: 800;                        /* matches the bottom-left statement */
+        letter-spacing: -0.02em;                 /* same tracking as the statement */
+      }
+      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }  /* primary — loudest */
+      .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }  /* longer word, kept a notch smaller */
+
+      /* forced-enlarged on arrival (set by the is:inline head script), instant
+         and untweened so the persisted TL label appears already-big — matches
+         the .work:hover state exactly so the handoff is seamless. */
+      html.pre-tl .grow { transition: none; }
+      html.pre-tl .work {
+        font-size: clamp(2.4rem, 6vw, 5.6rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      /* ...and pre-apply the Work-hover squish to the statement, instantly. Returning
+         to home still-hovering the TL label, the bottom text arrives already squished
+         instead of snapping into it on the first cursor jiggle. Hands back to native
+         :hover on pointermove (which drops .pre-tl) exactly like the label does. */
+      html.pre-tl .statement { transition: none; --sqV: 0.93; }
+      /* top-right (Information) persisted enlarge — mirrors .info:hover exactly */
+      html.pre-tr .grow { transition: none; }
+      html.pre-tr .info {
+        font-size: clamp(1.8rem, 4vw, 3.9rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      html.pre-tr .statement { transition: none; --sqV: 0.93; --sqH: 0.97; }
+
+      .tl { top: 1.9rem; left: 2.2rem; }
+      .tr { top: 1.9rem; right: 2.2rem; }
+      .bl { bottom: 1.9rem; left: 2.2rem; }
+      .br { bottom: 1.9rem; right: 2.2rem; }
+    </style>
+
+    <script>
+      const vids = Array.from(document.querySelectorAll('.hero video')) as HTMLVideoElement[];
+      const TOTAL = vids.length;
+      let i = 0;
+
+      const toggle = document.getElementById('bgToggle')!;
+      const cur = toggle.querySelector('.cur')!;
+      const tot = toggle.querySelector('.tot')!;
+      tot.textContent = `0${TOTAL}`;
+
+      vids.forEach((v) => v.pause());
+
+      function render() {
+        vids.forEach((v, idx) => v.classList.toggle('show', idx === i));
+        // reset the flywheel so the new painting starts from a clean frozen frame
+        phase = 0; target = 0;
+      }
+
+      toggle.addEventListener('click', () => {
+        i = (i + 1) % TOTAL;
+        render();
+        toggle.classList.add('tick');
+        setTimeout(() => {
+          cur.textContent = `0${i + 1}`;
+          toggle.classList.remove('tick');
+        }, 130);
+      });
+
+      // ——— cursor-scrub with momentum: cursor adds intent, playback eases toward it ———
+      // A weighted "flywheel" model — fast flicks become smooth sweeps, never a whip.
+      let last: { x: number; y: number } | null = null;
+      let phase = 0;          // eased playback position (monotonic)
+      let target = 0;         // where the cursor wants it to be
+      const SCRUB = 0.004;    // seconds added per px of cursor travel
+      const MAX_STEP = 0.08;  // cap how much one move event can add (anti-whip)
+      const EASE = 0.3;       // how quickly playback catches up to target
+      const MAX_FRAME = 0.09; // hard ceiling on seconds advanced per frame
+
+      window.addEventListener('pointermove', (e) => {
+        if (last) {
+          const d = Math.hypot(e.clientX - last.x, e.clientY - last.y);
+          target += Math.min(d * SCRUB, MAX_STEP);
+        }
+        last = { x: e.clientX, y: e.clientY };
+      });
+
+      function tick() {
+        const v = vids[i];
+        const dur = v?.duration;
+        if (dur) {
+          let step = (target - phase) * EASE;
+          if (step > MAX_FRAME) step = MAX_FRAME;
+          phase += step;
+          v.currentTime = ((phase % dur) + dur) % dur;
+        }
+        requestAnimationFrame(tick);
+      }
+      render();
+      requestAnimationFrame(tick);
+
+      // top-left nav: flag the persisted-enlarge handoff, then navigate normally
+      document.querySelector('a.work')?.addEventListener('click', () => {
+        sessionStorage.setItem('navTL', '1');
+      });
+      // Hand the persisted enlarge + squish back to native :hover only once the
+      // pointer actually LEAVES the top-left label. While you stay parked on it
+      // (e.g. you returned from /work still hovering), pre-tl holds the big word
+      // AND the bottom-statement squish frozen — so there's no :has recompute to
+      // snap on the first jiggle. Moving off the label eases everything out.
+      const tlLabel = document.querySelector('a.work');
+      const releasePreTL = () => document.documentElement.classList.remove('pre-tl');
+      if (tlLabel) {
+        tlLabel.addEventListener('pointerleave', releasePreTL, { once: true });
+        // if the very first move is already off the label, hand back right away
+        window.addEventListener('pointermove', (e) => {
+          if (!tlLabel.contains(e.target as Node)) releasePreTL();
+        }, { once: true });
+      }
+
+      // top-right nav (Information): same persisted-enlarge handoff + release
+      document.querySelector('a.info')?.addEventListener('click', () => {
+        sessionStorage.setItem('navTR', '1');
+      });
+      const trLabel = document.querySelector('a.info');
+      const releasePreTR = () => document.documentElement.classList.remove('pre-tr');
+      if (trLabel) {
+        trLabel.addEventListener('pointerleave', releasePreTR, { once: true });
+        window.addEventListener('pointermove', (e) => {
+          if (!trLabel.contains(e.target as Node)) releasePreTR();
+        }, { once: true });
+      }
+    </script>
+  </body>
+</html>

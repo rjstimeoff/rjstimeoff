@@ -1,0 +1,201 @@
+---
+// Timeoff — Information. Brought over from the ORIGINAL light /about page (2026-06-25):
+// centered photo + "This is me!" + bio + "Who I am, and what I do." + contact links, on the
+// airy paper-white backdrop. The original's left sidebar is dropped, so the photo/text group
+// is centered. Corner chrome (Work / Home) kept for nav, recolored for the light page.
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Information — Timeoff</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Mobile gate: the redesign is desktop-only — phones get the simplified site at /classic.
+      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+        window.location.replace('/classic');
+      }
+    </script>
+    <script is:inline>
+      if (sessionStorage.getItem('navTL')) {
+        document.documentElement.classList.add('pre-tl');
+        sessionStorage.removeItem('navTL');
+      }
+      // same handoff for the top-right (Home) nav
+      if (sessionStorage.getItem('navTR')) {
+        document.documentElement.classList.add('pre-tr');
+        sessionStorage.removeItem('navTR');
+      }
+    </script>
+  </head>
+  <body>
+    <main class="info">
+      <div class="about-group">
+        <div class="about-photo">
+          <img class="label" src="/this_is_me.png" alt="This is me!" />
+          <img class="photo" src="/rj_photo.jpg" alt="RJ Rivera" />
+        </div>
+        <div class="about-text">
+          <img class="who-label" src="/who_i_am.png" alt="Who I am, and what I do." />
+          <p class="about-bio">After 5 years in strategy and operations, I took a step away to figure out what I actually wanted to do. I explored my curiosities and started to build things — whatever came to mind I tried to make it real.</p>
+          <p class="about-bio">When building my first project, Bird Dog, I realized how much I enjoyed the design process (because I was spending too much time on it). That's when I knew design is what I wanted to pursue.</p>
+          <p class="about-bio">I obsess over how people experience things.</p>
+        </div>
+      </div>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/raul-j-rivera/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:rj@rjstimeoff.com">rj@rjstimeoff.com</a>
+      </div>
+    </main>
+
+    <nav class="chrome" aria-label="site">
+      <a class="label tl work grow" href="/work">Work</a>
+      <a class="label tr home grow" href="/">Home</a>
+    </nav>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { background: #fdfdfb; }
+      body {
+        min-height: 100vh;
+        background: #fdfdfb url('/info-paper-bg.png') center / cover no-repeat fixed;
+        color: #1c1f23;
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .info {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 6rem 2rem 4rem;
+        transition: opacity 0.3s ease-out;
+      }
+      .info.leaving { opacity: 0; }
+
+      /* photo + text, centered as a group now the sidebar is gone */
+      .about-group {
+        display: flex;
+        align-items: flex-start;
+        gap: 8rem;
+        transform: translateX(3.5rem);   /* nudge the whole group right of dead-center */
+      }
+
+      .about-photo {
+        position: relative;
+        flex-shrink: 0;
+        width: 180px;
+        margin-top: 9rem;       /* drop the photo so its label lines up with "Who I am" */
+      }
+      .about-photo .photo {
+        width: 180px;
+        height: auto;
+        display: block;
+      }
+      .about-photo .label {
+        position: absolute;
+        width: 200px;
+        top: -158px;
+        left: -115px;
+        pointer-events: none;
+      }
+
+      .about-text { flex-shrink: 0; margin-top: -2.5rem; }   /* lift heading + body together */
+      .about-text .who-label {
+        width: 560px;
+        height: auto;
+        display: block;
+        margin-left: -5.5rem;
+        margin-top: -2.5rem;
+      }
+
+      .about-bio {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.84rem;
+        color: #555;
+        letter-spacing: 0.02em;
+        word-spacing: 0.35em;
+        line-height: 1.8;
+        max-width: 380px;
+        margin-top: 1rem;
+        margin-left: 2rem;   /* shift the body block right, in from the heading's left edge */
+      }
+      .about-bio:first-of-type { margin-top: -12.5rem; }   /* pull up under the "Who I am" label's tall transparent space */
+
+      .contact-links {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 7rem;
+      }
+      .contact-links a {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.84rem;
+        color: #555;
+        letter-spacing: 0.08em;
+        text-decoration: none;
+        transition: color 0.25s ease;
+      }
+      .contact-links a:hover { color: #1c1f23; }
+
+      /* ——— corner chrome (dark on the light page) ——— */
+      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #1c1f23; }
+      .grow {
+        pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size;
+        transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .grow:hover { font-weight: 800; letter-spacing: -0.02em; }
+      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }
+      .home:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }
+      html.pre-tl .grow { transition: none; }
+      html.pre-tl .work { font-size: clamp(2.4rem, 6vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
+      html.pre-tr .grow { transition: none; }
+      html.pre-tr .home { font-size: clamp(1.8rem, 4vw, 3.9rem); font-weight: 800; letter-spacing: -0.02em; }
+      .tl { top: 1.9rem; left: 2.2rem; }
+      .tr { top: 1.9rem; right: 2.2rem; }
+
+      /* stack on narrow screens so the wide "Who I am" label doesn't overflow */
+      @media (max-width: 860px) {
+        .about-group { flex-direction: column; align-items: center; gap: 3rem; }
+        .about-photo { margin-top: 7rem; }
+        .about-text { display: flex; flex-direction: column; align-items: center; }
+        .about-text .who-label { width: min(560px, 86vw); margin-left: 0; margin-top: 0; }
+        .about-bio, .about-bio:first-of-type { text-align: center; margin-top: 1rem; }
+      }
+    </style>
+
+    <script>
+      window.addEventListener('pointermove', () => {
+        document.documentElement.classList.remove('pre-tl');
+        document.documentElement.classList.remove('pre-tr');
+      }, { once: true });
+
+      // ——— smooth exit: gentle opacity dip, then navigate (internal links only) ———
+      const info = document.querySelector('.info');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href || a.target === '_blank' || a.hasAttribute('download') || href.startsWith('mailto:')) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as MouseEvent).button !== 0) return;
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || url.pathname === location.pathname) return;
+        e.preventDefault();
+        if (a.classList.contains('work')) sessionStorage.setItem('navTL', '1');
+        if (a.classList.contains('home')) sessionStorage.setItem('navTR', '1');
+        if (reduceMotion) { window.location.href = url.href; return; }
+        info?.classList.add('leaving');
+        setTimeout(() => { window.location.href = url.href; }, 200);
+      });
+      window.addEventListener('pageshow', (e) => { if (e.persisted) info?.classList.remove('leaving'); });
+    </script>
+  </body>
+</html>

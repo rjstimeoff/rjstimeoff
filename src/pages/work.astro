@@ -1,6 +1,13 @@
 ---
-// Timeoff — Work index. Painterly light backdrop + persistent corner chrome
-// (Home TL, Information TR) mirroring the homepage system. Grid comes next.
+// Timeoff — Work index, editorial. Big type rows on the left (num · title · year);
+// a single preview frame on the right crossfades + plays the hovered project's demo.
+// Still, then alive: nothing plays until you point at a row. Years are placeholders.
+const projects = [
+  { href: '/bird-dog',        title: 'Bird Dog',        year: '2025', src: '/bird-dog.mov' },
+  { href: '/stripe-redesign', title: 'Stripe Redesign', year: '2026', src: '/stripe-redesign.mov' },
+  { href: '/ui-playground',   title: 'UI Playground',   year: '2026', src: '/ui-playground.mov' },
+  { href: '/jpl-redesign',    title: 'JPL Redesign',    year: '2026', src: '/jpl-redesign.mp4' },
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -13,6 +20,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
     <script is:inline>
+      // Mobile gate: the redesign is desktop-only — phones get the simplified site at /classic.
+      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+        window.location.replace('/classic');
+      }
+    </script>
+    <script is:inline>
       // Persisted-label handoff (see /timeoff): force the TL label to its
       // enlarged size before paint when we arrive from a top-left nav click,
       // so the big word feels continuous across the swap (Work→Home, etc).
@@ -24,35 +37,41 @@
   </head>
   <body>
     <main class="work">
-      <section class="grid">
-        <a class="card" href="/bird-dog">
-          <video class="thumb" src="/bird-dog.mov" muted loop playsinline preload="metadata"></video>
-          <span class="label-sm">Bird Dog</span>
-        </a>
-        <a class="card" href="/stripe-redesign">
-          <video class="thumb" src="/stripe-redesign.mov" muted loop playsinline preload="metadata"></video>
-          <span class="label-sm">Stripe Redesign</span>
-        </a>
-        <a class="card" href="/ui-playground">
-          <video class="thumb" src="/ui-playground.mov" muted loop playsinline preload="metadata"></video>
-          <span class="label-sm">UI Playground</span>
-        </a>
-        <a class="card" href="/jpl-redesign">
-          <video class="thumb" src="/jpl-redesign.mp4" muted loop playsinline preload="metadata"></video>
-          <span class="label-sm">JPL Redesign</span>
-        </a>
-      </section>
+      <ol class="index">
+        {projects.map((p, i) => (
+          <li>
+            <a class="row" href={p.href} data-i={i}>
+              <span class="num">{String(i + 1).padStart(2, '0')}</span>
+              <span class="title">{p.title}</span>
+              <span class="year">{p.year}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <aside class="preview" aria-hidden="true">
+        {projects.map((p, i) => (
+          <video
+            class="frame"
+            data-i={i}
+            src={p.src}
+            muted loop playsinline preload="metadata"
+          ></video>
+        ))}
+      </aside>
     </main>
 
     <nav class="chrome" aria-label="site">
-      <a class="label tl home grow" href="/timeoff">Home</a>
-      <a class="label tr info grow" href="#">Information</a>
+      <a class="label tl home grow" href="/">Home</a>
+      <a class="label tr info grow" href="/information">Information</a>
     </nav>
 
     <style>
       :root {
         --bg: #eef0ec;   /* light base — matches the painterly backdrop's near-white */
         --fg: #d6352a;   /* red — nav titles + project labels on the light page */
+        --fg-mute: rgba(214, 53, 42, 0.42);  /* resting row ink */
+        --rule: rgba(40, 44, 60, 0.12);      /* hairline between rows */
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { height: 100%; }
@@ -65,41 +84,94 @@
         overflow: hidden;
       }
 
-      /* ——— the work grid: four square tiles, 2×2, floating on the painting ——— */
+      /* ——— two-column editorial: index left, single preview frame right ——— */
       .work {
         position: fixed;
         inset: 0;
         display: grid;
-        place-items: center;
-        padding: 5.5rem 2rem;   /* keep clear of the corner chrome */
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        align-items: center;
+        gap: 4vw;
+        padding: 6rem clamp(2.2rem, 6vw, 7rem);   /* clear the corner chrome */
       }
-      .grid {
+
+      /* ——— the index: stacked type rows ——— */
+      .index { list-style: none; }
+      .index li { border-top: 1px solid var(--rule); }
+      .index li:last-child { border-bottom: 1px solid var(--rule); }
+
+      .row {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2.4rem 2.6rem;
-      }
-      .card {
-        display: flex;
-        flex-direction: column;
-        gap: 0.7rem;
+        grid-template-columns: auto 1fr auto;
+        align-items: baseline;
+        gap: 1.4rem;
         text-decoration: none;
+        padding: clamp(0.7rem, 1.8vh, 1.4rem) 0.4rem;
+        color: var(--fg-mute);
+        transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .thumb {
-        width: clamp(200px, 23vw, 320px);
-        aspect-ratio: 1 / 1;
-        object-fit: cover;       /* square crop of the landscape demo */
-        display: block;
-        background: #dcdcd4;
-        /* soft drop so the tile reads as floating over the painting */
-        box-shadow: 0 18px 50px rgba(40, 44, 60, 0.18);
-      }
-      .label-sm {
-        font-size: 0.7rem;
+      .num {
+        font-size: 0.72rem;
         font-weight: 600;
         letter-spacing: 0.14em;
-        text-transform: uppercase;
-        color: var(--fg);
+        font-variant-numeric: tabular-nums;
+        opacity: 0.7;
+        transform: translateY(-0.55em);   /* sit it like a superscript marker */
       }
+      .title {
+        font-size: clamp(2rem, 5.2vw, 4.6rem);
+        font-weight: 500;
+        line-height: 0.98;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+        will-change: transform, font-weight;
+        transition:
+          transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+          font-weight 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+          letter-spacing 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .year {
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        font-variant-numeric: tabular-nums;
+        opacity: 0;
+        transform: translateX(-0.4rem);
+        transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      /* hover (or keyboard focus): the row wakes — ink saturates, title leans in
+         and thickens, the year fades up on the right. */
+      .row:hover, .row:focus-visible { color: var(--fg); outline: none; }
+      .row:hover .title, .row:focus-visible .title {
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        transform: translateX(0.6rem);
+      }
+      .row:hover .year, .row:focus-visible .year { opacity: 0.85; transform: none; }
+
+      /* dim the siblings of the active row so the eye stays with the hovered one */
+      .index:hover .row:not(:hover) { color: rgba(214, 53, 42, 0.24); }
+
+      /* ——— the preview frame: stacked videos, crossfaded ——— */
+      .preview {
+        position: relative;
+        justify-self: center;
+        width: clamp(280px, 32vw, 460px);
+        aspect-ratio: 1 / 1;
+        box-shadow: 0 22px 60px rgba(40, 44, 60, 0.2);
+        background: #dcdcd4;
+      }
+      .frame {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .frame.active { opacity: 1; }
 
       /* ——— corner chrome, mirroring /timeoff but dark ink on the light page ——— */
       .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
@@ -111,8 +183,6 @@
         text-transform: uppercase;
         color: var(--fg);
       }
-      /* same grow-on-hover system as the homepage: a tiny tracked micro-label
-         unfurls to near-statement scale on a long weighted expo-out. */
       .grow {
         pointer-events: auto;
         text-decoration: none;
@@ -131,9 +201,6 @@
       .home:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }  /* TL — loudest, matches Work */
       .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }  /* TR — a notch smaller, matches home */
 
-      /* forced-enlarged on arrival (set by the is:inline head script), instant
-         and untweened so the persisted TL label appears already-big — matches
-         .home:hover so the Work→Home handoff is seamless. */
       html.pre-tl .grow { transition: none; }
       html.pre-tl .home {
         font-size: clamp(2.4rem, 6vw, 5.6rem);
@@ -143,30 +210,54 @@
 
       .tl { top: 1.9rem; left: 2.2rem; }
       .tr { top: 1.9rem; right: 2.2rem; }
+
+      /* narrow screens: stack the preview above the index, smaller */
+      @media (max-width: 720px) {
+        .work { grid-template-columns: 1fr; align-content: center; gap: 2rem; padding-top: 5rem; }
+        .preview { width: min(70vw, 320px); }
+        .title { white-space: normal; }
+      }
     </style>
 
     <script>
-      // still, then alive: tiles sit on their frozen first frame; the one you
-      // point at plays its demo, then freezes back. (Touch: just autoplay all.)
+      // still, then alive: the preview rests on the first project's frozen frame.
+      // Pointing at a row crossfades the frame to that project and plays its demo;
+      // leaving the index settles back to the resting first frame, paused.
+      const rows   = Array.from(document.querySelectorAll<HTMLAnchorElement>('.row'));
+      const frames = Array.from(document.querySelectorAll<HTMLVideoElement>('.frame'));
+      const index  = document.querySelector('.index');
+
+      function show(i: number, play: boolean) {
+        frames.forEach((v, j) => {
+          const on = j === i;
+          v.classList.toggle('active', on);
+          if (on && play) { v.play(); }
+          else { v.pause(); if (!on) v.currentTime = 0; }
+        });
+      }
+
+      show(0, false);   // resting state
+
       const isTouch = window.matchMedia('(hover: none)').matches;
-      document.querySelectorAll('.card').forEach((card) => {
-        const v = card.querySelector('video');
-        if (!v) return;
-        if (isTouch) {
-          v.play();
-        } else {
-          card.addEventListener('mouseenter', () => v.play());
-          card.addEventListener('mouseleave', () => { v.pause(); v.currentTime = 0; });
-        }
-      });
+      if (!isTouch) {
+        rows.forEach((row, i) => {
+          row.addEventListener('mouseenter', () => show(i, true));
+          row.addEventListener('focus',      () => show(i, true));
+        });
+        index?.addEventListener('mouseleave', () => show(0, false));
+      }
 
       // top-left nav: flag the persisted-enlarge handoff, then navigate normally
       document.querySelector('a.home')?.addEventListener('click', () => {
         sessionStorage.setItem('navTL', '1');
       });
-      // the instant the user actually moves, hand the size back to native :hover
+      // top-right nav (Information): same handoff for the next page
+      document.querySelector('a.info')?.addEventListener('click', () => {
+        sessionStorage.setItem('navTR', '1');
+      });
       window.addEventListener('pointermove', () => {
         document.documentElement.classList.remove('pre-tl');
+        document.documentElement.classList.remove('pre-tr');
       }, { once: true });
     </script>
   </body>

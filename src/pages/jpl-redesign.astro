@@ -1,5 +1,8 @@
 ---
-import ProjectLayout from '../layouts/ProjectLayout.astro';
+// Timeoff — JPL Redesign case study. STRIPPED: the painterly /work backdrop kept as-is,
+// NO mat — a single plain left-hung column sits straight on the painting. Red is a whisper
+// (kicker/title), warm-ink body, everything shares one left edge (ref: Studio Small).
+// Pacing is ONE BEAT PER SCREEN, each block rising into frame on scroll. Media = 1060px. Inter.
 import { Picture, Image } from 'astro:assets';
 import studio from '../assets/jpl-studio.jpg';
 import about from '../assets/jpl-about.png';
@@ -8,536 +11,392 @@ import inspoStudioSmall from '../assets/inspo-studiosmall.png';
 import inspoMahdavi from '../assets/inspo-mahdavi.png';
 import inspoAshby from '../assets/inspo-ashby.png';
 ---
-
-<ProjectLayout title="Jesse Parris-Lamb Website Redesign (Unofficial) — rjrivera">
-  <div class="project-header">
-    <h1 class="project-title">Jesse Parris-Lamb Website Redesign (Unofficial)</h1>
-    <div class="project-tags">
-      <span>Web Design</span>
-      <span>Front End</span>
-    </div>
-  </div>
-
-  <div class="media-row">
-    <div class="row-media project-hero-wrap">
-      <Picture
-        src={studio}
-        formats={['avif', 'webp']}
-        alt="Inside the Jesse Parris-Lamb studio — a walnut worktable with cane chairs against shelves of archive boxes and design books"
-        widths={[768, 1280, 1600, 2000]}
-        sizes="(max-width: 768px) 100vw, 880px"
-        loading="eager"
-        class="project-hero"
-      />
-      <div class="hero-scrim"></div>
-      <div class="hero-marks">
-        <img class="hero-wordmark" src="/jpl-wordmark.svg" alt="Jesse Parris-Lamb" />
-        <img class="hero-monogram" src="/jpl-monogram-white.png" alt="" />
-      </div>
-    </div>
-
-    <div class="row-text">
-      <p>I recently moved to Brooklyn and have started to spend a few hours a day at The Brooklyn Public Library near Prospect Park to get some work done. I&rsquo;ve been looking for inspiration for my next project, and on my first day walking to the library in the morning, I walk past this interesting &ldquo;storefront&rdquo; that looked different from the rest on the street.</p>
-      <p>I did a quick look on Apple Maps and saw it was the home of Jesse Parris-Lamb: a Brooklyn based interior design firm founded in 2014 &mdash; and they do really cool work. When I got to the library, I checked out their website and thought &ldquo;I can probably do better&rdquo; (humbly, of course) so here we are&hellip;</p>
-    </div>
-  </div>
-
-  <div class="media-row">
-    <div class="row-media">
-      <p class="media-caption">The home page..</p>
-      <div class="vimeo-wrapper">
-        <iframe loading="lazy" src="https://player.vimeo.com/video/1201950009?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>
-
-    <div class="row-text">
-      <p>I wanted to try and capture the essence of JPL&rsquo;s design in this website. To me, they show a lot of expression, but a lot of restraint. They add a lot of character to spaces, a lot of flair&hellip; but it all seems very familiar and not overdone. That&rsquo;s tough to nail. So the website reflects the same principles: charming and familiar at face value, but very unique and intentional. Everything has to have a purpose.</p>
-      <p>The goal of the home page was to get straight to the point. Get you into the world of Jesse Parris-Lamb as soon as you land on the website. I think the home page is a great execution of user guidance as well &mdash; tough to put into words, but I don&rsquo;t feel overwhelmed on the home page. I have everything I would want.</p>
-    </div>
-  </div>
-
-  <div class="media-row">
-    <div class="row-media">
-      <p class="media-caption">The interior gallery..</p>
-      <div class="vimeo-wrapper">
-        <iframe loading="lazy" src="https://player.vimeo.com/video/1201950010?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>
-
-    <div class="row-text">
-      <p>Interior gallery was an area I had to show a lot of restraint. Something bold or super &ldquo;experience&rdquo; heavy didn&rsquo;t fit into the vibe I had assigned to this project. A few nice touches went a long way here: a subtle parallax scroll and some hover effects to give the thumbnails some life.</p>
-    </div>
-  </div>
-
-  <div class="media-row">
-    <div class="row-media">
-      <p class="media-caption">A space gallery..</p>
-      <div class="vimeo-wrapper">
-        <iframe loading="lazy" src="https://player.vimeo.com/video/1201950562?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>
-
-    <div class="row-text">
-      <p>The gallery for each space was based off of reference image I generated for inspiration. I like how the large, off-center images sort of command a lot of space and attention, yet the write up to the left seems to have the same amount of pull. Idk, it was a fun use of spacing. The film strip on the bottom is a nice touch as well, the page felt incomplete and cheap without it.</p>
-    </div>
-  </div>
-
-  <div class="media-row">
-    <div class="row-media">
-      <p class="media-caption">The about page..</p>
-      <Picture
-        src={about}
-        formats={['avif', 'webp']}
-        alt="The Jesse Parris-Lamb About page — a black-and-white monogram sculpture beside a portrait of the firm's founders"
-        widths={[768, 1280, 1600, 2000]}
-        sizes="(max-width: 768px) 100vw, 880px"
-        loading="lazy"
-        class="row-image"
-      />
-    </div>
-
-    <div class="row-text">
-      <p>Finally, the about page &mdash; which unironically is my favorite page of the project. I kept getting stuck trying to turn the about page into a whole experience, and it just never felt right. The original about page on JPL&rsquo;s site is very simple and plain, but that&rsquo;s why it&rsquo;s good. I came to the conclusion that the rest of the site is designed to be an experience for their work&hellip; the about page should not be competing with that. I want to see the story, and I want to see it quickly and all at once.</p>
-      <p>I pulled inspiration from a website I had in my references that made really good use of full bleed images and color contrast. The other pages I had built were pretty uniform, so I felt that the about page was fair game for a slight departure in design. It feels special, but still not overdone.</p>
-    </div>
-  </div>
-
-  <div class="media-row">
-    <div class="row-media">
-      <p class="media-caption">The original site..</p>
-      <div class="vimeo-wrapper">
-        <iframe loading="lazy" src="https://player.vimeo.com/video/1201951169?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-      </div>
-    </div>
-
-    <div class="row-text">
-      <p>Here is the original (current) website. It&rsquo;s fine, but it doesn&rsquo;t feel special. To me, it didn&rsquo;t reflect the level of work that Jesse Parris-Lamb does.</p>
-    </div>
-  </div>
-
-  <section class="stack-section">
-    <p class="media-caption stack-caption">A few of my references..</p>
-    <div class="stack-row">
-      <div class="stack">
-        <div class="stack-card stack-card-1">
-          <Image src={inspoRoom} alt="Reference: a minimalist living room with a website on the screen" widths={[480, 960]} sizes="460px" loading="lazy" />
-        </div>
-        <div class="stack-card stack-card-2">
-          <Image src={inspoStudioSmall} alt="Reference: StudioSmall website" widths={[480, 960]} sizes="460px" loading="lazy" />
-        </div>
-        <div class="stack-card stack-card-3">
-          <Image src={inspoMahdavi} alt="Reference: India Mahdavi website" widths={[480, 960]} sizes="460px" loading="lazy" />
-        </div>
-        <div class="stack-card stack-card-4">
-          <Image src={inspoAshby} alt="Reference: Studio Ashby website" widths={[480, 960]} sizes="460px" loading="lazy" />
-        </div>
-      </div>
-
-      <div class="visit-block">
-        <img class="visit-note" src="/click_to_visit_trim.png" alt="Click to visit the site" width="340" height="64" />
-        <a class="omnibox" href="https://jpl-redesign.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Open the live JPL redesign at jpl-redesign.vercel.app">
-          <svg class="omnibox-lock" viewBox="0 0 16 16" fill="currentColor"><path d="M11 7V5a3 3 0 0 0-6 0v2H4v7h8V7h-1zm-4-2a1 1 0 0 1 2 0v2H7V5z"/></svg>
-          <span class="omnibox-url">jpl-redesign.vercel.app</span>
-          <svg class="omnibox-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-      </div>
-    </div>
-  </section>
-</ProjectLayout>
-
-<script>
-  // Each demo stays muted and plays only while in view, so we don't boot every
-  // Vimeo player at once on load. Rebuilt on navigation; reuses players across visits.
-  function initVimeoDemos() {
-    const iframes = document.querySelectorAll('.vimeo-wrapper iframe');
-    if (!iframes.length) return;
-
-    const attach = () => {
-      // @ts-ignore
-      const reg = (window.__vimeoPlayers = window.__vimeoPlayers || new WeakMap());
-      // @ts-ignore
-      if (window.__vimeoObserver) window.__vimeoObserver.disconnect();
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const player = reg.get(entry.target);
-          if (!player) return;
-          if (entry.isIntersecting) {
-            player.ready().then(() => player.setVolume(0)).then(() => player.play()).catch(() => {});
-          } else {
-            player.pause().then(() => player.setCurrentTime(0)).catch(() => {});
-          }
-        });
-      }, { threshold: 0.5 });
-      // @ts-ignore
-      window.__vimeoObserver = observer;
-
-      iframes.forEach(iframe => {
-        let player = reg.get(iframe);
-        if (!player) {
-          // @ts-ignore
-          player = new Vimeo.Player(iframe);
-          player.setVolume(0);
-          reg.set(iframe, player);
-        }
-        observer.observe(iframe);
-      });
-    };
-
-    // @ts-ignore — reuse the API if it loaded on a previous visit.
-    if (window.Vimeo && window.Vimeo.Player) {
-      attach();
-    } else {
-      let api = document.getElementById('vimeo-api');
-      if (!api) {
-        api = document.createElement('script');
-        api.id = 'vimeo-api';
-        api.src = 'https://player.vimeo.com/api/player.js';
-        document.head.appendChild(api);
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JPL Redesign — Timeoff</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      if (sessionStorage.getItem('navTL')) {
+        document.documentElement.classList.add('pre-tl');
+        sessionStorage.removeItem('navTL');
       }
-      api.addEventListener('load', attach, { once: true });
-    }
-  }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <!-- ——— hero ——— -->
+      <section class="panel hero-panel">
+        <header class="hero">
+          <p class="kicker reveal">Web Design · Front End · 2026</p>
+          <h1 class="title reveal">Jesse Parris-Lamb</h1>
+          <p class="subtitle reveal">Website Redesign – Unofficial</p>
+          <p class="scroll-hint reveal">Scroll ↓</p>
+        </header>
+      </section>
 
-  const runVimeoInit = () => requestAnimationFrame(() => initVimeoDemos());
-  runVimeoInit();
-  document.addEventListener('astro:page-load', runVimeoInit);
-  window.addEventListener('pageshow', (e) => { if (e.persisted) runVimeoInit(); });
-</script>
+      <!-- ——— intro: studio photo, then the story ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <Picture
+            src={studio}
+            formats={['avif', 'webp']}
+            alt="Inside the Jesse Parris-Lamb studio — a walnut worktable with cane chairs against shelves of archive boxes and design books"
+            widths={[768, 1280, 1600, 2000]}
+            sizes="(max-width: 880px) 86vw, 860px"
+            loading="eager"
+          />
+        </figure>
+      </section>
 
-<style>
-  .project-header {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p class="lead">I recently moved to Brooklyn and have started to spend a few hours a day at the Brooklyn Public Library near Prospect Park to get some work done. I&rsquo;ve been looking for inspiration for my next project, and on my first day walking to the library in the morning, I walk past this interesting &ldquo;storefront&rdquo; that looked different from the rest on the street.</p>
+          <p>I did a quick look on Apple Maps and saw it was the home of Jesse Parris-Lamb: a Brooklyn-based interior design firm founded in 2014 &mdash; and they do really cool work. When I got to the library, I checked out their website and thought &ldquo;I can probably do better&rdquo; (humbly, of course) so here we are&hellip;</p>
+        </div>
+      </section>
 
-  .project-title {
-    font-family: Garamond, 'EB Garamond', Georgia, serif;
-    font-size: 0.9rem;
-    font-weight: normal;
-    letter-spacing: 0.08em;
-    color: #1c1f23;
-  }
+      <!-- ——— the home page ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The home page..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1201950009?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
 
-  .project-tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>I wanted to try and capture the essence of JPL&rsquo;s design in this website. To me, they show a lot of expression, but a lot of restraint. They add a lot of character to spaces, a lot of flair&hellip; but it all seems very familiar and not overdone. That&rsquo;s tough to nail. So the website reflects the same principles: charming and familiar at face value, but very unique and intentional. Everything has to have a purpose.</p>
+          <p>The goal of the home page was to get straight to the point. Get you into the world of Jesse Parris-Lamb as soon as you land on the website. I think the home page is a great execution of user guidance as well &mdash; tough to put into words, but I don&rsquo;t feel overwhelmed on the home page. I have everything I would want.</p>
+        </div>
+      </section>
 
-  .project-tags span {
-    font-family: Garamond, 'EB Garamond', Georgia, serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: #999;
-    font-style: italic;
-  }
+      <!-- ——— interior gallery ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The interior gallery..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1201950010?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
 
-  /* Repeating row: media on the left, text on the right. */
-  .media-row {
-    display: flex;
-    align-items: center;
-    gap: 2.5rem;
-    max-width: 1320px;
-  }
+      <section class="panel text-panel">
+        <p class="reveal">Interior gallery was an area I had to show a lot of restraint. Something bold or super &ldquo;experience&rdquo; heavy didn&rsquo;t fit into the vibe I had assigned to this project. A few nice touches went a long way here: a subtle parallax scroll and some hover effects to give the thumbnails some life.</p>
+      </section>
 
-  .media-row + .media-row {
-    margin-top: 7rem;
-  }
+      <!-- ——— space gallery ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">A space gallery..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1201950562?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
 
-  .row-media {
-    flex: 0 0 880px;
-  }
+      <section class="panel text-panel">
+        <p class="reveal">The gallery for each space was based off of reference images I generated for inspiration. I like how the large, off-center images sort of command a lot of space and attention, yet the write-up to the left seems to have the same amount of pull. Idk, it was a fun use of spacing. The film strip on the bottom is a nice touch as well &mdash; the page felt incomplete and cheap without it.</p>
+      </section>
 
-  .row-text {
-    flex: 1;
-  }
+      <!-- ——— about page ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The about page..</p>
+          <Picture
+            src={about}
+            formats={['avif', 'webp']}
+            alt="The Jesse Parris-Lamb About page — a black-and-white monogram sculpture beside a portrait of the firm's founders"
+            widths={[768, 1280, 1600, 2000]}
+            sizes="(max-width: 880px) 86vw, 860px"
+            loading="lazy"
+          />
+        </figure>
+      </section>
 
-  .row-text p {
-    font-family: Garamond, 'EB Garamond', Georgia, serif;
-    font-size: 0.9rem;
-    color: #1c1f23;
-    letter-spacing: 0.02em;
-    line-height: 1.7;
-    margin: 0;
-  }
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>Finally, the about page &mdash; which unironically is my favorite page of the project. I kept getting stuck trying to turn the about page into a whole experience, and it just never felt right. The original about page on JPL&rsquo;s site is very simple and plain, but that&rsquo;s why it&rsquo;s good. I came to the conclusion that the rest of the site is designed to be an experience for their work&hellip; the about page should not be competing with that. I want to see the story, and I want to see it quickly and all at once.</p>
+          <p>I pulled inspiration from a website I had in my references that made really good use of full-bleed images and color contrast. The other pages I had built were pretty uniform, so I felt that the about page was fair game for a slight departure in design. It feels special, but still not overdone.</p>
+        </div>
+      </section>
 
-  .row-text p + p {
-    margin-top: 1rem;
-  }
+      <!-- ——— original site ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The original site..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1201951169?autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
 
-  .project-hero-wrap {
-    position: relative;
-    aspect-ratio: 2 / 1;
-    overflow: hidden;
-    border-radius: 6px;
-  }
+      <section class="panel text-panel">
+        <p class="reveal">Here is the original (current) website. It&rsquo;s fine, but it doesn&rsquo;t feel special. To me, it didn&rsquo;t reflect the level of work that Jesse Parris-Lamb does.</p>
+      </section>
 
-  .media-caption {
-    font-family: Garamond, 'EB Garamond', Georgia, serif;
-    font-size: 0.9rem;
-    color: #999;
-    font-style: italic;
-    letter-spacing: 0.02em;
-    margin: 0 0 0.35rem;
-  }
+      <!-- ——— closing: reference deck + visit the live site ——— -->
+      <section class="panel closing-panel">
+        <div class="closing">
+          <p class="caption reveal">A few of my references..</p>
+          <div class="closing-row reveal">
+            <div class="stack">
+              <div class="stack-card stack-card-1"><Image src={inspoRoom} alt="Reference: a minimalist living room with a website on the screen" widths={[480, 960]} sizes="460px" loading="lazy" /></div>
+              <div class="stack-card stack-card-2"><Image src={inspoStudioSmall} alt="Reference: StudioSmall website" widths={[480, 960]} sizes="460px" loading="lazy" /></div>
+              <div class="stack-card stack-card-3"><Image src={inspoMahdavi} alt="Reference: India Mahdavi website" widths={[480, 960]} sizes="460px" loading="lazy" /></div>
+              <div class="stack-card stack-card-4"><Image src={inspoAshby} alt="Reference: Studio Ashby website" widths={[480, 960]} sizes="460px" loading="lazy" /></div>
+            </div>
+            <div class="visit-block">
+              <img class="visit-note" src="/click_to_visit_trim.png" alt="Click to visit the site" width="340" height="64" />
+              <a class="omnibox" href="https://jpl-redesign.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Open the live JPL redesign at jpl-redesign.vercel.app">
+                <svg class="omnibox-lock" viewBox="0 0 16 16" fill="currentColor"><path d="M11 7V5a3 3 0 0 0-6 0v2H4v7h8V7h-1zm-4-2a1 1 0 0 1 2 0v2H7V5z"/></svg>
+                <span class="omnibox-url">jpl-redesign.vercel.app</span>
+                <svg class="omnibox-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-  .row-image {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-  }
+      <!-- ——— next project ——— -->
+      <section class="panel next-panel">
+        <a class="next reveal" href="/bird-dog">
+          <span class="next-kicker">Next</span>
+          <span class="next-title">Bird Dog</span>
+        </a>
+      </section>
+    </main>
 
-  .vimeo-wrapper {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 416 / 240;
-    overflow: hidden;
-    border-radius: 6px;
-  }
+    <nav class="chrome" aria-label="site">
+      <a class="label tl work grow" href="/work">Work</a>
+      <a class="label tr info grow" href="/information">Information</a>
+    </nav>
 
-  .vimeo-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
+    <style>
+      :root {
+        --fg: #d6352a;                       /* red — accent (kicker, title) */
+        --ink: #26241f;                      /* warm near-black — body reading ink */
+        --muted: rgba(38, 36, 31, 0.5);      /* captions */
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { background: #eef0ec; scroll-behavior: smooth; }
+      body {
+        /* painterly backdrop, kept as-is — content sits straight on the painting, no mat */
+        background: #eef0ec url('/work-bg.png') center / cover no-repeat fixed;
+        color: var(--ink);
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
 
-  /* Closing "reference deck" — photos assemble into a jeu-de-paume-style pile. */
-  .stack-section {
-    margin-top: 9rem;
-    padding-bottom: 4rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    max-width: 1320px;
-  }
+      /* ——— the column: one plain centered measure; painting shows in the gutters ——— */
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: min(92vw, 1080px);
+        margin: 0 auto;
+        /* content fades in on load; .leaving dips it before we navigate away */
+        animation: page-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        transition: opacity 0.3s ease-out;
+      }
+      @keyframes page-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: none; }
+      }
+      .page.leaving { opacity: 0; }
+      @media (prefers-reduced-motion: reduce) {
+        .page { animation: none; }
+        .page.leaving { opacity: 1; transition: none; }
+      }
 
-  .stack-caption {
-    align-self: flex-start;
-    margin-bottom: 1.75rem;
-    margin-left: 16px;
-  }
+      /* ——— one beat per screen, everything hung to the same left edge ——— */
+      .panel {
+        min-height: 100vh;
+        display: grid;
+        align-content: center;
+        justify-items: start;
+        padding: 12vh 0;
+      }
 
-  .stack-row {
-    display: flex;
-    align-items: center;
-    gap: 3.5rem;
-    width: 100%;
-  }
+      /* ——— hero ——— */
+      .hero { text-align: left; }
+      .kicker { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg); margin-bottom: 1.4rem; }
+      .title { font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 400; line-height: 1; letter-spacing: -0.012em; color: var(--fg); }
+      .subtitle { font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 400; line-height: 1.04; letter-spacing: -0.012em; color: var(--fg); margin-top: 0.2rem; }
+      .scroll-hint { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 3.5rem; }
 
-  .stack {
-    position: relative;
-    flex: 0 0 auto;
-    width: clamp(300px, 40vw, 480px);
-    aspect-ratio: 3 / 2;
-  }
+      /* ——— bare media — no frame, no shadow, demos/screengrabs all at 1060px ——— */
+      .media { max-width: 1060px; width: 100%; }
+      .caption { font-size: 0.82rem; color: var(--muted); letter-spacing: 0.01em; margin-bottom: 0.7rem; }
+      .media :global(img), .media .vimeo-wrapper { display: block; }
+      .media :global(img) { width: 100%; height: auto; }
+      .vimeo-wrapper { position: relative; width: 100%; aspect-ratio: 416 / 240; overflow: hidden; background: #ddd; }
+      .vimeo-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
 
-  .visit-block {
-    flex: 0 0 auto;
-    width: 300px;
-    margin-left: auto;
-    margin-right: 13.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
+      /* ——— text: quiet, left-hung, one calm treatment (ref: Studio Small) ——— */
+      .text-panel p {
+        max-width: 58ch;
+        font-size: clamp(1.02rem, 1.35vw, 1.16rem);
+        font-weight: 400;
+        line-height: 1.7;
+        color: var(--ink);
+      }
+      .text { max-width: 58ch; }
+      .text p { max-width: none; }
+      .text p + p { margin-top: 1.4rem; }
 
-  .visit-note {
-    display: block;
-    width: 340px;
-    height: auto;
-    opacity: 0.8;
-    margin: 0 0 0.9rem 0.75rem;
-    pointer-events: none;
-  }
+      /* ——— reveal-on-scroll: rises into frame, weighted easing ——— */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+      }
+      .reveal.in { opacity: 1; transform: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+      }
 
-  .omnibox {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 18px;
-    background: #f1f3f4;
-    border: 1px solid #e4e6e8;
-    border-radius: 999px;
-    text-decoration: none;
-    overflow: hidden;
-    transition: background 0.25s ease, box-shadow 0.3s ease, transform 0.25s ease;
-  }
+      /* ——— closing reference deck ——— */
+      .closing-panel { min-height: 100vh; }
+      .closing { width: 100%; max-width: 980px; }
+      .closing-row { display: flex; align-items: center; gap: 3.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+      .stack { position: relative; flex: 0 0 auto; width: clamp(280px, 38vw, 460px); aspect-ratio: 3 / 2; }
+      .stack-card { position: absolute; top: 50%; left: 50%; width: 100%; aspect-ratio: 3 / 2; border-radius: 4px; overflow: hidden; background: #fff; box-shadow: 0 14px 34px rgba(0,0,0,0.2); will-change: transform, opacity; }
+      .stack-card :global(img) { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .stack-card-1 { z-index: 1; transform: translate(-50%, -50%) translate(-16px, 14px) rotate(-7deg); }
+      .stack-card-2 { z-index: 2; transform: translate(-50%, -50%) translate(12px, 8px) rotate(5deg); animation: stack2 2.6s linear infinite alternate; }
+      .stack-card-3 { z-index: 3; transform: translate(-50%, -50%) translate(-6px, 0) rotate(-3deg); animation: stack3 2.6s linear infinite alternate; }
+      .stack-card-4 { z-index: 4; transform: translate(-50%, -50%) translate(8px, -8px) rotate(2deg); animation: stack4 2.6s linear infinite alternate; }
+      @keyframes stack2 { 0%, 8% { opacity: 0; } 9%, 100% { opacity: 1; } }
+      @keyframes stack3 { 0%, 38% { opacity: 0; } 39%, 100% { opacity: 1; } }
+      @keyframes stack4 { 0%, 68% { opacity: 0; } 69%, 100% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .stack-card { animation: none; opacity: 1; } }
 
-  .omnibox:hover {
-    background: #eceef0;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
-    transform: translateY(-1px);
-  }
+      .visit-block { flex: 1 1 280px; max-width: 340px; display: flex; flex-direction: column; align-items: flex-start; }
+      .visit-note { display: block; width: 300px; max-width: 100%; height: auto; opacity: 0.8; margin: 0 0 0.9rem 0.5rem; pointer-events: none; }
+      .omnibox { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 12px 18px; background: #f1f3f4; border: 1px solid #e4e6e8; border-radius: 999px; text-decoration: none; overflow: hidden; transition: background 0.25s ease, box-shadow 0.3s ease, transform 0.25s ease; }
+      .omnibox:hover { background: #eceef0; box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-1px); }
+      .omnibox-lock { width: 13px; height: 13px; color: #5f6368; flex-shrink: 0; }
+      .omnibox-url { flex: 1; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.85rem; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .omnibox-arrow { width: 16px; height: 16px; color: #5f6368; flex-shrink: 0; transition: transform 0.25s ease, color 0.25s ease; }
+      .omnibox:hover .omnibox-arrow { transform: translateX(4px); color: #202124; }
+      .omnibox::after { content: ''; position: absolute; top: 0; left: -60%; width: 55%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent); transform: skewX(-20deg); pointer-events: none; }
+      .omnibox:hover::after { animation: omnibox-shimmer 0.9s ease; }
+      @keyframes omnibox-shimmer { from { left: -60%; } to { left: 130%; } }
 
-  .omnibox-lock {
-    width: 13px;
-    height: 13px;
-    color: #5f6368;
-    flex-shrink: 0;
-  }
+      /* ——— next project ——— */
+      .next-panel { min-height: 70vh; }
+      .next { display: inline-flex; flex-direction: column; gap: 0.4rem; text-decoration: none; }
+      .next-kicker { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+      .next-title { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 400; letter-spacing: -0.012em; color: var(--fg); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+      .next:hover .next-title { transform: translateX(0.6rem); }
 
-  .omnibox-url {
-    flex: 1;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 0.85rem;
-    color: #202124;
-    letter-spacing: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+      /* ——— corner chrome (matches /work) ——— */
+      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg); }
+      .grow { pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size; transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1); }
+      .grow:hover { font-weight: 800; letter-spacing: -0.02em; }
+      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }
+      .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }
+      html.pre-tl .grow { transition: none; }
+      html.pre-tl .work { font-size: clamp(2.4rem, 6vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
+      .tl { top: 1.9rem; left: 2.2rem; }
+      .tr { top: 1.9rem; right: 2.2rem; }
 
-  .omnibox-arrow {
-    width: 16px;
-    height: 16px;
-    color: #5f6368;
-    flex-shrink: 0;
-    transition: transform 0.25s ease, color 0.25s ease;
-  }
+      @media (max-width: 720px) {
+        .page { max-width: 94vw; }
+        .panel { padding: 10vh 0; }
+        .closing-row { gap: 2.5rem; }
+      }
+    </style>
 
-  .omnibox:hover .omnibox-arrow {
-    transform: translateX(4px);
-    color: #202124;
-  }
+    <script>
+      window.addEventListener('pointermove', () => {
+        document.documentElement.classList.remove('pre-tl');
+      }, { once: true });
 
-  /* Shimmer sweep on hover — feels like it's about to navigate */
-  .omnibox::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -60%;
-    width: 55%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent);
-    transform: skewX(-20deg);
-    pointer-events: none;
-  }
+      // ——— smooth exit: gentle opacity dip, then navigate (internal links only) ———
+      const page = document.querySelector('.page');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href || a.target === '_blank' || a.hasAttribute('download')) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as MouseEvent).button !== 0) return;
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || url.pathname === location.pathname) return;
+        e.preventDefault();
+        if (a.classList.contains('work')) sessionStorage.setItem('navTL', '1');
+        if (a.classList.contains('info')) sessionStorage.setItem('navTR', '1');
+        if (reduceMotion) { window.location.href = url.href; return; }
+        page?.classList.add('leaving');
+        setTimeout(() => { window.location.href = url.href; }, 200);
+      });
+      window.addEventListener('pageshow', (e) => { if (e.persisted) page?.classList.remove('leaving'); });
 
-  .omnibox:hover::after {
-    animation: omnibox-shimmer 0.9s ease;
-  }
+      // ——— reveal-on-scroll ———
+      const reveals = document.querySelectorAll('.reveal');
+      if (reduceMotion) {
+        reveals.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+          });
+        }, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
+        reveals.forEach((el) => io.observe(el));
+      }
 
-  @keyframes omnibox-shimmer {
-    from { left: -60%; }
-    to { left: 130%; }
-  }
-
-  .stack-card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    border-radius: 4px;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.20);
-    will-change: transform, opacity;
-  }
-
-  .stack-card :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Resting positions (also the static fallback when motion is reduced). */
-  .stack-card-1 { z-index: 1; transform: translate(-50%, -50%) translate(-16px, 14px) rotate(-7deg); }
-  .stack-card-2 { z-index: 2; transform: translate(-50%, -50%) translate(12px, 8px) rotate(5deg); }
-  .stack-card-3 { z-index: 3; transform: translate(-50%, -50%) translate(-6px, 0) rotate(-3deg); }
-  .stack-card-4 { z-index: 4; transform: translate(-50%, -50%) translate(8px, -8px) rotate(2deg); }
-
-  /* Card 1 is the base of the pile — it's always present and never animates. */
-  .stack-card-2 { animation: stack2 2.6s linear infinite alternate; }
-  .stack-card-3 { animation: stack3 2.6s linear infinite alternate; }
-  .stack-card-4 { animation: stack4 2.6s linear infinite alternate; }
-
-  @keyframes stack2 {
-    0%, 8%   { opacity: 0; }
-    9%, 100% { opacity: 1; }
-  }
-  @keyframes stack3 {
-    0%, 38%  { opacity: 0; }
-    39%, 100% { opacity: 1; }
-  }
-  @keyframes stack4 {
-    0%, 68%  { opacity: 0; }
-    69%, 100% { opacity: 1; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .stack-card { animation: none; opacity: 1; }
-  }
-
-  @media (max-width: 768px) {
-    .media-row {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1.5rem;
-    }
-
-    .row-media {
-      flex: none;
-      width: 100%;
-    }
-
-    .stack-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2.5rem;
-    }
-  }
-
-  .project-hero {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 72%;
-    display: block;
-  }
-
-  .hero-scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.34));
-    pointer-events: none;
-  }
-
-  .hero-marks {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .hero-monogram {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(72%, 384px);
-    height: auto;
-  }
-
-  .hero-wordmark {
-    position: absolute;
-    left: 50%;
-    bottom: 1.4rem;
-    transform: translateX(-50%);
-    width: min(22%, 120px);
-    height: auto;
-    filter: brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0,0,0,0.35));
-  }
-</style>
+      // ——— Vimeo demos: muted, play only while in view, booted lazily ———
+      function initVimeoDemos() {
+        const iframes = document.querySelectorAll('.vimeo-wrapper iframe');
+        if (!iframes.length) return;
+        const attach = () => {
+          const players = new WeakMap();
+          // create each player only when its demo first scrolls into view, so we never
+          // boot all of them at once (simultaneous handshakes can trip "Player error")
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              const iframe = entry.target as HTMLIFrameElement;
+              if (entry.isIntersecting) {
+                let player = players.get(iframe);
+                if (!player) {
+                  player = new (window as any).Vimeo.Player(iframe);
+                  player.setVolume(0);
+                  players.set(iframe, player);
+                }
+                player.ready().then(() => player.setVolume(0)).then(() => player.play()).catch(() => {});
+              } else {
+                const player = players.get(iframe);
+                if (player) player.pause().then(() => player.setCurrentTime(0)).catch(() => {});
+              }
+            });
+          }, { threshold: 0.5 });
+          iframes.forEach((iframe) => observer.observe(iframe));
+        };
+        if ((window as any).Vimeo && (window as any).Vimeo.Player) {
+          attach();
+        } else {
+          let api = document.getElementById('vimeo-api') as HTMLScriptElement | null;
+          if (!api) {
+            api = document.createElement('script');
+            api.id = 'vimeo-api';
+            api.src = 'https://player.vimeo.com/api/player.js';
+            document.head.appendChild(api);
+          }
+          api.addEventListener('load', attach, { once: true });
+        }
+      }
+      requestAnimationFrame(() => initVimeoDemos());
+    </script>
+  </body>
+</html>

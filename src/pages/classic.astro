@@ -1,0 +1,187 @@
+---
+// /classic — the original simple portfolio, kept as the MOBILE experience (the redesign
+// at / is desktop-only and gates phones here). Also the human-readable backup of the old site.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+---
+
+<BaseLayout>
+  <!-- Entry notice: shown once per session on small screens before the simplified site -->
+  <div id="lite-notice" class="lite-notice" role="dialog" aria-modal="true" aria-labelledby="lite-head">
+    <div class="lite-card">
+      <p id="lite-head" class="lite-head">Best viewed on desktop</p>
+      <p class="lite-sub">You&rsquo;re entering a simplified version of the portfolio.</p>
+      <button id="lite-continue" class="lite-btn" type="button">Continue &rarr;</button>
+    </div>
+  </div>
+
+  <main>
+
+    <Sidebar />
+
+    <section class="projects-grid">
+      <a class="project-card" href="/about">
+        <video class="project-thumb" src="/about.mov" muted loop playsinline></video>
+        <span class="project-title">My Life Story and Contact Info</span>
+      </a>
+      <a class="project-card" href="/bird-dog">
+        <video class="project-thumb" src="/bird-dog.mov" muted loop playsinline></video>
+        <span class="project-title">Bird Dog</span>
+      </a>
+      <a class="project-card" href="/ui-playground">
+        <video class="project-thumb" src="/ui-playground.mov" muted loop playsinline></video>
+        <span class="project-title">UI Playground</span>
+      </a>
+      <a class="project-card" href="/stripe-redesign">
+        <video class="project-thumb" src="/stripe-redesign.mov" muted loop playsinline></video>
+        <span class="project-title">Stripe Landing Page Redesign (Unofficial)</span>
+      </a>
+      <a class="project-card" href="/jpl-redesign">
+        <video class="project-thumb" src="/jpl-redesign.mp4" muted loop playsinline></video>
+        <span class="project-title">Jesse Parris-Lamb Website Redesign (Unofficial)</span>
+      </a>
+    </section>
+
+
+  </main>
+</BaseLayout>
+
+<style>
+  main {
+    min-height: 100vh;
+  }
+
+  .projects-grid {
+    position: fixed;
+    top: 0;
+    left: 320px;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 3rem 3rem 5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    align-content: flex-start;
+    overflow-y: auto;
+    pointer-events: auto;
+  }
+
+  .project-card {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    pointer-events: auto;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .project-thumb {
+    width: 380px;
+    height: auto;
+    display: block;
+    background: #e8e8e8;
+  }
+
+  .project-title {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    color: #1c1f23;
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      position: static;
+      padding: 5rem 1.5rem 2rem;
+      flex-direction: column;
+      flex-wrap: nowrap;
+      gap: 2rem;
+    }
+
+    .project-thumb {
+      width: 100%;
+    }
+
+    .project-card {
+      width: 100%;
+    }
+  }
+
+  /* ——— simplified-version entry notice (mobile) ——— */
+  .lite-notice {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;                 /* shown via .show by script, only on small screens */
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #faf9f6;
+  }
+  .lite-notice.show { display: flex; }
+  .lite-card { max-width: 16rem; text-align: center; }
+  .lite-head {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 1.5rem;
+    color: #1c1f23;
+    margin-bottom: 0.6rem;
+  }
+  .lite-sub {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.95rem;
+    color: #6b6b6b;
+    line-height: 1.6;
+    margin-bottom: 1.9rem;
+  }
+  .lite-btn {
+    font-family: Garamond, 'EB Garamond', Georgia, serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    color: #1c1f23;
+    background: none;
+    border: 1px solid #1c1f23;
+    border-radius: 999px;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .lite-btn:hover { background: #1c1f23; color: #faf9f6; }
+</style>
+
+
+<script>
+  function bindVideoCards() {
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    document.querySelectorAll('.project-card').forEach((card) => {
+      const video = card.querySelector('video');
+      if (!video) return;
+      if (isTouch) {
+        video.play();
+      } else {
+        card.addEventListener('mouseenter', () => video.play());
+        card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+      }
+    });
+  }
+  bindVideoCards();
+  document.addEventListener('astro:page-load', bindVideoCards);
+
+  // Entry notice: on small screens, show the "simplified version" card once per session.
+  (function () {
+    const notice = document.getElementById('lite-notice');
+    const cont = document.getElementById('lite-continue');
+    if (!notice) return;
+    const isSmall = window.matchMedia('(max-width: 768px)').matches;
+    if (isSmall && !sessionStorage.getItem('liteSeen')) {
+      notice.classList.add('show');
+      document.documentElement.style.overflow = 'hidden';
+    }
+    cont?.addEventListener('click', () => {
+      sessionStorage.setItem('liteSeen', '1');
+      notice.classList.remove('show');
+      document.documentElement.style.overflow = '';
+    });
+  })();
+</script>
+
