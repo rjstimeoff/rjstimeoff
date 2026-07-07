@@ -1,0 +1,404 @@
+---
+// Timeoff — Base360 Landing case study. Same system as /jpl-redesign: painterly /work
+// backdrop kept as-is, no mat, one plain left-hung column, red-as-a-whisper, warm-ink body.
+// ONE BEAT PER SCREEN, each rising into frame on scroll. Media = 1060px, framed 16:9. Inter.
+// Sequence: full scroll-through → hero → 4 pillars → demo → closing CTA. Videos are private
+// Vimeo embeds — each src carries its ?h= privacy hash.
+//
+import { Image } from 'astro:assets';
+import base360Logo from '../assets/base360-logo.png';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Base360 Landing — Timeoff</title>
+    <meta name="description" content="A landing page for Base360, an agentic platform for B2C companies, designed and built in roughly 48 hours." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph / social share cards — how the link unfurls in iMessage, Slack, LinkedIn, etc. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Base360 Landing — Timeoff" />
+    <meta property="og:description" content="A landing page for Base360, an agentic platform for B2C companies, designed and built in roughly 48 hours." />
+    <meta property="og:image" content="/base360-og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Base360 Landing — Timeoff" />
+    <meta name="twitter:description" content="A landing page for Base360, an agentic platform for B2C companies, designed and built in roughly 48 hours." />
+    <meta name="twitter:image" content="/base360-og.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      if (sessionStorage.getItem('navTL')) {
+        document.documentElement.classList.add('pre-tl');
+        sessionStorage.removeItem('navTL');
+      }
+    </script>
+  </head>
+  <body>
+    <main class="page">
+      <!-- ——— hero ——— -->
+      <section class="panel hero-panel">
+        <header class="hero">
+          <p class="kicker reveal">Landing Page · Front End · 2026</p>
+          <h1 class="title reveal">Base360</h1>
+          <p class="subtitle reveal">Landing Page</p>
+          <p class="scroll-hint reveal">Scroll ↓</p>
+        </header>
+      </section>
+
+      <!-- ——— intro ——— -->
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p class="lead">This project came out of an interview process, and instead of the usual interview loop they handed me something better&hellip; a brief.</p>
+          <p>Design and build a landing page for Base360, an agentic platform for B2C companies that captures every potential customer interaction, tracks it, and responds - all on its own. I love a good prompt, and I love a time constraint even more. This one came to life in roughly 48 hours&hellip; have a look.</p>
+        </div>
+      </section>
+
+      <!-- ——— the full scroll-through ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The full page..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1207861361?h=9b590f25bb&autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
+
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>I have been dying to do a project with this sort of &ldquo;dithered&rdquo;, pixelated animated look. I saw a few designers online do some cool stuff with it and I&rsquo;ve been waiting for something to let loose on, and this project was perfect. The organic animations and shapes paired with the dithered effect offer a natural, yet robotic feel? Which is perfect for an agentic tool - it is supposed to feel like a natural assistant that handles all the hard parts for you.</p>
+          <p>I started out by messing around with some animation development in my other tool, <a class="inline-link" href="/ui-playground">UI Playground</a>, and landed on these very calming animations, and I let those sort of take the lead in the design direction. Sort of turning chaos into calm?</p>
+        </div>
+      </section>
+
+      <!-- ——— hero section ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The hero section..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1207861360?h=9b530da4a7&autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
+
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>The hero section is my favorite section by far. I knew I wanted to have a full bleed animation as the centerpiece, and this distorted flower thing came out so good. Another decision I fell in love with was the white word mark in the center. I had to play around with this a lot to get it right. I wanted it to read as subtle and calm, sort of fading in and out of the white that pokes through the animation. It comes across as a nice whisper of the company, not a shout.</p>
+          <p>I like doing these sort of understated, editorial style pages for SaaS companies because it goes completely against the grain of every other SaaS that throws a million company logos, demos, and CTAs in your face. This shows up in the simple nav bar with a quiet CTA and a cheeky hover animation that I&rsquo;m obsessed with - and the footer with the tag line sort of hinting at more content below is another example of this execution.</p>
+        </div>
+      </section>
+
+      <!-- ——— 4 pillars section ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The four pillars..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1207861362?h=8bae80dfe0&autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
+
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>The 4 pillars section racked my brain for a bit&hellip; I had certain pieces of information that were necessary to share about the product and I wasn&rsquo;t sure how to include them in a tasteful way. The typical solution is to just throw demo after demo and hope the user understands what&rsquo;s going on.</p>
+          <p>I opted for, you guessed it, a simple and easy to read solution. Plain language of what the product capabilities are on the left, and a nice visual to pair with it on the right. Title text and progress indicators aren&rsquo;t in &ldquo;traditional&rdquo; locations, but I think they add just enough flair to the page.</p>
+          <p>This is also a sticky scroll section, which I typically HATE. The jury is still out on whether I&rsquo;ve come around on them or not - but I figured this could be a fun experiment to try and do a sticky scroll site at least somewhat decent.</p>
+        </div>
+      </section>
+
+      <!-- ——— demo section ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The demo..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1207861358?h=2afc3e1132&autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
+
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>Okay so I&rsquo;ll be honest, the demo section is probably my least favorite here&hellip; I just am not a fan of typical demos to begin with, it&rsquo;s hard to do them right.</p>
+          <p>The issue with this project was I had no actual product to base these off of, so I just sort of went bare bones with a chatbot interface scenario. I do, however, enjoy this little scroll journey you are taken on - I think it serves its purpose very well. And even though I don&rsquo;t love the demos themselves, I think I was able to execute them fairly well with some fun &ldquo;pop&rdquo; animations.</p>
+        </div>
+      </section>
+
+      <!-- ——— closing CTA section ——— -->
+      <section class="panel">
+        <figure class="media reveal">
+          <p class="caption">The closing CTA..</p>
+          <div class="vimeo-wrapper">
+            <iframe loading="lazy" src="https://player.vimeo.com/video/1207861373?h=100aa3c0f8&autopause=0&muted=1&controls=0&loop=1&title=0&byline=0&portrait=0" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </figure>
+      </section>
+
+      <section class="panel text-panel">
+        <div class="text reveal">
+          <p>Okay so we skipped out on the traditional &ldquo;in your face&rdquo; CTA in the hero section, but this is a SaaS&hellip; we have to put one somewhere. I like putting them at the end as a nice little bookend. It felt right to make it a bit simpler and airy, keeping with the overall vibe of the page. This Fraunces font paired with Satoshi is a homer font combo and it carries a lot of the feeling of the closing tagline and CTA. I love when typography does the work for you.</p>
+          <p>Pair that with the same hover animation for the buttons, and a gentle floor animation, and you&rsquo;re golden.</p>
+        </div>
+      </section>
+
+      <!-- ——— a fun logo + visit the live site ——— -->
+      <section class="panel closing-panel">
+        <div class="closing">
+          <p class="caption reveal">A fun logo I whipped up in Midjourney..</p>
+          <div class="closing-row reveal">
+            <figure class="logo-figure">
+              <Image
+                src={base360Logo}
+                alt="Base360 logo — a bright blue dot inside a soft white glow on a grey gradient"
+                widths={[480, 768, 960]}
+                sizes="380px"
+                loading="lazy"
+              />
+            </figure>
+            <div class="visit-block">
+              <img class="visit-note" src="/click_to_visit_trim.png" alt="Click to visit the site" width="340" height="64" />
+              <a class="omnibox" href="https://base360-landing-xi.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="Open the live Base360 landing page at base360-landing-xi.vercel.app">
+                <svg class="omnibox-lock" viewBox="0 0 16 16" fill="currentColor"><path d="M11 7V5a3 3 0 0 0-6 0v2H4v7h8V7h-1zm-4-2a1 1 0 0 1 2 0v2H7V5z"/></svg>
+                <span class="omnibox-url">base360-landing-xi.vercel.app</span>
+                <svg class="omnibox-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ——— next project ——— -->
+      <section class="panel next-panel">
+        <a class="next reveal" href="/jpl-redesign">
+          <span class="next-kicker">Next</span>
+          <span class="next-title">JPL Redesign</span>
+        </a>
+      </section>
+    </main>
+
+    <nav class="chrome" aria-label="site">
+      <a class="label tl work grow" href="/work">Work</a>
+      <a class="label tr info grow" href="/information">Information</a>
+    </nav>
+
+    <style>
+      :root {
+        --fg: #d6352a;                       /* red — accent (kicker, title) */
+        --ink: #26241f;                      /* warm near-black — body reading ink */
+        --muted: rgba(38, 36, 31, 0.5);      /* captions */
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { background: #eef0ec; scroll-behavior: smooth; }
+      body {
+        background: #eef0ec url('/work-bg.png') center / cover no-repeat fixed;
+        color: var(--ink);
+        font-family: 'Inter', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      /* ——— the column: one plain centered measure; painting shows in the gutters ——— */
+      .page {
+        position: relative;
+        z-index: 1;
+        max-width: min(92vw, 1080px);
+        margin: 0 auto;
+        animation: page-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        transition: opacity 0.3s ease-out;
+      }
+      @keyframes page-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: none; }
+      }
+      .page.leaving { opacity: 0; }
+      @media (prefers-reduced-motion: reduce) {
+        .page { animation: none; }
+        .page.leaving { opacity: 1; transition: none; }
+      }
+
+      /* ——— one beat per screen, everything hung to the same left edge ——— */
+      .panel {
+        min-height: 100vh;
+        display: grid;
+        align-content: center;
+        justify-items: start;
+        padding: 12vh 0;
+      }
+
+      /* ——— hero ——— */
+      .hero { text-align: left; }
+      .kicker { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg); margin-bottom: 1.4rem; }
+      .title { font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 400; line-height: 1; letter-spacing: -0.012em; color: var(--fg); }
+      .subtitle { font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 400; line-height: 1.04; letter-spacing: -0.012em; color: var(--fg); margin-top: 0.2rem; }
+      .scroll-hint { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 3.5rem; }
+
+      /* ——— bare media — no frame, no shadow, demos all at 1060px, framed 16:9 ——— */
+      .media { max-width: 1060px; width: 100%; }
+      .caption { font-size: 0.82rem; color: var(--muted); letter-spacing: 0.01em; margin-bottom: 0.7rem; }
+      .media :global(img), .media .vimeo-wrapper { display: block; }
+      .media :global(img) { width: 100%; height: auto; }
+      .vimeo-wrapper { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #ddd; }
+      .vimeo-wrapper iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+      /* ——— text: quiet, left-hung, one calm treatment ——— */
+      .text-panel p {
+        max-width: 58ch;
+        font-size: clamp(1.02rem, 1.35vw, 1.16rem);
+        font-weight: 400;
+        line-height: 1.7;
+        color: var(--ink);
+      }
+      .text { max-width: 58ch; }
+      .text p { max-width: none; }
+      .text p + p { margin-top: 1.4rem; }
+
+      /* ——— inline link: quiet ink underline, warms to red on hover ——— */
+      .inline-link {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: rgba(38, 36, 31, 0.28);
+        text-underline-offset: 0.18em;
+        text-decoration-thickness: 1px;
+        transition: color 0.3s ease, text-decoration-color 0.3s ease;
+      }
+      .inline-link:hover { color: var(--fg); text-decoration-color: var(--fg); }
+
+      /* ——— reveal-on-scroll: rises into frame, weighted easing ——— */
+      .reveal {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+        will-change: opacity, transform;
+      }
+      .reveal.in { opacity: 1; transform: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+      }
+
+      /* ——— closing: fun logo (smaller, left) + visit the live site ——— */
+      .closing-panel { min-height: 100vh; }
+      .closing { width: 100%; max-width: 980px; }
+      .closing-row { display: flex; align-items: center; gap: 3.5rem; flex-wrap: wrap; margin-top: 1.5rem; }
+      .logo-figure { flex: 0 0 auto; width: clamp(200px, 26vw, 340px); }
+      .logo-figure :global(img) { width: 100%; height: auto; display: block; border-radius: 4px; }
+
+      .visit-block { flex: 1 1 280px; max-width: 340px; display: flex; flex-direction: column; align-items: flex-start; }
+      .visit-note { display: block; width: 300px; max-width: 100%; height: auto; opacity: 0.8; margin: 0 0 0.9rem 0.5rem; pointer-events: none; }
+      .omnibox { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 12px 18px; background: #f1f3f4; border: 1px solid #e4e6e8; border-radius: 999px; text-decoration: none; overflow: hidden; transition: background 0.25s ease, box-shadow 0.3s ease, transform 0.25s ease; }
+      .omnibox:hover { background: #eceef0; box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-1px); }
+      .omnibox-lock { width: 13px; height: 13px; color: #5f6368; flex-shrink: 0; }
+      .omnibox-url { flex: 1; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 0.85rem; color: #202124; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .omnibox-arrow { width: 16px; height: 16px; color: #5f6368; flex-shrink: 0; transition: transform 0.25s ease, color 0.25s ease; }
+      .omnibox:hover .omnibox-arrow { transform: translateX(4px); color: #202124; }
+      .omnibox::after { content: ''; position: absolute; top: 0; left: -60%; width: 55%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent); transform: skewX(-20deg); pointer-events: none; }
+      .omnibox:hover::after { animation: omnibox-shimmer 0.9s ease; }
+      @keyframes omnibox-shimmer { from { left: -60%; } to { left: 130%; } }
+
+      /* ——— next project ——— */
+      .next-panel { min-height: 70vh; }
+      .next { display: inline-flex; flex-direction: column; gap: 0.4rem; text-decoration: none; }
+      .next-kicker { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+      .next-title { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 400; letter-spacing: -0.012em; color: var(--fg); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+      .next:hover .next-title { transform: translateX(0.6rem); }
+
+      /* ——— corner chrome (matches /work) ——— */
+      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
+      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg); }
+      .grow { pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size; transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1); }
+      .grow:hover { font-weight: 800; letter-spacing: -0.02em; }
+      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }
+      .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }
+      html.pre-tl .grow { transition: none; }
+      html.pre-tl .work { font-size: clamp(2.4rem, 6vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
+      .tl { top: 1.9rem; left: 2.2rem; }
+      .tr { top: 1.9rem; right: 2.2rem; }
+
+      @media (max-width: 720px) {
+        .page { max-width: 94vw; }
+        .panel { padding: 10vh 0; }
+      }
+    </style>
+
+    <script>
+      window.addEventListener('pointermove', () => {
+        document.documentElement.classList.remove('pre-tl');
+      }, { once: true });
+
+      // ——— smooth exit: gentle opacity dip, then navigate (internal links only) ———
+      const page = document.querySelector('.page');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href || a.target === '_blank' || a.hasAttribute('download')) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as MouseEvent).button !== 0) return;
+        const url = new URL(href, location.href);
+        if (url.origin !== location.origin || url.pathname === location.pathname) return;
+        e.preventDefault();
+        if (a.classList.contains('work')) sessionStorage.setItem('navTL', '1');
+        if (a.classList.contains('info')) sessionStorage.setItem('navTR', '1');
+        if (reduceMotion) { window.location.href = url.href; return; }
+        page?.classList.add('leaving');
+        setTimeout(() => { window.location.href = url.href; }, 200);
+      });
+      window.addEventListener('pageshow', (e) => { if (e.persisted) page?.classList.remove('leaving'); });
+
+      // ——— reveal-on-scroll ———
+      const reveals = document.querySelectorAll('.reveal');
+      if (reduceMotion) {
+        reveals.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+          });
+        }, { threshold: 0.2, rootMargin: '0px 0px -12% 0px' });
+        reveals.forEach((el) => io.observe(el));
+      }
+
+      // ——— Vimeo demos: muted, play only while in view, booted lazily ———
+      function initVimeoDemos() {
+        const iframes = document.querySelectorAll('.vimeo-wrapper iframe');
+        if (!iframes.length) return;
+        const attach = () => {
+          const players = new WeakMap();
+          // create each player only when its demo first scrolls into view, so we never
+          // boot all of them at once (simultaneous handshakes can trip "Player error")
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              const iframe = entry.target as HTMLIFrameElement;
+              if (entry.isIntersecting) {
+                let player = players.get(iframe);
+                if (!player) {
+                  player = new (window as any).Vimeo.Player(iframe);
+                  player.setVolume(0);
+                  players.set(iframe, player);
+                }
+                player.ready().then(() => player.setVolume(0)).then(() => player.play()).catch(() => {});
+              } else {
+                const player = players.get(iframe);
+                if (player) player.pause().then(() => player.setCurrentTime(0)).catch(() => {});
+              }
+            });
+          }, { threshold: 0.5 });
+          iframes.forEach((iframe) => observer.observe(iframe));
+        };
+        if ((window as any).Vimeo && (window as any).Vimeo.Player) {
+          attach();
+        } else {
+          let api = document.getElementById('vimeo-api') as HTMLScriptElement | null;
+          if (!api) {
+            api = document.createElement('script');
+            api.id = 'vimeo-api';
+            api.src = 'https://player.vimeo.com/api/player.js';
+            document.head.appendChild(api);
+          }
+          api.addEventListener('load', attach, { once: true });
+        }
+      }
+      requestAnimationFrame(() => initVimeoDemos());
+    </script>
+  </body>
+</html>
