@@ -15,9 +15,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
     <script is:inline>
-      // Mobile gate: the redesign is desktop-only — phones get the simplified site at /classic.
+      // Paint the mobile theme from the first frame: stamp <html> before <body> renders,
+      // so there's no flash of the desktop (red text / textured bg) on navigation.
       if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-        window.location.replace('/classic');
+        document.documentElement.classList.add('is-mobile');
       }
     </script>
     <script is:inline>
@@ -145,8 +146,8 @@
       .contact-links a:hover { color: #1c1f23; }
 
       /* ——— corner chrome (dark on the light page) ——— */
-      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
-      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #1c1f23; }
+      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: difference; }
+      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; }
       .grow {
         pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size;
         transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
@@ -161,13 +162,77 @@
       .tl { top: 1.9rem; left: 2.2rem; }
       .tr { top: 1.9rem; right: 2.2rem; }
 
-      /* stack on narrow screens so the wide "Who I am" label doesn't overflow */
-      @media (max-width: 860px) {
-        .about-group { flex-direction: column; align-items: center; gap: 3rem; }
-        .about-photo { margin-top: 7rem; }
-        .about-text { display: flex; flex-direction: column; align-items: center; }
-        .about-text .who-label { width: min(560px, 86vw); margin-left: 0; margin-top: 0; }
-        .about-bio, .about-bio:first-of-type { text-align: center; margin-top: 1rem; }
+      /* ——— Mobile: simple white page, black text, clean centered column ———
+         The desktop handwritten-image labels (this_is_me / who_i_am PNGs) carry baked-in
+         positioning + tall transparent space that wreck the layout on a phone, so on
+         mobile we hide them and use plain text. Keyed to html.is-mobile (set by the head
+         script before first paint) so it's correct from frame one — no flash, no @media lag. */
+      html.is-mobile { background: #fff; }
+      html.is-mobile body { background: #fff; color: #141414; }
+
+      html.is-mobile .info { padding: 6rem 1.6rem 4rem; }
+
+      html.is-mobile .about-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 2.4rem;   /* more clearance so the "Who I am" heading drops clear of the photo */
+        transform: none;
+      }
+
+      /* the handwritten "This is me!" note (arrows point down) sits above the photo,
+         cropped to its ink so the big white margins don't add a gap */
+      html.is-mobile .about-photo { width: 150px; margin-top: 0; }
+      html.is-mobile .about-photo .photo { width: 150px; }
+      html.is-mobile .about-photo .label {
+        position: static;
+        display: block;
+        width: 175px;
+        height: 140px;
+        object-fit: cover;
+        object-position: center 30%;
+        margin: 0 auto 0.3rem;
+        transform: translateX(-72px);   /* shift left so the arrows land on the photo's top-left */
+      }
+
+      /* the handwritten "Who I am, and what I do." heading, cropped to the text band */
+      html.is-mobile .about-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 0;
+      }
+      html.is-mobile .about-text .who-label {
+        display: block;
+        width: min(330px, 82vw);
+        height: 96px;               /* taller crop so the handwriting isn't clipped at the top */
+        object-fit: cover;
+        object-position: center;
+        margin: 0 auto 0.5rem;
+      }
+
+      html.is-mobile .about-bio,
+      html.is-mobile .about-bio:first-of-type {
+        text-align: left;
+        color: #141414;
+        font-size: 0.95rem;
+        word-spacing: normal;
+        letter-spacing: 0;
+        line-height: 1.6;
+        max-width: 34ch;
+        margin: 0.7rem auto 0;
+      }
+
+      html.is-mobile .contact-links { margin-top: 2.6rem; }
+      html.is-mobile .contact-links a { color: #141414; font-size: 0.9rem; }
+
+      /* Touch devices: no hover, so freeze the nav labels small & static. This page was
+         mobile-gated to /classic until now, so it never got this fix like the others. */
+      @media (hover: none) {
+        .grow, .grow:hover, html.pre-tl .grow, html.pre-tr .grow {
+          font-size: 0.72rem !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.16em !important;
+        }
       }
     </style>
 

@@ -21,6 +21,13 @@ import ref4 from '../assets/cosign-ref-4.jpeg';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
     <script is:inline>
+      // Paint the mobile theme from the first frame: stamp <html> before <body> renders,
+      // so there's no flash of the desktop (red text / textured bg) on navigation.
+      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+        document.documentElement.classList.add('is-mobile');
+      }
+    </script>
+    <script is:inline>
       if (sessionStorage.getItem('navTL')) {
         document.documentElement.classList.add('pre-tl');
         sessionStorage.removeItem('navTL');
@@ -322,8 +329,8 @@ import ref4 from '../assets/cosign-ref-4.jpeg';
       .next:hover .next-title { transform: translateX(0.6rem); }
 
       /* ——— corner chrome (matches /work) ——— */
-      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
-      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg); }
+      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: difference; }
+      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; }
       .grow { pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size; transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1); }
       .grow:hover { font-weight: 800; letter-spacing: -0.02em; }
       .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }
@@ -332,11 +339,41 @@ import ref4 from '../assets/cosign-ref-4.jpeg';
       html.pre-tl .work { font-size: clamp(2.4rem, 6vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
       .tl { top: 1.9rem; left: 2.2rem; }
       .tr { top: 1.9rem; right: 2.2rem; }
+      /* First-paint mobile theme (html.is-mobile set by the head script): kill the desktop
+         red text + textured background on the very first frame, before the @media rules
+         resolve — this is what removes the flash on navigation. */
+      html.is-mobile { --fg: #141414; }
+      html.is-mobile, html.is-mobile body { background: #fff; }
 
-      @media (max-width: 720px) {
-        .page { max-width: 94vw; }
-        .panel { padding: 10vh 0; }
+      /* ——— Mobile: white/black StudioSmall retheme + natural stacked scroll
+         (shared project-page format; see jpl-redesign) ——— */
+      @media (max-width: 768px) {
+        :root { --fg: #141414; --ink: #1a1a1a; --muted: rgba(20, 20, 20, 0.46); }
+        html { background: #fff; }
+        body { background: #fff; overflow-x: hidden; }
+        .page { max-width: 100%; margin: 0; padding: 0 1rem; }
+        .panel { min-height: auto; padding: 4.5vh 0; }
+        .hero-panel { min-height: 74vh; padding-top: 20vh; }
+        .next-panel { min-height: auto; padding: 6vh 0 12vh; }
+        .title, .subtitle { font-size: clamp(2rem, 8.5vw, 2.5rem); }
+        .kicker { color: var(--muted); }
+        .scroll-hint { margin-top: 2.4rem; }
+        .media { max-width: 100%; }
+        /* closing: reference deck stacks above the visit link */
+        .closing-row { flex-direction: column; align-items: flex-start; gap: 2rem; }
+        .stack { width: min(72vw, 300px); }
       }
+      /* Touch devices have no hover, so the nav enlarge — both the :hover growth and
+         the persisted cross-page handoff (pre-tl/pre-tr) — only reads as a broken
+         giant word. Keep the nav labels small and static on mobile. */
+      @media (hover: none) {
+        .grow, .grow:hover, html.pre-tl .grow, html.pre-tr .grow {
+          font-size: 0.72rem !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.16em !important;
+        }
+      }
+
     </style>
 
     <script>

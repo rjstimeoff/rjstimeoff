@@ -17,9 +17,15 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
     <script is:inline>
-      // Mobile gate: the redesign is desktop-only — phones get the simplified site at /classic.
+      // Mobile still hero: pick a random painting AND a random frame from its loop,
+      // frozen. Only the one chosen ~55KB frame downloads (no video), so it stays cheap.
+      // Runs before paint and sets --still-src on :root so there's no flash of a default.
       if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-        window.location.replace('/classic');
+        document.documentElement.classList.add('is-mobile');   // first-paint mobile theme, no desktop flash
+        var paintings = ['ballerina', 'dog'];
+        var p = paintings[Math.floor(Math.random() * paintings.length)];
+        var f = 1 + Math.floor(Math.random() * 8);   // 8 frames extracted per painting
+        document.documentElement.style.setProperty('--still-src', "url('/still-" + p + "-" + f + ".jpg')");
       }
     </script>
     <script is:inline>
@@ -47,12 +53,20 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
       ))}
     </main>
 
+    {/* Mobile-only "still" hero — the painterly loop frozen to a single frame.
+        No cursor to bring it alive, so mobile is the permanent still state:
+        full-bleed art direction + quiet corner chrome, StudioSmall-style.
+        Swap the painting by changing --still-src (dog-still.jpg is the alt). */}
+    <div class="hero-still" aria-hidden="true"></div>
+
     <button class="bg-toggle" id="bgToggle" type="button" aria-label="switch background">
       <span class="cur">01</span><span class="sep">/</span><span class="tot">02</span>
     </button>
 
-    <h1 class="statement">Timeoff<br />a design &amp; product<br />studio by RJ Rivera<br />born in NYC</h1>
-    <h1 class="statement ghost" aria-hidden="true">Timeoff<br />a design &amp; product<br />studio by RJ Rivera<br />born in NYC</h1>
+    {/* The .mbr breaks only render on mobile (hidden ≥769px), so the tagline reads as
+        4 wide lines on desktop and stacks into 6 taller/narrower lines on a phone. */}
+    <h1 class="statement">Timeoff<br />a design <br class="mbr" />&amp; product<br />studio by <br class="mbr" />RJ Rivera<br />born in NYC</h1>
+    <h1 class="statement ghost" aria-hidden="true">Timeoff<br />a design <br class="mbr" />&amp; product<br />studio by <br class="mbr" />RJ Rivera<br />born in NYC</h1>
 
     <nav class="chrome" aria-label="site">
       <a class="label tl work grow" href="/work">Work</a>
@@ -183,6 +197,7 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
         z-index: 3;
         pointer-events: none;
       }
+      .mbr { display: none; }   /* mobile-only tagline breaks; shown in the @media below */
 
       .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
       .label {
@@ -244,10 +259,102 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
       .tr { top: 1.9rem; right: 2.2rem; }
       .bl { bottom: 1.9rem; left: 2.2rem; }
       .br { bottom: 1.9rem; right: 2.2rem; }
+
+      /* ——— Mobile: the permanent "still" state ———
+         No pointer, so none of the desktop drama (cursor-scrub video, hover-squish,
+         toggle) applies. Mobile is one full-bleed painterly still + quiet corner chrome
+         + the tagline stacked tall in the bottom-left. Hidden ≥769px. */
+      .hero-still { display: none; }
+
+      /* First-paint mobile theme (html.is-mobile set by the head script): show the still
+         hero + stacked tagline on the very first frame so there's no reflow flash on
+         navigation, before the @media rules resolve. */
+      html.is-mobile .hero, html.is-mobile .bg-toggle { display: none; }
+      html.is-mobile .mbr { display: inline; }
+      html.is-mobile .hero-still {
+        display: block; position: fixed; inset: 0; z-index: 0;
+        background: var(--still-src, url('/still-ballerina-1.jpg')) center / cover no-repeat, var(--bg);
+      }
+      html.is-mobile .statement {
+        left: 1.5rem; bottom: 1.5rem;
+        font-size: clamp(3.4rem, 14vw, 4.2rem); line-height: 1.0;
+        transform: none; transition: none;
+      }
+      html.is-mobile .br { display: none; }
+
+      @media (max-width: 768px) {
+        /* retire the desktop, pointer-driven video hero + toggle */
+        .hero, .bg-toggle { display: none; }
+        .mbr { display: inline; }   /* activate the extra tagline breaks → taller stack */
+
+        /* full-bleed frozen painting — src chosen at random by the head script.
+           Falls back to a ballerina frame if JS is off. */
+        .hero-still {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          background: var(--still-src, url('/still-ballerina-1.jpg')) center / cover no-repeat, var(--bg);
+        }
+        /* same vignette as desktop so corner chrome stays legible over any frame */
+        .hero-still::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background:
+            radial-gradient(120% 120% at 50% 50%, transparent 45%, rgba(8,7,6,0.6) 100%),
+            linear-gradient(to bottom, rgba(8,7,6,0.5) 0%, transparent 26%, transparent 62%, rgba(8,7,6,0.72) 100%);
+          pointer-events: none;
+        }
+
+        /* tagline, bottom-left, static — no squish. Force identity transform so the
+           hover/persisted-squish states can never apply on touch. Sized to sit a notch
+           smaller than desktop min so the 6-line stack breathes on a phone. */
+        .statement {
+          left: 1.5rem;
+          bottom: 1.5rem;
+          font-size: clamp(3.4rem, 14vw, 4.2rem);
+          line-height: 1.0;
+          transform: none;
+          transition: none;
+        }
+
+        /* corner chrome stays, but static — no hover-grow on touch. Tighten to the
+           phone edges and drop to a comfortable tap size. */
+        .label { font-size: 0.72rem; letter-spacing: 0.16em; }
+        .grow { will-change: auto; transition: none; }
+        .tl { left: 1.5rem; }
+        .tr { right: 1.5rem; }
+        .tl, .tr { top: 1.6rem; }
+        .br { display: none; }   /* Est. 2026 — no clean home on mobile; the tagline carries the identity */
+      }
+      /* Touch devices have no hover, so the nav enlarge — both the :hover growth and
+         the persisted cross-page handoff (pre-tl/pre-tr) — only reads as a broken
+         giant word. Keep the nav labels small and static on mobile. */
+      @media (hover: none) {
+        .grow, .grow:hover, html.pre-tl .grow, html.pre-tr .grow {
+          font-size: 0.72rem !important;
+          font-weight: 600 !important;
+          letter-spacing: 0.16em !important;
+        }
+      }
+
     </style>
 
     <script>
       const vids = Array.from(document.querySelectorAll('.hero video')) as HTMLVideoElement[];
+
+      // Mobile shows the frozen still instead of the scrubbable video hero — so abort
+      // the heavy .mp4 fetches (preload="auto") and skip all the pointer-driven setup.
+      const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+      if (isMobile) {
+        vids.forEach((v) => {
+          v.removeAttribute('preload');
+          v.querySelectorAll('source').forEach((s) => s.remove());
+          v.load();   // aborts any in-flight download
+        });
+      }
+
       const TOTAL = vids.length;
       let i = 0;
 
@@ -304,7 +411,7 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
         requestAnimationFrame(tick);
       }
       render();
-      requestAnimationFrame(tick);
+      if (!isMobile) requestAnimationFrame(tick);   // no scrub loop on the still mobile hero
 
       // top-left nav: flag the persisted-enlarge handoff, then navigate normally
       document.querySelector('a.work')?.addEventListener('click', () => {
