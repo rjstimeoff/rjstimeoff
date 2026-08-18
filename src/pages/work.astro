@@ -9,7 +9,11 @@ const projects = [
   { href: '/jpl-redesign',    title: 'JPL Redesign',    year: '2026', src: '/jpl-redesign.mp4' },
   { href: '/cove-landing', title: 'Cove Landing', year: '2026', src: '/cove-thumb.mp4' },
   { href: '/cosign', title: 'COSIGN', year: '2026', src: '/cosign-thumb.mp4' },
+  { href: '/ish-knits', title: 'Ish Knits', year: '2026', src: '/ish-knits-thumb.mp4' },
+  { href: '/berneron', title: 'Berneron', year: '2026', src: '/berneron-thumb.mp4' },
 ];
+// Some pieces (graphic design) preview as a still, not a looping demo.
+const isImg = (s) => /\.(png|jpe?g|webp|gif|avif)$/i.test(s);
 ---
 <!doctype html>
 <html lang="en">
@@ -40,7 +44,7 @@ const projects = [
   </head>
   <body>
     <main class="work">
-      <ol class="index">
+      <ol class="index" style={`--n:${projects.length}`}>
         {projects.map((p, i) => (
           <li>
             <a class="row" href={p.href} data-i={i}>
@@ -54,12 +58,14 @@ const projects = [
 
       <aside class="preview" aria-hidden="true">
         {projects.map((p, i) => (
-          <video
-            class="frame"
-            data-i={i}
-            src={p.src}
-            muted loop playsinline preload="metadata"
-          ></video>
+          isImg(p.src)
+            ? <img class="frame" data-i={i} src={p.src} alt="" loading="lazy" />
+            : <video
+                class="frame"
+                data-i={i}
+                src={p.src}
+                muted loop playsinline preload="metadata"
+              ></video>
         ))}
       </aside>
     </main>
@@ -70,12 +76,14 @@ const projects = [
     <section class="work-grid" aria-label="projects">
       {projects.map((p, i) => (
         <a class="cell" href={p.href}>
-          <video
-            class="cell-vid"
-            src={p.src}
-            poster={"/work-" + p.href.slice(1) + ".jpg"}
-            muted loop autoplay playsinline preload="none"
-          ></video>
+          {isImg(p.src)
+            ? <img class="cell-vid" src={p.src} alt={p.title} loading="lazy" />
+            : <video
+                class="cell-vid"
+                src={p.src}
+                poster={"/work-" + p.href.slice(1) + ".jpg"}
+                muted loop autoplay playsinline preload="none"
+              ></video>}
           <span class="cell-cap"><span class="cell-title">{p.title}</span><span class="cell-year">{p.year}</span></span>
         </a>
       ))}
@@ -112,7 +120,7 @@ const projects = [
         grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
         align-items: center;
         gap: 4vw;
-        padding: 6rem clamp(2.2rem, 6vw, 7rem);   /* clear the corner chrome */
+        padding: 3rem clamp(2.2rem, 6vw, 7rem);   /* clear the corner chrome */
       }
 
       /* ——— the index: stacked type rows ——— */
@@ -126,7 +134,8 @@ const projects = [
         align-items: baseline;
         gap: 1.4rem;
         text-decoration: none;
-        padding: clamp(0.7rem, 1.8vh, 1.4rem) 0.4rem;
+        /* row vertical rhythm scales to the count so the whole list fits the viewport */
+        padding: clamp(0.3rem, calc(80vh / var(--n, 8) * 0.12), 1.4rem) 0.4rem;
         color: var(--fg-mute);
         transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
       }
@@ -139,7 +148,8 @@ const projects = [
         transform: translateY(-0.55em);   /* sit it like a superscript marker */
       }
       .title {
-        font-size: clamp(2rem, 5.2vw, 4.6rem);
+        /* title also scales to the count (capped by vw) so more rows never overflow */
+        font-size: clamp(1.4rem, min(5.2vw, calc(80vh / var(--n, 8) * 0.66)), 4.6rem);
         font-weight: 500;
         line-height: 0.98;
         letter-spacing: -0.01em;
@@ -318,11 +328,14 @@ const projects = [
       // fetch — and drive the grid thumbnails, playing each only while it's on screen.
       const isMobile = window.matchMedia('(max-width: 768px)').matches;
       if (isMobile) {
-        frames.forEach((v) => { v.removeAttribute('src'); v.load(); });
+        frames.forEach((v) => {
+          if (v instanceof HTMLVideoElement) { v.removeAttribute('src'); v.load(); }
+        });
         const cells = Array.from(document.querySelectorAll<HTMLVideoElement>('.cell-vid'));
         const io = new IntersectionObserver((entries) => {
           entries.forEach((e) => {
-            const v = e.target as HTMLVideoElement;
+            const v = e.target;
+            if (!(v instanceof HTMLVideoElement)) return;   // still-image cells don't play
             if (e.isIntersecting) { v.play().catch(() => {}); }
             else { v.pause(); }
           });
@@ -334,6 +347,7 @@ const projects = [
         frames.forEach((v, j) => {
           const on = j === i;
           v.classList.toggle('active', on);
+          if (!(v instanceof HTMLVideoElement)) return;   // still-image previews just crossfade
           if (on && play) { v.play(); }
           else { v.pause(); if (!on) v.currentTime = 0; }
         });
