@@ -164,7 +164,7 @@ const pad = (n) => String(n + 1).padStart(2, '0');
           <div class="beat-media" style={`--i:${i}`}>
             <div class="fn">{pad(i)}</div>
             <div class="media">
-              <video class="demo" src={demoSrcs[i]} muted loop playsinline preload="metadata"></video>
+              <video class="demo" src={demoSrcs[i]} poster={demoSrcs[i].replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="none"></video>
             </div>
           </div>
         </>
