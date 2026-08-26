@@ -11,6 +11,39 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Cross-page swipe direction. Axis: Work(0) · Home(1) · Information(2).
+      (function () {
+        function axis(p) {
+          if (p === '/' || p === '') return 1;
+          if (p.indexOf('/work') === 0) return 0;
+          if (p.indexOf('/information') === 0) return 2;
+          return null;
+        }
+        function dirType(fromUrl, toUrl) {
+          var f = axis(new URL(fromUrl).pathname), t = axis(new URL(toUrl).pathname);
+          if (f == null || t == null || f === t) return null;
+          return t > f ? 'to-right' : 'to-left';
+        }
+        window.addEventListener('pageswap', function (e) {
+          if (!e.viewTransition || !e.activation || !e.activation.from) { sessionStorage.removeItem('swipeDir'); return; }
+          var type = dirType(e.activation.from.url, e.activation.entry.url);
+          if (!type) { sessionStorage.removeItem('swipeDir'); return; }
+          sessionStorage.setItem('swipeDir', type);
+          e.viewTransition.types.add(type);
+        });
+        window.addEventListener('pagereveal', function (e) {
+          if (!e.viewTransition) return;
+          var type = sessionStorage.getItem('swipeDir');
+          sessionStorage.removeItem('swipeDir');
+          if (!type) {
+            var a = window.navigation && navigation.activation;
+            if (a && a.from) type = dirType(a.from.url, a.entry.url);
+          }
+          if (type) e.viewTransition.types.add(type);
+        });
+      })();
+    </script>
     <style>
       :root {
         --ground: #ffffff;
@@ -140,6 +173,8 @@
         transition: r 1.7s cubic-bezier(0.22, 1, 0.3, 1);
       }
       body.art .disc { r: 6000px; }
+      /* restored-open (flagged before paint): show the image instantly, skip the grow */
+      html.art-instant .disc { transition: none; }
       body.art .artpiece { pointer-events: auto; cursor: pointer; }
 
       /* text stays legible over the art: white, a touch heavier, soft shadow */
@@ -159,9 +194,32 @@
         .artpiece { opacity: 0; transition: opacity 0.4s ease; }
         body.art .artpiece { opacity: 1; }
       }
+      /* ——— cross-page swipe (native view transitions) ——— */
+      @view-transition { navigation: auto; }
+      ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+      @keyframes swipe-out-left  { to   { transform: translateX(-100%); } }
+      @keyframes swipe-in-right  { from { transform: translateX(100%);  } }
+      @keyframes swipe-out-right { to   { transform: translateX(100%);  } }
+      @keyframes swipe-in-left   { from { transform: translateX(-100%); } }
+      :root:active-view-transition-type(to-right)::view-transition-old(root) { animation: swipe-out-left 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; }
+      :root:active-view-transition-type(to-right)::view-transition-new(root) { animation: swipe-in-right 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; box-shadow: -1px 0 0 rgba(0, 0, 0, 0.14); }
+      :root:active-view-transition-type(to-left)::view-transition-old(root)  { animation: swipe-out-right 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; }
+      :root:active-view-transition-type(to-left)::view-transition-new(root)  { animation: swipe-in-left 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; box-shadow: 1px 0 0 rgba(0, 0, 0, 0.14); }
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+      }
     </style>
   </head>
   <body>
+    <script is:inline>
+      // Persist the hero art-piece "open" state across navigations (per session).
+      // Runs before paint: if it was left open, mark the doc so the image restores
+      // instantly (the .art-instant class suppresses the grow animation).
+      if (sessionStorage.getItem('artOpen') === '1') {
+        document.documentElement.classList.add('art-instant');
+        document.body.classList.add('art');
+      }
+    </script>
     {/* Identity art piece. The painting is a plain cover <image> at true viewport
         scale — never filtered, so it can't warp or zoom. It's revealed through an SVG
         <mask> whose circle grows and whose ALPHA is displaced into an organic wet front.
@@ -320,6 +378,18 @@
         var art = document.querySelector('.artpiece');
         if (!cta || !art) return;
 
+        // Restore a persisted "open" state (flagged pre-paint by .art-instant): re-apply the
+        // stored origin so a later close collapses to the right point, then re-enable the grow
+        // transition on the next frame so closing still animates.
+        if (document.documentElement.classList.contains('art-instant')) {
+          var sx = sessionStorage.getItem('artCx'), sy = sessionStorage.getItem('artCy');
+          if (sx) art.style.setProperty('--cx', sx);
+          if (sy) art.style.setProperty('--cy', sy);
+          requestAnimationFrame(function () {
+            requestAnimationFrame(function () { document.documentElement.classList.remove('art-instant'); });
+          });
+        }
+
         function setOrigin(x, y) {
           // px origin in viewport space — where the disc (and so the bleed) grows from
           art.style.setProperty('--cx', Math.round(x) + 'px');
@@ -330,8 +400,14 @@
           setOrigin(e && e.clientX ? e.clientX : r.left + r.width / 2,
                     e && e.clientY ? e.clientY : r.top + r.height / 2);
           document.body.classList.add('art');
+          sessionStorage.setItem('artOpen', '1');
+          sessionStorage.setItem('artCx', art.style.getPropertyValue('--cx'));
+          sessionStorage.setItem('artCy', art.style.getPropertyValue('--cy'));
         }
-        function close() { document.body.classList.remove('art'); }
+        function close() {
+          document.body.classList.remove('art');
+          sessionStorage.removeItem('artOpen');
+        }
 
         cta.addEventListener('click', function (e) {
           e.preventDefault();

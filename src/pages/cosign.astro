@@ -84,7 +84,8 @@ const pad = (n) => String(n + 1).padStart(2, '0');
         text-decoration: none;
         z-index: 3;
       }
-      .back:hover { text-decoration: underline; text-underline-offset: 3px; }
+      .back { transition: opacity 0.2s ease; }
+      .back:hover { opacity: 0.55; }
 
       /* same split + spacing as the /work grid; each text block pairs with its
          demo on the same row and aligns at the top */

@@ -62,7 +62,8 @@ const nextProject = { title: 'Cove', href: '/cove-landing' };
       }
       .brand.tucked { transform: translateX(-50%) translateY(-160%); opacity: 0; pointer-events: none; }
       .back { position: fixed; top: 1.1rem; left: 1.25rem; font-size: 0.95rem; font-weight: 500; color: var(--ink); text-decoration: none; z-index: 3; }
-      .back:hover { text-decoration: underline; text-underline-offset: 3px; }
+      .back { transition: opacity 0.2s ease; }
+      .back:hover { opacity: 0.55; }
 
       .beats { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.75rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
       .fn { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink-faint); font-variant-numeric: tabular-nums; margin-bottom: 0.7rem; }

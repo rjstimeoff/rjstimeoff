@@ -1,8 +1,7 @@
 ---
-// Timeoff — Information. Brought over from the ORIGINAL light /about page (2026-06-25):
-// centered photo + "This is me!" + bio + "Who I am, and what I do." + contact links, on the
-// airy paper-white backdrop. The original's left sidebar is dropped, so the photo/text group
-// is centered. Corner chrome (Work / Home) kept for nav, recolored for the light page.
+// Timeoff — Information. Pared-back editorial page: a short studio statement
+// (who we are / what we do / what we want to work on) + contact. StudioSmall-ish,
+// no frills. Matches the home system: Host Grotesk, white ground, #101113 ink.
 ---
 <!doctype html>
 <html lang="en">
@@ -13,254 +12,158 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
     <script is:inline>
-      // Paint the mobile theme from the first frame: stamp <html> before <body> renders,
-      // so there's no flash of the desktop (red text / textured bg) on navigation.
-      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-        document.documentElement.classList.add('is-mobile');
-      }
+      // Cross-page swipe direction. Axis: Work(0) · Home(1) · Information(2).
+      (function () {
+        function axis(p) {
+          if (p === '/' || p === '') return 1;
+          if (p.indexOf('/work') === 0) return 0;
+          if (p.indexOf('/information') === 0) return 2;
+          return null;
+        }
+        function dirType(fromUrl, toUrl) {
+          var f = axis(new URL(fromUrl).pathname), t = axis(new URL(toUrl).pathname);
+          if (f == null || t == null || f === t) return null;
+          return t > f ? 'to-right' : 'to-left';
+        }
+        window.addEventListener('pageswap', function (e) {
+          if (!e.viewTransition || !e.activation || !e.activation.from) { sessionStorage.removeItem('swipeDir'); return; }
+          var type = dirType(e.activation.from.url, e.activation.entry.url);
+          if (!type) { sessionStorage.removeItem('swipeDir'); return; }
+          sessionStorage.setItem('swipeDir', type);
+          e.viewTransition.types.add(type);
+        });
+        window.addEventListener('pagereveal', function (e) {
+          if (!e.viewTransition) return;
+          var type = sessionStorage.getItem('swipeDir');
+          sessionStorage.removeItem('swipeDir');
+          if (!type) {
+            var a = window.navigation && navigation.activation;
+            if (a && a.from) type = dirType(a.from.url, a.entry.url);
+          }
+          if (type) e.viewTransition.types.add(type);
+        });
+      })();
     </script>
-    <script is:inline>
-      if (sessionStorage.getItem('navTL')) {
-        document.documentElement.classList.add('pre-tl');
-        sessionStorage.removeItem('navTL');
-      }
-      // same handoff for the top-right (Home) nav
-      if (sessionStorage.getItem('navTR')) {
-        document.documentElement.classList.add('pre-tr');
-        sessionStorage.removeItem('navTR');
-      }
-    </script>
-  </head>
-  <body>
-    <main class="info">
-      <div class="about-group">
-        <div class="about-photo">
-          <img class="label" src="/this_is_me.png" alt="This is me!" />
-          <img class="photo" src="/rj_photo.jpg" alt="RJ Rivera" />
-        </div>
-        <div class="about-text">
-          <img class="who-label" src="/who_i_am.png" alt="Who I am, and what I do." />
-          <p class="about-bio">Designer, builder, creative technologist... pick one.</p>
-          <p class="about-bio">I love to build and design things, and I obsess over how people experience them.</p>
-          <p class="about-bio">Currently building heavily with tools like Claude Code, Midjourney, and my own two hands.</p>
-        </div>
-      </div>
-      <div class="contact-links">
-        <a href="https://www.linkedin.com/in/raul-j-rivera/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:rj@rjstimeoff.com">rj@rjstimeoff.com</a>
-      </div>
-    </main>
-
-    <nav class="chrome" aria-label="site">
-      <a class="label tl work grow" href="/work">Work</a>
-      <a class="label tr home grow" href="/">Home</a>
-    </nav>
-
     <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html { background: #fdfdfb; }
+      :root {
+        --ground: #ffffff;
+        --ink: #101113;
+        --muted: #8b8b86;
+        --font: "Host Grotesk", system-ui, -apple-system, sans-serif;
+      }
+      * { box-sizing: border-box; }
       body {
+        margin: 0;
         min-height: 100vh;
-        background: #fdfdfb url('/info-paper-bg.png') center / cover no-repeat fixed;
-        color: #1c1f23;
-        font-family: 'Inter', sans-serif;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: var(--font);
         -webkit-font-smoothing: antialiased;
       }
 
-      .info {
-        position: relative;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 6rem 2rem 4rem;
-        transition: opacity 0.3s ease-out;
-      }
-      .info.leaving { opacity: 0; }
-
-      /* photo + text, centered as a group now the sidebar is gone */
-      .about-group {
-        display: flex;
-        align-items: flex-start;
-        gap: 8rem;
-        transform: translateX(3.5rem);   /* nudge the whole group right of dead-center */
-      }
-
-      .about-photo {
-        position: relative;
-        flex-shrink: 0;
-        width: 180px;
-        margin-top: 9rem;       /* drop the photo so its label lines up with "Who I am" */
-      }
-      .about-photo .photo {
-        width: 180px;
-        height: auto;
-        display: block;
-      }
-      .about-photo .label {
-        position: absolute;
-        width: 200px;
-        top: -158px;
-        left: -115px;
-        pointer-events: none;
-      }
-
-      .about-text { flex-shrink: 0; margin-top: -2.5rem; }   /* lift heading + body together */
-      .about-text .who-label {
-        width: 560px;
-        height: auto;
-        display: block;
-        margin-left: -5.5rem;
-        margin-top: -2.5rem;
-      }
-
-      .about-bio {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.84rem;
-        color: #555;
-        letter-spacing: 0.02em;
-        word-spacing: 0.35em;
-        line-height: 1.8;
-        max-width: 380px;
-        margin-top: 1rem;
-        margin-left: 2rem;   /* shift the body block right, in from the heading's left edge */
-      }
-      .about-bio:first-of-type { margin-top: calc(-12.5rem + 14px); }   /* pull up under the "Who I am" label's tall transparent space */
-
-      .contact-links {
-        display: flex;
-        gap: 1.5rem;
-        margin-top: 7rem;
-      }
-      .contact-links a {
-        font-family: 'Inter', sans-serif;
-        font-size: 0.84rem;
-        color: #555;
-        letter-spacing: 0.08em;
-        text-decoration: none;
-        transition: color 0.25s ease;
-      }
-      .contact-links a:hover { color: #1c1f23; }
-
-      /* ——— corner chrome (dark on the light page) ——— */
-      .chrome { position: fixed; inset: 0; z-index: 4; pointer-events: none; mix-blend-mode: difference; }
-      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; }
-      .grow {
-        pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size;
-        transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      .grow:hover { font-weight: 800; letter-spacing: -0.02em; }
-      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }
-      .home:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }
-      html.pre-tl .grow { transition: none; }
-      html.pre-tl .work { font-size: clamp(2.4rem, 6vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
-      html.pre-tr .grow { transition: none; }
-      html.pre-tr .home { font-size: clamp(1.8rem, 4vw, 3.9rem); font-weight: 800; letter-spacing: -0.02em; }
-      .tl { top: 1.9rem; left: 2.2rem; }
-      .tr { top: 1.9rem; right: 2.2rem; }
-
-      /* ——— Mobile: simple white page, black text, clean centered column ———
-         The desktop handwritten-image labels (this_is_me / who_i_am PNGs) carry baked-in
-         positioning + tall transparent space that wreck the layout on a phone, so on
-         mobile we hide them and use plain text. Keyed to html.is-mobile (set by the head
-         script before first paint) so it's correct from frame one — no flash, no @media lag. */
-      html.is-mobile { background: #fff; }
-      html.is-mobile body { background: #fff; color: #141414; }
-
-      html.is-mobile .info { padding: 6rem 1.6rem 4rem; }
-
-      html.is-mobile .about-group {
-        flex-direction: column;
-        align-items: center;
-        gap: 2.4rem;   /* more clearance so the "Who I am" heading drops clear of the photo */
-        transform: none;
-      }
-
-      /* the handwritten "This is me!" note (arrows point down) sits above the photo,
-         cropped to its ink so the big white margins don't add a gap */
-      html.is-mobile .about-photo { width: 150px; margin-top: 0; }
-      html.is-mobile .about-photo .photo { width: 150px; }
-      html.is-mobile .about-photo .label {
-        position: static;
-        display: block;
-        width: 175px;
-        height: 140px;
-        object-fit: cover;
-        object-position: center 30%;
-        margin: 0 auto 0.3rem;
-        transform: translateX(-72px);   /* shift left so the arrows land on the photo's top-left */
-      }
-
-      /* the handwritten "Who I am, and what I do." heading, cropped to the text band */
-      html.is-mobile .about-text {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 0;
-      }
-      html.is-mobile .about-text .who-label {
-        display: block;
-        width: min(330px, 82vw);
-        height: 96px;               /* taller crop so the handwriting isn't clipped at the top */
-        object-fit: cover;
-        object-position: center;
-        margin: 0 auto 0.5rem;
-      }
-
-      html.is-mobile .about-bio,
-      html.is-mobile .about-bio:first-of-type {
-        text-align: left;
-        color: #141414;
+      /* ——— top bar: Projects · timeoff · Information ——— */
+      .top-link {
+        position: fixed;
+        top: 1.1rem;
         font-size: 0.95rem;
-        word-spacing: normal;
-        letter-spacing: 0;
-        line-height: 1.6;
-        max-width: 34ch;
-        margin: 0.7rem auto 0;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--ink);
+        text-decoration: none;
+        z-index: 2;
+      }
+      .brand { left: 50%; transform: translateX(-50%); }
+      .top-left { left: 1.5rem; }
+      .top-right { right: 1.5rem; color: var(--muted); }
+      a.top-left { transition: opacity 0.2s ease; }
+      a.top-left:hover { opacity: 0.55; }
+
+      /* ——— body ——— */
+      .info {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30vh 1.5rem 5rem;
+        display: grid;
+        grid-template-columns: minmax(0, 40rem) minmax(0, 15rem);
+        justify-content: space-between;
+        gap: 4rem 6rem;
       }
 
-      html.is-mobile .contact-links { margin-top: 2.6rem; }
-      html.is-mobile .contact-links a { color: #141414; font-size: 0.9rem; }
+      .statement p {
+        margin: 0 0 1.15em;
+        font-size: 1.02rem;
+        line-height: 1.5;
+        letter-spacing: -0.005em;
+        max-width: 38rem;
+      }
+      .statement p:last-child { margin-bottom: 0; }
+      .statement .line { display: block; }
+      .statement .line + .line { margin-top: 0.5em; }
+      .statement .closer { margin-top: 1.15em; }
 
-      /* Touch devices: no hover, so freeze the nav labels small & static. This page was
-         mobile-gated to /classic until now, so it never got this fix like the others. */
-      @media (hover: none) {
-        .grow, .grow:hover, html.pre-tl .grow, html.pre-tr .grow {
-          font-size: 0.72rem !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.16em !important;
+      .contact { font-size: 1.02rem; line-height: 1.5; }
+      .contact .row { margin-bottom: 1.4rem; }
+      .contact .row:last-child { margin-bottom: 0; }
+      .contact .k { color: var(--muted); margin: 0 0 0.15rem; }
+      .contact a { display: block; color: var(--ink); text-decoration: none; }
+      .contact a + a { margin-top: 0.15rem; }
+      .contact a:hover { text-decoration: underline; text-underline-offset: 0.15em; }
+
+      @media (max-width: 780px) {
+        .info {
+          grid-template-columns: 1fr;
+          padding: 22vh 1.4rem 4rem;
+          gap: 3rem;
         }
+        .top-right { display: none; }
+      }
+
+      /* ——— cross-page swipe (native view transitions) ——— */
+      @view-transition { navigation: auto; }
+      ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+      @keyframes swipe-out-left  { to   { transform: translateX(-100%); } }
+      @keyframes swipe-in-right  { from { transform: translateX(100%);  } }
+      @keyframes swipe-out-right { to   { transform: translateX(100%);  } }
+      @keyframes swipe-in-left   { from { transform: translateX(-100%); } }
+      :root:active-view-transition-type(to-right)::view-transition-old(root) { animation: swipe-out-left 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; }
+      :root:active-view-transition-type(to-right)::view-transition-new(root) { animation: swipe-in-right 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; box-shadow: -1px 0 0 rgba(0, 0, 0, 0.14); }
+      :root:active-view-transition-type(to-left)::view-transition-old(root)  { animation: swipe-out-right 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; }
+      :root:active-view-transition-type(to-left)::view-transition-new(root)  { animation: swipe-in-left 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; box-shadow: 1px 0 0 rgba(0, 0, 0, 0.14); }
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
       }
     </style>
+  </head>
+  <body>
+    <a class="top-link top-left" href="/work">Work</a>
+    <a class="top-link brand" href="/">timeoff</a>
+    <span class="top-link top-right" aria-current="page">Information</span>
 
-    <script>
-      window.addEventListener('pointermove', () => {
-        document.documentElement.classList.remove('pre-tl');
-        document.documentElement.classList.remove('pre-tr');
-      }, { once: true });
+    <main class="info">
+      <div class="statement">
+        <p>Timeoff is an independent design and product studio led by RJ Rivera — based in New York City. We help ambitious companies stand out through experimental, considered design across brand, product, and the web.</p>
+        <p>We're drawn to teams who care about how they show up: founders building something new, companies ready to challenge the expected, and people who believe the details are the difference.</p>
+        <p><span class="line">Things we hate: Following Trends. Playing it safe. Lack of empathy.</span><span class="line">Things we love: Taking risks.</span></p>
+        <p class="closer">#enjoyyourtimeoff</p>
+      </div>
 
-      // ——— smooth exit: gentle opacity dip, then navigate (internal links only) ———
-      const info = document.querySelector('.info');
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      document.addEventListener('click', (e) => {
-        const a = (e.target as HTMLElement).closest('a');
-        if (!a) return;
-        const href = a.getAttribute('href');
-        if (!href || a.target === '_blank' || a.hasAttribute('download') || href.startsWith('mailto:')) return;
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || (e as MouseEvent).button !== 0) return;
-        const url = new URL(href, location.href);
-        if (url.origin !== location.origin || url.pathname === location.pathname) return;
-        e.preventDefault();
-        if (a.classList.contains('work')) sessionStorage.setItem('navTL', '1');
-        if (a.classList.contains('home')) sessionStorage.setItem('navTR', '1');
-        if (reduceMotion) { window.location.href = url.href; return; }
-        info?.classList.add('leaving');
-        setTimeout(() => { window.location.href = url.href; }, 200);
-      });
-      window.addEventListener('pageshow', (e) => { if (e.persisted) info?.classList.remove('leaving'); });
-    </script>
+      <div class="contact">
+        <div class="row">
+          <p class="k">New business</p>
+          <a href="mailto:rj@rjstimeoff.com">rj@rjstimeoff.com</a>
+        </div>
+        <div class="row">
+          <p class="k">Elsewhere</p>
+          <a href="https://www.instagram.com/timeoffnyc/" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.linkedin.com/in/raul-j-rivera/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="row">
+          <p class="k">Based in</p>
+          <span>NYC</span>
+        </div>
+      </div>
+    </main>
   </body>
 </html>

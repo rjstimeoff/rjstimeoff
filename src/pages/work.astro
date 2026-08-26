@@ -26,6 +26,39 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <script is:inline>
+      // Cross-page swipe direction. Axis: Work(0) · Home(1) · Information(2).
+      (function () {
+        function axis(p) {
+          if (p === '/' || p === '') return 1;
+          if (p.indexOf('/work') === 0) return 0;
+          if (p.indexOf('/information') === 0) return 2;
+          return null;
+        }
+        function dirType(fromUrl, toUrl) {
+          var f = axis(new URL(fromUrl).pathname), t = axis(new URL(toUrl).pathname);
+          if (f == null || t == null || f === t) return null;
+          return t > f ? 'to-right' : 'to-left';
+        }
+        window.addEventListener('pageswap', function (e) {
+          if (!e.viewTransition || !e.activation || !e.activation.from) { sessionStorage.removeItem('swipeDir'); return; }
+          var type = dirType(e.activation.from.url, e.activation.entry.url);
+          if (!type) { sessionStorage.removeItem('swipeDir'); return; }
+          sessionStorage.setItem('swipeDir', type);
+          e.viewTransition.types.add(type);
+        });
+        window.addEventListener('pagereveal', function (e) {
+          if (!e.viewTransition) return;
+          var type = sessionStorage.getItem('swipeDir');
+          sessionStorage.removeItem('swipeDir');
+          if (!type) {
+            var a = window.navigation && navigation.activation;
+            if (a && a.from) type = dirType(a.from.url, a.entry.url);
+          }
+          if (type) e.viewTransition.types.add(type);
+        });
+      })();
+    </script>
     <style>
       :root {
         --ground: #ffffff;
@@ -68,6 +101,29 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
       @media (prefers-reduced-motion: reduce) {
         .brand { transition: opacity 0.3s ease; }
         .brand.tucked { transform: translateX(-50%) translateY(0); }
+      }
+
+      /* corner nav — Work (left, self) · Information (right, link). Home = brand. */
+      .corner {
+        position: fixed;
+        top: 1.1rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--ink);
+        text-decoration: none;
+        z-index: 3;
+        transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease;
+      }
+      .corner-left { left: 1.5rem; }
+      .corner-right { right: 1.5rem; }
+      .corner.is-self { color: var(--ink-soft); pointer-events: none; }
+      a.corner:hover { opacity: 0.55; }
+      /* tuck away on scroll, in step with the brand */
+      .corner.tucked { transform: translateY(-160%); opacity: 0; pointer-events: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .corner { transition: opacity 0.3s ease; }
+        .corner.tucked { transform: none; }
       }
 
       /* left text (~3/8) | right gallery (~5/8) */
@@ -158,10 +214,27 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         .col-text { position: static; }
         .gallery { grid-template-columns: repeat(2, 1fr); }
       }
+
+      /* ——— cross-page swipe (native view transitions) ——— */
+      @view-transition { navigation: auto; }
+      ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+      @keyframes swipe-out-left  { to   { transform: translateX(-100%); } }
+      @keyframes swipe-in-right  { from { transform: translateX(100%);  } }
+      @keyframes swipe-out-right { to   { transform: translateX(100%);  } }
+      @keyframes swipe-in-left   { from { transform: translateX(-100%); } }
+      :root:active-view-transition-type(to-right)::view-transition-old(root) { animation: swipe-out-left 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; }
+      :root:active-view-transition-type(to-right)::view-transition-new(root) { animation: swipe-in-right 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; box-shadow: -1px 0 0 rgba(0, 0, 0, 0.14); }
+      :root:active-view-transition-type(to-left)::view-transition-old(root)  { animation: swipe-out-right 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; }
+      :root:active-view-transition-type(to-left)::view-transition-new(root)  { animation: swipe-in-left 0.55s cubic-bezier(0.7, 0, 0.2, 1) both; box-shadow: 1px 0 0 rgba(0, 0, 0, 0.14); }
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+      }
     </style>
   </head>
   <body>
+    <span class="corner corner-left is-self" aria-current="page">Work</span>
     <a class="brand" href="/">timeoff</a>
+    <a class="corner corner-right" href="/information">Information</a>
 
     <main class="layout">
       <div class="col-text">
@@ -191,12 +264,13 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
       // Brand wordmark: tuck up + fade once you scroll off the top,
       // return when the top space is clear again.
       (function () {
-        var brand = document.querySelector('.brand');
-        if (!brand) return;
+        var nav = document.querySelectorAll('.brand, .corner');
+        if (!nav.length) return;
         var THRESHOLD = 6;    // px from top before it tucks away
         var ticking = false;
         function update() {
-          brand.classList.toggle('tucked', window.scrollY > THRESHOLD);
+          var tuck = window.scrollY > THRESHOLD;
+          nav.forEach(function (el) { el.classList.toggle('tucked', tuck); });
           ticking = false;
         }
         window.addEventListener('scroll', function () {
