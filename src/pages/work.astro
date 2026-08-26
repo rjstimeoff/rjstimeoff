@@ -249,7 +249,7 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         {projects.map((p) => (
           <a class="item" href={p.href} data-tags={p.tags.join('|')}>
             <div class="thumb">
-              <video class="thumb-vid" src={p.src} poster={p.src.replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="none" aria-hidden="true"></video>
+              <video class="thumb-vid" src={p.src} poster={p.src.replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="metadata" aria-hidden="true"></video>
             </div>
             <div class="caption">
               <div class="title">{p.title}</div>
