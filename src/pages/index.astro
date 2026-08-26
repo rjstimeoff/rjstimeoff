@@ -120,29 +120,27 @@
       }
 
       /* ——— identity art piece: a soft, slow bleed that grows from the click ———
-         An animatable mask radius (@property) feathers the reveal edge, so the
-         image seeps in organically without distorting the artwork itself. */
-      @property --bleed-r {
-        syntax: '<length>';
-        inherits: false;
-        initial-value: 0px;
-      }
+         Painting = a true-scale cover <image>, revealed through a growing SVG mask
+         whose alpha is displaced into an organic wet front. Image and mask are separate
+         layers, so the front reaches organically with no zoom or distortion. */
       .artpiece {
         position: fixed;
         inset: 0;
         z-index: 0;
-        background: #101113 url('/identity-room.png') center / cover no-repeat;
-        --bleed-r: 0px;
-        -webkit-mask-image: radial-gradient(circle var(--bleed-r) at var(--cx, 50%) var(--cy, 50%), #000 58%, rgba(0,0,0,0) 100%);
-        mask-image: radial-gradient(circle var(--bleed-r) at var(--cx, 50%) var(--cy, 50%), #000 58%, rgba(0,0,0,0) 100%);
-        transition: --bleed-r 1.4s cubic-bezier(0.22, 1, 0.3, 1);
+        display: block;
         pointer-events: none;
       }
-      body.art .artpiece {
-        --bleed-r: 2800px;
-        pointer-events: auto;
-        cursor: pointer;
+      /* The reveal circle: grows from the click point (--cx/--cy, viewport px). r is
+         animated on the circle itself; the mask's displacement warps its alpha edge.
+         r=6000 at full open keeps the solid core past every corner (feather offscreen). */
+      .disc {
+        cx: var(--cx, 50%);
+        cy: var(--cy, 50%);
+        r: 0;
+        transition: r 1.7s cubic-bezier(0.22, 1, 0.3, 1);
       }
+      body.art .disc { r: 6000px; }
+      body.art .artpiece { pointer-events: auto; cursor: pointer; }
 
       /* text stays legible over the art: white, a touch heavier, soft shadow */
       .hero p, .hero .cta, .nav-link, .scatter .gl {
@@ -153,14 +151,46 @@
       body.art .nav-link,
       body.art .scatter .gl { color: #fff; text-shadow: 0 1px 16px rgba(0,0,0,0.5); }
 
+      .bleed-defs { position: absolute; pointer-events: none; }
+
       @media (prefers-reduced-motion: reduce) {
-        .artpiece { -webkit-mask-image: none; mask-image: none; opacity: 0; transition: opacity 0.4s ease; }
+        /* No organic reveal — drop the mask and simply cross-fade the whole painting. */
+        .art-img { mask: none; -webkit-mask: none; }
+        .artpiece { opacity: 0; transition: opacity 0.4s ease; }
         body.art .artpiece { opacity: 1; }
       }
     </style>
   </head>
   <body>
-    <div class="artpiece" aria-hidden="true"></div>
+    {/* Identity art piece. The painting is a plain cover <image> at true viewport
+        scale — never filtered, so it can't warp or zoom. It's revealed through an SVG
+        <mask> whose circle grows and whose ALPHA is displaced into an organic wet front.
+        Image and mask being separate layers is what lets the front reach (and oversize
+        past the edges to avoid tearing) with zero cost to the image. */}
+    <svg class="artpiece" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true"
+      xmlns:xlink="http://www.w3.org/1999/xlink">
+      <defs>
+        {/* Broad lobes (scale 180) = reaching tendrils; fine grain (scale 22) = fibre.
+            in="SourceGraphic" keeps the mask WHITE so its luminance still reveals. */}
+        <filter id="bleed-edge" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="2" seed="4" result="lobes" />
+          <feDisplacementMap in="SourceGraphic" in2="lobes" scale="180" xChannelSelector="R" yChannelSelector="G" result="reach" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="9" result="fibre" />
+          <feDisplacementMap in="reach" in2="fibre" scale="22" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+        {/* Soft-edged disc (feather + damp halo) — objectBoundingBox so it scales with r. */}
+        <radialGradient id="disc-grad">
+          <stop offset="55%" stop-color="#fff" stop-opacity="1" />
+          <stop offset="80%" stop-color="#fff" stop-opacity="0.5" />
+          <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+        </radialGradient>
+        <mask id="bleed-mask" maskUnits="userSpaceOnUse" x="-20%" y="-20%" width="140%" height="140%">
+          <circle class="disc" cx="50%" cy="50%" r="0" fill="url(#disc-grad)" filter="url(#bleed-edge)" />
+        </mask>
+      </defs>
+      <image class="art-img" href="/identity-room.png" xlink:href="/identity-room.png"
+        x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" mask="url(#bleed-mask)" />
+    </svg>
     <a class="nav-link brand" href="/">timeoff</a>
     <a class="scatter left" href="/work" aria-label="Work"
       ><span>W</span><span>o</span><span>r</span><span>k</span></a>
@@ -291,8 +321,9 @@
         if (!cta || !art) return;
 
         function setOrigin(x, y) {
-          art.style.setProperty('--cx', (x / window.innerWidth * 100).toFixed(1) + '%');
-          art.style.setProperty('--cy', (y / window.innerHeight * 100).toFixed(1) + '%');
+          // px origin in viewport space — where the disc (and so the bleed) grows from
+          art.style.setProperty('--cx', Math.round(x) + 'px');
+          art.style.setProperty('--cy', Math.round(y) + 'px');
         }
         function open(e) {
           var r = cta.getBoundingClientRect();
