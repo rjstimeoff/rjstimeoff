@@ -16,6 +16,9 @@
     <script is:inline>
       // Cross-page swipe direction. Axis: Work(0) · Home(1) · Information(2).
       (function () {
+        // Directional swipe is a desktop mechanic. On mobile we let the browser's
+        // default view-transition cross-fade play instead (smooth, no slide).
+        var mobile = window.matchMedia('(max-width: 768px)').matches;
         function axis(p) {
           if (p === '/' || p === '') return 1;
           if (p.indexOf('/work') === 0) return 0;
@@ -28,6 +31,7 @@
           return t > f ? 'to-right' : 'to-left';
         }
         window.addEventListener('pageswap', function (e) {
+          if (mobile) { sessionStorage.removeItem('swipeDir'); return; }
           if (!e.viewTransition || !e.activation || !e.activation.from) { sessionStorage.removeItem('swipeDir'); return; }
           var type = dirType(e.activation.from.url, e.activation.entry.url);
           if (!type) { sessionStorage.removeItem('swipeDir'); return; }
@@ -36,6 +40,7 @@
         });
         window.addEventListener('pagereveal', function (e) {
           if (!e.viewTransition) return;
+          if (mobile) { sessionStorage.removeItem('swipeDir'); return; }
           var type = sessionStorage.getItem('swipeDir');
           sessionStorage.removeItem('swipeDir');
           if (!type) {
@@ -114,9 +119,11 @@
       @media (max-width: 780px) {
         .info {
           grid-template-columns: 1fr;
-          padding: 22vh 1.4rem 4rem;
-          gap: 3rem;
+          padding: 16vh 1.4rem 4rem;
+          gap: 2.5rem;
         }
+        .statement p { font-size: 1.05rem; }
+        .contact { font-size: 1.05rem; }
         .top-right { display: none; }
       }
 

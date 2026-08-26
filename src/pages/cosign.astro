@@ -140,6 +140,10 @@ const pad = (n) => String(n + 1).padStart(2, '0');
       @media (max-width: 900px) {
         .beats { grid-template-columns: 1fr; row-gap: 2.5rem; }
         .beat-text { max-width: none; }
+        .beat-media .fn { display: none; }
+      }
+      @media (max-width: 768px) {
+        .beats { padding: 5rem 1.2rem 4rem; column-gap: 1.4rem; }
       }
     </style>
   </head>

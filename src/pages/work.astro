@@ -29,6 +29,9 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
     <script is:inline>
       // Cross-page swipe direction. Axis: Work(0) · Home(1) · Information(2).
       (function () {
+        // Directional swipe is a desktop mechanic. On mobile we let the browser's
+        // default view-transition cross-fade play instead (smooth, no slide).
+        var mobile = window.matchMedia('(max-width: 768px)').matches;
         function axis(p) {
           if (p === '/' || p === '') return 1;
           if (p.indexOf('/work') === 0) return 0;
@@ -41,6 +44,7 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
           return t > f ? 'to-right' : 'to-left';
         }
         window.addEventListener('pageswap', function (e) {
+          if (mobile) { sessionStorage.removeItem('swipeDir'); return; }
           if (!e.viewTransition || !e.activation || !e.activation.from) { sessionStorage.removeItem('swipeDir'); return; }
           var type = dirType(e.activation.from.url, e.activation.entry.url);
           if (!type) { sessionStorage.removeItem('swipeDir'); return; }
@@ -49,6 +53,7 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         });
         window.addEventListener('pagereveal', function (e) {
           if (!e.viewTransition) return;
+          if (mobile) { sessionStorage.removeItem('swipeDir'); return; }
           var type = sessionStorage.getItem('swipeDir');
           sessionStorage.removeItem('swipeDir');
           if (!type) {
@@ -214,6 +219,10 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         .col-text { position: static; }
         .gallery { grid-template-columns: repeat(2, 1fr); }
       }
+      @media (max-width: 768px) {
+        .layout { padding: 5rem 1.2rem 4rem; gap: 1.75rem; }
+        .gallery { column-gap: 1rem; row-gap: 2rem; }
+      }
 
       /* ——— cross-page swipe (native view transitions) ——— */
       @view-transition { navigation: auto; }
@@ -349,9 +358,27 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         });
       })();
 
-      // Thumbnail videos: paused first frame by default, play only while hovered.
+      // Thumbnail videos. Desktop: paused first frame, play only while hovered.
+      // Mobile (no hover): autoplay only the thumbs currently on-screen, via an
+      // IntersectionObserver — the rest stay on their poster frame (perf).
       (function () {
-        document.querySelectorAll('.gallery .item').forEach(function (item) {
+        var items = document.querySelectorAll('.gallery .item');
+        var mobile = window.matchMedia('(max-width: 768px)').matches;
+
+        if (mobile && 'IntersectionObserver' in window) {
+          var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) {
+              var vid = en.target.querySelector('.thumb-vid');
+              if (!vid) return;
+              if (en.isIntersecting) { var p = vid.play(); if (p && p.catch) p.catch(function () {}); }
+              else { vid.pause(); }
+            });
+          }, { threshold: 0.35 });
+          items.forEach(function (item) { io.observe(item); });
+          return;
+        }
+
+        items.forEach(function (item) {
           var vid = item.querySelector('.thumb-vid');
           if (!vid) return;
           item.addEventListener('mouseenter', function () {

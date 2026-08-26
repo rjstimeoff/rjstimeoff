@@ -14,6 +14,9 @@
     <script is:inline>
       // Cross-page swipe direction. Axis: Work(0) · Home(1) · Information(2).
       (function () {
+        // Directional swipe is a desktop mechanic. On mobile we let the browser's
+        // default view-transition cross-fade play instead (smooth, no slide).
+        var mobile = window.matchMedia('(max-width: 768px)').matches;
         function axis(p) {
           if (p === '/' || p === '') return 1;
           if (p.indexOf('/work') === 0) return 0;
@@ -26,6 +29,7 @@
           return t > f ? 'to-right' : 'to-left';
         }
         window.addEventListener('pageswap', function (e) {
+          if (mobile) { sessionStorage.removeItem('swipeDir'); return; }
           if (!e.viewTransition || !e.activation || !e.activation.from) { sessionStorage.removeItem('swipeDir'); return; }
           var type = dirType(e.activation.from.url, e.activation.entry.url);
           if (!type) { sessionStorage.removeItem('swipeDir'); return; }
@@ -34,6 +38,7 @@
         });
         window.addEventListener('pagereveal', function (e) {
           if (!e.viewTransition) return;
+          if (mobile) { sessionStorage.removeItem('swipeDir'); return; }
           var type = sessionStorage.getItem('swipeDir');
           sessionStorage.removeItem('swipeDir');
           if (!type) {
@@ -58,6 +63,7 @@
         color: var(--ink);
         font-family: var(--font);
         -webkit-font-smoothing: antialiased;
+        overflow: hidden;               /* home is a single screen — no scroll */
       }
 
       .nav-link {
@@ -74,6 +80,24 @@
         left: 50%;
         transform: translateX(-50%);
       }
+
+      /* mobile-only plain corner nav — replaces the scatter blobs on touch.
+         Same grammar as /work and /information (top corners, 0.95rem). */
+      .corner-m {
+        position: fixed;
+        top: 1.1rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--ink);
+        text-decoration: none;
+        z-index: 2;
+        display: none;
+        transition: color 0.45s ease;
+      }
+      .corner-m.left { left: 1.5rem; }
+      .corner-m.right { right: 1.5rem; }
+      body.art .corner-m { color: #fff; text-shadow: 0 1px 16px rgba(0,0,0,0.5); }
 
       /* scattered, gently drifting letter clusters */
       .scatter {
@@ -163,6 +187,8 @@
         display: block;
         pointer-events: none;
       }
+      /* mobile-only radial-expand layer; off on desktop */
+      .art-radial { display: none; }
       /* The reveal circle: grows from the click point (--cx/--cy, viewport px). r is
          animated on the circle itself; the mask's displacement warps its alpha edge.
          r=6000 at full open keeps the solid core past every corner (feather offscreen). */
@@ -194,6 +220,37 @@
         .artpiece { opacity: 0; transition: opacity 0.4s ease; }
         body.art .artpiece { opacity: 1; }
       }
+      /* ——— mobile: swap the hover-scatter blobs for plain corner nav ——— */
+      @media (max-width: 768px) {
+        .scatter { display: none; }
+        .corner-m { display: block; }
+
+        /* smaller, centered statement — a single centered column, lines centered */
+        .hero { padding: 6rem 1.5rem; text-align: center; }
+        .hero-text { max-width: 32rem; gap: 1.1rem; align-items: center; }
+        .hero p { font-size: 0.95rem; line-height: 1.45; }
+        .cta-arrow { vertical-align: 0.2em; }
+
+        /* Bleed on mobile: a clean radial expand from the tapped text. Clip a
+           plain full-cover <div> to a circle that grows from the tap point
+           (--cx/--cy). clip-path radius animates reliably on an HTML element
+           (unlike on the SVG <image>). No edge filter — just a clean circle. */
+        .artpiece { display: none; }
+        .art-radial {
+          display: block;
+          position: fixed; inset: 0; z-index: 0;
+          background: url(/identity-room.jpg) center / cover no-repeat;
+          pointer-events: none;
+          clip-path: circle(0px at var(--cx, 50%) var(--cy, 50%));
+          transition: clip-path 1.1s cubic-bezier(0.22, 1, 0.3, 1);
+        }
+        body.art .art-radial {
+          clip-path: circle(150% at var(--cx, 50%) var(--cy, 50%));
+          pointer-events: auto; cursor: pointer;
+        }
+        html.art-instant .art-radial { transition: none; }
+      }
+
       /* ——— cross-page swipe (native view transitions) ——— */
       @view-transition { navigation: auto; }
       ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
@@ -249,11 +306,16 @@
       <image class="art-img" href="/identity-room.jpg" xlink:href="/identity-room.jpg"
         x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" mask="url(#bleed-mask)" />
     </svg>
+    {/* Mobile-only radial-expand layer (clean circle clip, no edge filter). */}
+    <div class="art-radial" aria-hidden="true"></div>
+
     <a class="nav-link brand" href="/">timeoff</a>
     <a class="scatter left" href="/work" aria-label="Work"
       ><span>W</span><span>o</span><span>r</span><span>k</span></a>
     <a class="scatter right" href="/information" aria-label="Information"
       ><span>I</span><span>n</span><span>f</span><span>o</span><span>r</span><span>m</span><span>a</span><span>t</span><span>i</span><span>o</span><span>n</span></a>
+    <a class="corner-m left" href="/work">Work</a>
+    <a class="corner-m right" href="/information">Information</a>
 
     <main class="hero">
       <div class="hero-text">
@@ -366,8 +428,12 @@
           });
         }
 
-        init(document.querySelector('.scatter.left'), 1017);
-        init(document.querySelector('.scatter.right'), 2620);
+        // Scatter is a pointer/hover mechanic — skip it on mobile, where the
+        // blobs are hidden and plain corner links stand in.
+        if (!window.matchMedia('(max-width: 768px)').matches) {
+          init(document.querySelector('.scatter.left'), 1017);
+          init(document.querySelector('.scatter.right'), 2620);
+        }
       })();
 
       // Identity art piece: clicking "challenging the expected." bleeds the image
@@ -375,25 +441,29 @@
       // link again, click the art, or press Esc to reverse.
       (function () {
         var cta = document.querySelector('.cta');
-        var art = document.querySelector('.artpiece');
+        var art = document.querySelector('.artpiece');       // desktop SVG bloom
+        var radial = document.querySelector('.art-radial');  // mobile radial expand
         if (!cta || !art) return;
+        // Origin on <html> so both the disc (cx:var(--cx)) and the mobile clip
+        // (clip-path ... at var(--cx)) read the same tap point by inheritance.
+        var root = document.documentElement;
 
         // Restore a persisted "open" state (flagged pre-paint by .art-instant): re-apply the
         // stored origin so a later close collapses to the right point, then re-enable the grow
         // transition on the next frame so closing still animates.
-        if (document.documentElement.classList.contains('art-instant')) {
+        if (root.classList.contains('art-instant')) {
           var sx = sessionStorage.getItem('artCx'), sy = sessionStorage.getItem('artCy');
-          if (sx) art.style.setProperty('--cx', sx);
-          if (sy) art.style.setProperty('--cy', sy);
+          if (sx) root.style.setProperty('--cx', sx);
+          if (sy) root.style.setProperty('--cy', sy);
           requestAnimationFrame(function () {
-            requestAnimationFrame(function () { document.documentElement.classList.remove('art-instant'); });
+            requestAnimationFrame(function () { root.classList.remove('art-instant'); });
           });
         }
 
         function setOrigin(x, y) {
-          // px origin in viewport space — where the disc (and so the bleed) grows from
-          art.style.setProperty('--cx', Math.round(x) + 'px');
-          art.style.setProperty('--cy', Math.round(y) + 'px');
+          // px origin in viewport space — where the bleed grows from
+          root.style.setProperty('--cx', Math.round(x) + 'px');
+          root.style.setProperty('--cy', Math.round(y) + 'px');
         }
         function open(e) {
           var r = cta.getBoundingClientRect();
@@ -401,8 +471,8 @@
                     e && e.clientY ? e.clientY : r.top + r.height / 2);
           document.body.classList.add('art');
           sessionStorage.setItem('artOpen', '1');
-          sessionStorage.setItem('artCx', art.style.getPropertyValue('--cx'));
-          sessionStorage.setItem('artCy', art.style.getPropertyValue('--cy'));
+          sessionStorage.setItem('artCx', root.style.getPropertyValue('--cx'));
+          sessionStorage.setItem('artCy', root.style.getPropertyValue('--cy'));
         }
         function close() {
           document.body.classList.remove('art');
@@ -414,6 +484,7 @@
           if (document.body.classList.contains('art')) close(); else open(e);
         });
         art.addEventListener('click', close);
+        if (radial) radial.addEventListener('click', close);
         document.addEventListener('keydown', function (e) {
           if (e.key === 'Escape') close();
         });
