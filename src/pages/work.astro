@@ -1,19 +1,20 @@
 ---
-// Timeoff — Work index, editorial. Big type rows on the left (num · title · year);
-// a single preview frame on the right crossfades + plays the hovered project's demo.
-// Still, then alive: nothing plays until you point at a row. Years are placeholders.
+// Timeoff — Work.
+// Right-side gallery (~5/8 width), rows of 3, StudioSmall-style portrait
+// thumbnails. Left column (~3/8) reserved for text — built later.
+// Thumbnails are placeholders for now; titles are the real projects.
+// Ordered newest → oldest (top-left is newest); grid renders in this order.
 const projects = [
-  { href: '/bird-dog',        title: 'Bird Dog',        year: '2025', src: '/bird-dog.mov' },
-  { href: '/stripe-redesign', title: 'Stripe Redesign', year: '2026', src: '/stripe-redesign.mov' },
-  { href: '/ui-playground',   title: 'UI Playground',   year: '2026', src: '/ui-playground.mov' },
-  { href: '/jpl-redesign',    title: 'JPL Redesign',    year: '2026', src: '/jpl-redesign.mp4' },
-  { href: '/cove-landing', title: 'Cove Landing', year: '2026', src: '/cove-thumb.mp4' },
-  { href: '/cosign', title: 'COSIGN', year: '2026', src: '/cosign-thumb.mp4' },
-  { href: '/ish-knits', title: 'Ish Knits', year: '2026', src: '/ish-knits-thumb.mp4' },
-  { href: '/berneron', title: 'Berneron', year: '2026', src: '/berneron-thumb.mp4' },
+  { title: 'Berneron', href: '/berneron', tags: ['Graphic Design'], year: '2026', src: '/berneron-thumb.mp4' },
+  { title: 'Ish Knits', href: '/ish-knits', tags: ['Graphic Design'], year: '2026', src: '/ish-knits-thumb.mp4' },
+  { title: 'Cosign', href: '/cosign', tags: ['Product Design'], year: '2026', src: '/cosign-thumb.mp4' },
+  { title: 'Cove', href: '/cove-landing', tags: ['Web Design'], year: '2026', src: '/cove-thumb.mp4' },
+  { title: 'JPL Redesign', href: '/jpl-redesign', tags: ['Web Design'], year: '2026', src: '/jpl-redesign.mp4' },
+  { title: 'Stripe Redesign', href: '/stripe-redesign', tags: ['Web Design'], year: '2026', src: '/stripe-redesign.mov' },
+  { title: 'UI Playground', href: '/ui-playground', tags: ['Product Design'], year: '2026', src: '/ui-playground.mov' },
+  { title: 'Bird Dog', href: '/bird-dog', tags: ['Product Design'], year: '2025', src: '/bird-dog.mov' },
 ];
-// Some pieces (graphic design) preview as a still, not a looping demo.
-const isImg = (s) => /\.(png|jpe?g|webp|gif|avif)$/i.test(s);
+const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
 ---
 <!doctype html>
 <html lang="en">
@@ -24,358 +25,271 @@ const isImg = (s) => /\.(png|jpe?g|webp|gif|avif)$/i.test(s);
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
-    <script is:inline>
-      // Paint the mobile theme from the first frame: stamp <html> before <body> renders,
-      // so there's no flash of the desktop (red text / textured bg) on navigation.
-      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-        document.documentElement.classList.add('is-mobile');
-      }
-    </script>
-    <script is:inline>
-      // Persisted-label handoff (see /timeoff): force the TL label to its
-      // enlarged size before paint when we arrive from a top-left nav click,
-      // so the big word feels continuous across the swap (Work→Home, etc).
-      if (sessionStorage.getItem('navTL')) {
-        document.documentElement.classList.add('pre-tl');
-        sessionStorage.removeItem('navTL');
-      }
-    </script>
-  </head>
-  <body>
-    <main class="work">
-      <ol class="index" style={`--n:${projects.length}`}>
-        {projects.map((p, i) => (
-          <li>
-            <a class="row" href={p.href} data-i={i}>
-              <span class="num">{String(i + 1).padStart(2, '0')}</span>
-              <span class="title">{p.title}</span>
-              <span class="year">{p.year}</span>
-            </a>
-          </li>
-        ))}
-      </ol>
-
-      <aside class="preview" aria-hidden="true">
-        {projects.map((p, i) => (
-          isImg(p.src)
-            ? <img class="frame" data-i={i} src={p.src} alt="" loading="lazy" />
-            : <video
-                class="frame"
-                data-i={i}
-                src={p.src}
-                muted loop playsinline preload="metadata"
-              ></video>
-        ))}
-      </aside>
-    </main>
-
-    {/* Mobile-only: StudioSmall-style two-column grid of auto-looping video thumbnails.
-        preload="none" + display:none on desktop keeps these from loading there; the
-        poster shows instantly on mobile until each loop starts. */}
-    <section class="work-grid" aria-label="projects">
-      {projects.map((p, i) => (
-        <a class="cell" href={p.href}>
-          {isImg(p.src)
-            ? <img class="cell-vid" src={p.src} alt={p.title} loading="lazy" />
-            : <video
-                class="cell-vid"
-                src={p.src}
-                poster={"/work-" + p.href.slice(1) + ".jpg"}
-                muted loop autoplay playsinline preload="none"
-              ></video>}
-          <span class="cell-cap"><span class="cell-title">{p.title}</span><span class="cell-year">{p.year}</span></span>
-        </a>
-      ))}
-    </section>
-
-    <nav class="chrome" aria-label="site">
-      <a class="label tl home grow" href="/">Home</a>
-      <a class="label tr info grow" href="/information">Information</a>
-    </nav>
-
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #eef0ec;   /* light base — matches the painterly backdrop's near-white */
-        --fg: #d6352a;   /* red — nav titles + project labels on the light page */
-        --fg-mute: rgba(214, 53, 42, 0.42);  /* resting row ink */
-        --rule: rgba(40, 44, 60, 0.12);      /* hairline between rows */
+        --ground: #ffffff;
+        --ink: #101113;
+        --ink-soft: #6f6f68;
+        --placeholder: #ECEBE7;
+        --placeholder-2: #E3E2DC;
+        --font: "Host Grotesk", system-ui, -apple-system, sans-serif;
       }
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { height: 100%; }
-      html { background: var(--bg); }   /* light base so the fade-in starts neutral, no white flash */
+      * { box-sizing: border-box; }
       body {
-        min-height: 100vh;
-        background: var(--bg) url('/work-bg.png') center / cover no-repeat;
-        color: var(--fg);
-        font-family: 'Inter', sans-serif;
+        margin: 0;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      /* persistent brand wordmark — top center, across pages */
+      .brand {
+        position: fixed;
+        top: 1.1rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(0);
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--ink);
+        text-decoration: none;
+        z-index: 3;
+        transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease;
+      }
+      /* scrolled away from the top: lift up out of the way + fade */
+      .brand.tucked {
+        transform: translateX(-50%) translateY(-160%);
+        opacity: 0;
+        pointer-events: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .brand { transition: opacity 0.3s ease; }
+        .brand.tucked { transform: translateX(-50%) translateY(0); }
+      }
+
+      /* left text (~3/8) | right gallery (~5/8) */
+      .layout {
+        display: grid;
+        grid-template-columns: 3fr 5fr;
+        gap: 2.5rem;
+        padding: 5.5rem 1.5rem 5rem;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      /* left column — reserved for text, sticky so it holds as gallery scrolls */
+      .col-text {
+        position: sticky;
+        top: 5.5rem;
+        align-self: start;
+        height: max-content;
+      }
+
+      /* mock filter nav — aligns with the top of the grid */
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem 1.1rem;
+        font-size: 0.95rem;
+        line-height: 1.35;
+        max-width: 30ch;
+      }
+      .filters a {
+        color: #a5a49c;
+        text-decoration: none;
+        transition: color 0.15s ease;
+      }
+      .filters a:hover { color: var(--ink); }
+      .filters a.active { color: var(--ink); }
+
+      /* right gallery */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 2.75rem;
+        row-gap: 3.5rem;
+      }
+      .item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        text-decoration: none;
+        color: inherit;
+      }
+      .thumb {
+        aspect-ratio: 3 / 4;
+        background: var(--placeholder);
+        border-radius: 2px;
         overflow: hidden;
       }
-
-      /* ——— two-column editorial: index left, single preview frame right ——— */
-      .work {
-        position: fixed;
-        inset: 0;
-        display: grid;
-        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-        align-items: center;
-        gap: 4vw;
-        padding: 3rem clamp(2.2rem, 6vw, 7rem);   /* clear the corner chrome */
-      }
-
-      /* ——— the index: stacked type rows ——— */
-      .index { list-style: none; }
-      .index li { border-top: 1px solid var(--rule); }
-      .index li:last-child { border-bottom: 1px solid var(--rule); }
-
-      .row {
-        display: grid;
-        grid-template-columns: auto 1fr auto;
-        align-items: baseline;
-        gap: 1.4rem;
-        text-decoration: none;
-        /* row vertical rhythm scales to the count so the whole list fits the viewport */
-        padding: clamp(0.3rem, calc(80vh / var(--n, 8) * 0.12), 1.4rem) 0.4rem;
-        color: var(--fg-mute);
-        transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      .num {
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        font-variant-numeric: tabular-nums;
-        opacity: 0.7;
-        transform: translateY(-0.55em);   /* sit it like a superscript marker */
-      }
-      .title {
-        /* title also scales to the count (capped by vw) so more rows never overflow */
-        font-size: clamp(1.4rem, min(5.2vw, calc(80vh / var(--n, 8) * 0.66)), 4.6rem);
-        font-weight: 500;
-        line-height: 0.98;
-        letter-spacing: -0.01em;
-        white-space: nowrap;
-        will-change: transform, font-weight;
-        transition:
-          transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-          font-weight 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-          letter-spacing 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      .year {
-        font-size: 0.72rem;
-        font-weight: 600;
-        letter-spacing: 0.14em;
-        font-variant-numeric: tabular-nums;
-        opacity: 0;
-        transform: translateX(-0.4rem);
-        transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-
-      /* hover (or keyboard focus): the row wakes — ink saturates, title leans in
-         and thickens, the year fades up on the right. */
-      .row:hover, .row:focus-visible { color: var(--fg); outline: none; }
-      .row:hover .title, .row:focus-visible .title {
-        font-weight: 800;
-        letter-spacing: -0.025em;
-        transform: translateX(0.6rem);
-      }
-      .row:hover .year, .row:focus-visible .year { opacity: 0.85; transform: none; }
-
-      /* dim the siblings of the active row so the eye stays with the hovered one */
-      .index:hover .row:not(:hover) { color: rgba(214, 53, 42, 0.24); }
-
-      /* ——— the preview frame: stacked videos, crossfaded ——— */
-      .preview {
-        position: relative;
-        justify-self: center;
-        width: clamp(280px, 32vw, 460px);
-        aspect-ratio: 1 / 1;
-        box-shadow: 0 22px 60px rgba(40, 44, 60, 0.2);
-        background: #dcdcd4;
-      }
-      .frame {
-        position: absolute;
-        inset: 0;
+      .thumb-vid {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        opacity: 0;
-        transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        object-position: center;
+        display: block;
       }
-      .frame.active { opacity: 1; }
-
-      /* ——— corner chrome, mirroring /timeoff but dark ink on the light page ——— */
-      .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: difference; }
-      .label {
-        position: fixed;
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #fff;
+      .caption {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
       }
-      .grow {
-        pointer-events: auto;
-        text-decoration: none;
-        white-space: nowrap;
-        line-height: 1;
-        will-change: font-size;
-        transition:
-          font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1),
-          letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1),
-          font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+      .title {
+        font-size: 0.82rem;
+        font-weight: 500;
+        letter-spacing: 0.005em;
       }
-      .grow:hover {
-        font-weight: 800;
-        letter-spacing: -0.02em;
+      .subtitle {
+        font-size: 0.82rem;
+        font-weight: 500;
+        letter-spacing: 0.005em;
+        color: var(--ink-soft);
       }
-      .home:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }  /* TL — loudest, matches Work */
-      .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }  /* TR — a notch smaller, matches home */
+      .item { transition: opacity 0.22s ease, transform 0.22s ease; }
+      .item.hidden { display: none; }
+      .item.leaving { opacity: 0; transform: scale(0.97); }
+      .filters a { cursor: pointer; }
 
-      html.pre-tl .grow { transition: none; }
-      html.pre-tl .home {
-        font-size: clamp(2.4rem, 6vw, 5.6rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
+      @media (max-width: 900px) {
+        .layout { grid-template-columns: 1fr; }
+        .col-text { position: static; }
+        .gallery { grid-template-columns: repeat(2, 1fr); }
       }
-
-      .tl { top: 1.9rem; left: 2.2rem; }
-      .tr { top: 1.9rem; right: 2.2rem; }
-
-      /* ——— Mobile: StudioSmall-style 2-column grid of auto-looping thumbnails ———
-         The hover-preview index is desktop-only (dead on touch), so mobile gets its
-         own scrollable grid. Hidden ≥769px. */
-      .work-grid { display: none; }
-
-      /* First-paint mobile theme (html.is-mobile set by the head script): swap the red
-         desktop index for the white grid on the very first frame, before the @media
-         rules resolve — removes the desktop flash on navigation. */
-      html.is-mobile, html.is-mobile body { background: #fff; }
-      html.is-mobile .work { display: none; }
-      html.is-mobile .work-grid { display: grid; }
-
-      /* Mobile theme — deliberately plain: the desktop's red-on-light package reads
-         busy on a phone. Off-white ground, small near-black caption, flat thumbnails,
-         no shadows. StudioSmall-simple. */
-      @media (max-width: 768px) {
-        /* let the page scroll; the desktop index is fixed/overflow-hidden */
-        html, body { height: auto; }
-        html { background: #fff; }   /* no flash of the desktop light ground */
-        body {
-          overflow-x: hidden;
-          overflow-y: auto;
-          background: #fff;
-        }
-        .work { display: none; }   /* retire the hover-driven two-column index */
-
-        .work-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1.6rem 1rem;
-          padding: 5rem 1.4rem 3rem;   /* top clears the corner chrome */
-        }
-        .cell { text-decoration: none; display: block; }
-        .cell-vid {
-          display: block;
-          width: 100%;
-          aspect-ratio: 4 / 5;           /* tall portrait crop, like StudioSmall */
-          object-fit: cover;
-          background: #e8e7e2;           /* flat placeholder; no drop shadow */
-        }
-        .cell-cap { display: block; margin-top: 0.55rem; }
-        .cell-title {
-          font-size: 0.85rem;
-          font-weight: 500;
-          letter-spacing: 0;
-          color: #141414;
-          line-height: 1.2;
-        }
-        .cell-year { display: none; }    /* keep it to just the title — simple */
-
-        /* corner chrome: scrolls with the page (absolute), static, and inherits the
-           base white + difference blend so it inverts over whatever's behind it. */
-        .chrome { position: absolute; }
-        .label {
-          position: absolute;
-          font-size: 0.72rem;
-          letter-spacing: 0.16em;
-        }
-        .grow { will-change: auto; transition: none; }
-        .tl { top: 1.6rem; left: 1.4rem; }
-        .tr { top: 1.6rem; right: 1.4rem; }
-      }
-      /* Touch devices have no hover, so the nav enlarge — both the :hover growth and
-         the persisted cross-page handoff (pre-tl/pre-tr) — only reads as a broken
-         giant word. Keep the nav labels small and static on mobile. */
-      @media (hover: none) {
-        .grow, .grow:hover, html.pre-tl .grow, html.pre-tr .grow {
-          font-size: 0.72rem !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.16em !important;
-        }
-      }
-
     </style>
+  </head>
+  <body>
+    <a class="brand" href="/">timeoff</a>
 
-    <script>
-      // still, then alive: the preview rests on the first project's frozen frame.
-      // Pointing at a row crossfades the frame to that project and plays its demo;
-      // leaving the index settles back to the resting first frame, paused.
-      const rows   = Array.from(document.querySelectorAll<HTMLAnchorElement>('.row'));
-      const frames = Array.from(document.querySelectorAll<HTMLVideoElement>('.frame'));
-      const index  = document.querySelector('.index');
+    <main class="layout">
+      <div class="col-text">
+        <nav class="filters">
+          {filters.map((f) => (
+            <a href="#" class:list={["filter", { active: f === 'All' }]} data-filter={f}>{f}</a>
+          ))}
+        </nav>
+      </div>
 
-      // Mobile: the hover-preview index is hidden — drop its video srcs so they never
-      // fetch — and drive the grid thumbnails, playing each only while it's on screen.
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      if (isMobile) {
-        frames.forEach((v) => {
-          if (v instanceof HTMLVideoElement) { v.removeAttribute('src'); v.load(); }
-        });
-        const cells = Array.from(document.querySelectorAll<HTMLVideoElement>('.cell-vid'));
-        const io = new IntersectionObserver((entries) => {
-          entries.forEach((e) => {
-            const v = e.target;
-            if (!(v instanceof HTMLVideoElement)) return;   // still-image cells don't play
-            if (e.isIntersecting) { v.play().catch(() => {}); }
-            else { v.pause(); }
+      <div class="gallery">
+        {projects.map((p) => (
+          <a class="item" href={p.href} data-tags={p.tags.join('|')}>
+            <div class="thumb">
+              <video class="thumb-vid" src={p.src} muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            </div>
+            <div class="caption">
+              <div class="title">{p.title}</div>
+              <div class="subtitle">{p.tags[0]}, {p.year}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </main>
+
+    <script is:inline>
+      // Brand wordmark: tuck up + fade once you scroll off the top,
+      // return when the top space is clear again.
+      (function () {
+        var brand = document.querySelector('.brand');
+        if (!brand) return;
+        var THRESHOLD = 6;    // px from top before it tucks away
+        var ticking = false;
+        function update() {
+          brand.classList.toggle('tucked', window.scrollY > THRESHOLD);
+          ticking = false;
+        }
+        window.addEventListener('scroll', function () {
+          if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+        }, { passive: true });
+        update();
+      })();
+
+      // Filter the gallery by category, animated. Outgoing tiles fade out, then
+      // the remaining tiles glide to their new spots (FLIP) while incoming tiles
+      // fade in. "All" shows everything.
+      (function () {
+        var links = document.querySelectorAll('.filters .filter');
+        var items = Array.prototype.slice.call(document.querySelectorAll('.gallery .item'));
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        var busy = false;
+
+        function matches(it, cat) {
+          if (cat === 'All') return true;
+          return (it.getAttribute('data-tags') || '').split('|').indexOf(cat) !== -1;
+        }
+
+        function apply(cat) {
+          if (reduce) {
+            items.forEach(function (it) { it.classList.toggle('hidden', !matches(it, cat)); });
+            return;
+          }
+          busy = true;
+          // 1) fade out the tiles that are leaving
+          var leaving = items.filter(function (it) {
+            return !it.classList.contains('hidden') && !matches(it, cat);
           });
-        }, { rootMargin: '150px' });
-        cells.forEach((v) => io.observe(v));
-      }
+          leaving.forEach(function (it) { it.classList.add('leaving'); });
 
-      function show(i: number, play: boolean) {
-        frames.forEach((v, j) => {
-          const on = j === i;
-          v.classList.toggle('active', on);
-          if (!(v instanceof HTMLVideoElement)) return;   // still-image previews just crossfade
-          if (on && play) { v.play(); }
-          else { v.pause(); if (!on) v.currentTime = 0; }
+          setTimeout(function () {
+            // 2) record positions BEFORE the layout change
+            var first = new Map();
+            items.forEach(function (it) { first.set(it, it.getBoundingClientRect()); });
+
+            // 3) commit the new visibility (reflows the grid)
+            items.forEach(function (it) {
+              it.classList.remove('leaving');
+              it.classList.toggle('hidden', !matches(it, cat));
+            });
+
+            // 4) FLIP: invert to old spot, then play to new; fade in newcomers
+            items.forEach(function (it) {
+              if (it.classList.contains('hidden')) return;
+              var f = first.get(it);
+              var last = it.getBoundingClientRect();
+              var wasHidden = f.width === 0 && f.height === 0;
+              it.style.transition = 'none';
+              if (wasHidden) {
+                it.style.opacity = '0';
+                it.style.transform = 'scale(0.97)';
+              } else {
+                it.style.transform = 'translate(' + (f.left - last.left) + 'px,' + (f.top - last.top) + 'px)';
+              }
+              it.getBoundingClientRect(); // force reflow so the invert sticks
+              it.style.transition = 'transform 0.42s cubic-bezier(0.2,0.7,0.2,1), opacity 0.32s ease';
+              it.style.transform = '';
+              it.style.opacity = '';
+            });
+            busy = false;
+          }, 170);
+        }
+
+        links.forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (busy || link.classList.contains('active')) return;
+            links.forEach(function (l) { l.classList.remove('active'); });
+            link.classList.add('active');
+            apply(link.getAttribute('data-filter'));
+          });
         });
-      }
+      })();
 
-      show(0, false);   // resting state
-
-      const isTouch = window.matchMedia('(hover: none)').matches;
-      if (!isTouch) {
-        rows.forEach((row, i) => {
-          row.addEventListener('mouseenter', () => show(i, true));
-          row.addEventListener('focus',      () => show(i, true));
+      // Thumbnail videos: paused first frame by default, play only while hovered.
+      (function () {
+        document.querySelectorAll('.gallery .item').forEach(function (item) {
+          var vid = item.querySelector('.thumb-vid');
+          if (!vid) return;
+          item.addEventListener('mouseenter', function () {
+            var p = vid.play();
+            if (p && p.catch) p.catch(function () {});
+          });
+          item.addEventListener('mouseleave', function () {
+            vid.pause();
+            vid.currentTime = 0;
+          });
         });
-        index?.addEventListener('mouseleave', () => show(0, false));
-      }
-
-      // top-left nav: flag the persisted-enlarge handoff, then navigate normally
-      document.querySelector('a.home')?.addEventListener('click', () => {
-        sessionStorage.setItem('navTL', '1');
-      });
-      // top-right nav (Information): same handoff for the next page
-      document.querySelector('a.info')?.addEventListener('click', () => {
-        sessionStorage.setItem('navTR', '1');
-      });
-      window.addEventListener('pointermove', () => {
-        document.documentElement.classList.remove('pre-tl');
-        document.documentElement.classList.remove('pre-tr');
-      }, { once: true });
+      })();
     </script>
   </body>
 </html>

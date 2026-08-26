@@ -1,19 +1,24 @@
 ---
-// Timeoff — Berneron. Same brand-container template as Ish Knits: page titled for the
-// subject, each project its own titled section so more can stack later. This one is a
-// self-initiated CONCEPT (kicker + brand note say so plainly — not affiliated with the
-// brand). Light graphic-design page: artwork large on the /work backdrop, shared chrome.
+// Timeoff — Berneron project page. SCAFFOLD (graphic-design variant of the system).
+// Same 3fr/5fr split, but the right column is an image grid that adapts to aspect
+// ratio (wide = full width, portrait = 2-up), and the left holds one write-up.
+// Real images. Copy = RJ's voice (verbatim write-up).
+const meta = 'Graphic Design · Concept';
 const works = [
   {
     title: 'Mirage Miroir — Editorial Spread',
-    note: 'I wanted to do an editorial-style project based off of one of my personal hobbies. I saw that one of my favorite watch brands, Berneron, was releasing a new version of their Mirage watch, the Mirage Miroir. This was the perfect subject for this project. The idea behind this was sort of a full editorial spread for the launch. The main visual concept I played around with was “deception of the eyes” — obviously because of the Mirage name. On the left side I had a fun concept of trying to make the page background look as if you were staring at a screen for too long, haha. When I’m focused on a project and staring at a white background for a long time, I notice these sort of blue-ish hues that come out of the screen due to visual fatigue. Such a weird concept that I came up with randomly, but I emulated it with subtle blue diffusions. I placed a glass-like rectangle in the middle just for some more visual effect and framing for the text around it, and then added the 3/4 watch shot with a slight diffusion/blur. The right side started out with the “MIRAGE” text in the background with a super heavy diffusion/blur — I wanted this to barely be visible unless you were squinting or looking from afar. It gave this perfect subtle, warm background for the page. Then I added the caseback shots of the watches as if they were falling down. The rest was pure text and typography — I like this scattered, yet organized placement I went with. Finally I placed the Berneron type logo in the center across both pages just for some added effect. Super happy with the result.',
-    hero: { src: '/berneron/berneron-spread.png', alt: 'Berneron Mirage Miroir — the spread mocked up in an open magazine' },
-    pages: [
-      { src: '/berneron/berneron-06.png', alt: 'Berneron Mirage Miroir — left page, opening' },
-      { src: '/berneron/berneron-07.png', alt: 'Berneron Mirage Miroir — right page, specifications' },
+    note: [
+      "I wanted to do an editorial-style project based off one of my personal hobbies. I saw that one of my favorite watch brands, Berneron, was releasing a new version of their Mirage watch — the Mirage Miroir. Perfect subject. The idea was a full editorial spread for the launch, and the main visual concept I played with was “deception of the eyes” — obviously, because of the Mirage name.",
+      "On the left I tried to make the background look as if you'd been staring at a screen too long — those blue-ish hues that come out from visual fatigue. A weird concept I came up with randomly, but I emulated it with subtle blue diffusions, a glass-like rectangle for framing, and the 3/4 watch shot with a slight blur. The right side started with the “MIRAGE” text heavily blurred in the background — barely visible unless you squint or look from afar — then the caseback shots falling down, and the rest is pure typography. Finally the Berneron logo across both pages. Super happy with the result.",
+    ],
+    plates: [
+      { src: '/berneron/berneron-spread.png', alt: 'Berneron Mirage Miroir — editorial spread', span: 6 },
+      { src: '/berneron/berneron-06.png', alt: 'Berneron Mirage Miroir — caseback shot', span: 3 },
+      { src: '/berneron/berneron-07.png', alt: 'Berneron Mirage Miroir — caseback shot', span: 3 },
     ],
   },
 ];
+const nextProject = { title: 'Ish Knits', href: '/ish-knits' };
 ---
 <!doctype html>
 <html lang="en">
@@ -24,144 +29,96 @@ const works = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
-    <script is:inline>
-      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-        document.documentElement.classList.add('is-mobile');
-      }
-    </script>
-    <script is:inline>
-      if (sessionStorage.getItem('navTL')) {
-        document.documentElement.classList.add('pre-tl');
-        sessionStorage.removeItem('navTL');
-      }
-    </script>
-  </head>
-  <body>
-    <main class="proj">
-      <header class="lead">
-        <p class="kicker">Graphic Design · Concept</p>
-        <h1 class="title">Berneron</h1>
-        <p class="note">A self-initiated editorial concept — not commissioned by or affiliated with the brand.</p>
-      </header>
-
-      {works.map((w) => (
-        <section class="work">
-          <header class="work-head">
-            <h2 class="work-title">{w.title}</h2>
-            {w.note && <p class="work-note">{w.note}</p>}
-          </header>
-          <div class="plates">
-            <figure class="plate hero">
-              <img src={w.hero.src} alt={w.hero.alt} loading="lazy" />
-            </figure>
-            <div class="pages">
-              {w.pages.map((p) => (
-                <figure class="plate">
-                  <img src={p.src} alt={p.alt} loading="lazy" />
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
-      ))}
-    </main>
-
-    <nav class="chrome" aria-label="site">
-      <a class="label tl work grow" href="/work">Work</a>
-      <a class="label tr info grow" href="/information">Information</a>
-    </nav>
-
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --fg: #d6352a;
-        --ink: #26241f;
-        --muted: rgba(38, 36, 31, 0.5);
+        --ground: #ffffff; --ink: #101113; --ink-soft: #6f6f68; --ink-faint: #a5a49c;
+        --placeholder: #ECEBE7; --line: #e6e5e0; --font: "Host Grotesk", system-ui, -apple-system, sans-serif;
       }
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      html { background: #eef0ec; scroll-behavior: smooth; }
-      body {
-        background: #eef0ec url('/work-bg.png') center / cover no-repeat fixed;
-        color: var(--ink);
-        font-family: 'Inter', sans-serif;
-        -webkit-font-smoothing: antialiased;
-        min-height: 100vh;
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+      .brand {
+        position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%) translateY(0);
+        font-size: 0.95rem; font-weight: 500; letter-spacing: 0.01em; color: var(--ink);
+        text-decoration: none; z-index: 3;
+        transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease;
       }
+      .brand.tucked { transform: translateX(-50%) translateY(-160%); opacity: 0; pointer-events: none; }
+      .back { position: fixed; top: 1.1rem; left: 1.25rem; font-size: 0.95rem; font-weight: 500; color: var(--ink); text-decoration: none; z-index: 3; }
+      .back:hover { text-decoration: underline; text-underline-offset: 3px; }
 
-      .proj {
-        position: relative;
-        z-index: 1;
-        max-width: min(94vw, 1180px);
-        margin: 0 auto;
-        padding: 22vh 0 16vh;
-        animation: page-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      .works { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.5rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
+      .work-text { max-width: 38ch; }
+      .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
+      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 1.8rem; }
+      .work-title {
+        font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+        color: var(--ink-soft); margin: 0 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--line);
       }
-      @keyframes page-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-      @media (prefers-reduced-motion: reduce) { .proj { animation: none; } }
+      .work-text p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+      .work-text p + p { margin-top: 1.1rem; }
 
-      .lead { max-width: 46ch; margin-bottom: 10vh; }
-      .kicker { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--fg); margin-bottom: 1.2rem; }
-      .title { font-size: clamp(2.6rem, 7vw, 5.4rem); font-weight: 400; line-height: 1; letter-spacing: -0.012em; color: var(--fg); }
-      .note { font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.5; color: var(--muted); margin-top: 1.6rem; }
+      .plates { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
+      .plate { grid-column: span var(--span, 6); }
+      .plate img { width: 100%; height: auto; display: block; border-radius: 2px; }
 
-      /* ——— each piece is its own titled section; sections stack as more are added ——— */
-      .work { border-top: 1px solid rgba(38, 36, 31, 0.14); padding-top: clamp(2rem, 4vh, 3.2rem); margin-top: clamp(3rem, 7vh, 6rem); }
-      .work:first-of-type { margin-top: 0; }
-      .work-head { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.1rem; margin-bottom: clamp(2rem, 4vh, 3.2rem); }
-      .work-title { font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; color: var(--ink); }
-      .work-note { font-size: clamp(0.95rem, 1.4vw, 1.08rem); line-height: 1.6; color: var(--muted); max-width: 100%; }
+      .next { grid-column: 1 / -1; display: inline-flex; flex-direction: column; gap: 0.3rem; margin-top: 3rem; text-decoration: none; color: inherit; width: max-content; }
+      .next-kicker { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-faint); }
+      .next-title { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+      .next:hover .next-title { transform: translateX(0.4rem); }
 
-      .plates { display: grid; gap: clamp(1.4rem, 3vw, 3rem); }
-      .plate { line-height: 0; }
-      .plate img { width: 100%; height: auto; display: block; }
-      .hero img { box-shadow: 0 30px 80px rgba(40, 44, 60, 0.26); }
-
-      /* the two catalogue pages, shown large to read the type + specs */
-      .pages { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 2.2vw, 2rem); }
-      .pages .plate img { box-shadow: 0 18px 50px rgba(40, 44, 60, 0.2); }
-
-      /* ——— corner chrome ——— */
-      .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; mix-blend-mode: difference; }
-      .label { position: fixed; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #fff; }
-      .grow {
-        pointer-events: auto; text-decoration: none; white-space: nowrap; line-height: 1; will-change: font-size;
-        transition: font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1), font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
+      .work-text, .plates, .next {
+        opacity: 0; transform: translateY(14px);
+        animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i) * 90ms);
       }
-      .grow:hover { font-weight: 800; letter-spacing: -0.02em; }
-      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }
-      .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }
-      html.pre-tl .grow { transition: none; }
-      html.pre-tl .work { font-size: clamp(2.4rem, 6vw, 5.6rem); font-weight: 800; letter-spacing: -0.02em; }
-      .tl { top: 1.9rem; left: 2.2rem; }
-      .tr { top: 1.9rem; right: 2.2rem; }
-
-      @media (max-width: 768px) {
-        .proj { padding: 6rem 1.4rem 4rem; max-width: none; }
-        .lead { margin-bottom: 3.5rem; }
-        .pages { grid-template-columns: 1fr; gap: 1.4rem; }
-        .chrome { position: absolute; }
-        .label { position: absolute; font-size: 0.72rem; letter-spacing: 0.16em; }
-        .tl { top: 1.6rem; left: 1.4rem; }
-        .tr { top: 1.6rem; right: 1.4rem; }
+      @keyframes rise { to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        .work-text, .plates, .next { opacity: 1; transform: none; animation: none; }
+        .brand { transition: opacity 0.3s ease; }
+        .brand.tucked { transform: translateX(-50%) translateY(0); }
       }
-      @media (hover: none) {
-        .grow, .grow:hover, html.pre-tl .grow {
-          font-size: 0.72rem !important; font-weight: 600 !important; letter-spacing: 0.16em !important;
-        }
-      }
+      @media (max-width: 900px) { .works { grid-template-columns: 1fr; row-gap: 2.5rem; } .work-text { max-width: none; } }
     </style>
+  </head>
+  <body>
+    <a class="back" href="/work">Work</a>
+    <a class="brand" href="/">timeoff</a>
 
-    <script>
-      document.querySelectorAll<HTMLAnchorElement>('.chrome a').forEach((a) => {
-        a.addEventListener('click', () => {
-          if (a.classList.contains('work')) sessionStorage.setItem('navTL', '1');
-          if (a.classList.contains('info')) sessionStorage.setItem('navTR', '1');
-        });
-      });
-      window.addEventListener('pointermove', () => {
-        document.documentElement.classList.remove('pre-tl');
-        document.documentElement.classList.remove('pre-tr');
-      }, { once: true });
+    <main class="works">
+      {works.map((w, i) => (
+        <>
+          <div class="work-text" style={`--i:${i}`}>
+            {i === 0 && <h1 class="proj-title">Berneron</h1>}
+            {i === 0 && <p class="proj-meta">{meta}</p>}
+            <h2 class="work-title">{w.title}</h2>
+            {w.note.map((para) => <p>{para}</p>)}
+          </div>
+          <div class="plates" style={`--i:${i}`}>
+            {w.plates.map((p) => (
+              <figure class="plate" style={`--span:${p.span}`}>
+                <img src={p.src} alt={p.alt} loading="lazy" />
+              </figure>
+            ))}
+          </div>
+        </>
+      ))}
+
+      <a class="next" href={nextProject.href}>
+        <span class="next-kicker">Next</span>
+        <span class="next-title">{nextProject.title}</span>
+      </a>
+    </main>
+
+    <script is:inline>
+      (function () {
+        var brand = document.querySelector('.brand');
+        if (!brand) return;
+        var THRESHOLD = 6, ticking = false;
+        function update() { brand.classList.toggle('tucked', window.scrollY > THRESHOLD); ticking = false; }
+        window.addEventListener('scroll', function () { if (!ticking) { window.requestAnimationFrame(update); ticking = true; } }, { passive: true });
+        update();
+      })();
     </script>
   </body>
 </html>

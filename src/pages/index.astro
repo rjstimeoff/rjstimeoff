@@ -1,10 +1,5 @@
 ---
-// Timeoff homepage — "welcomed into a world" concept.
-// Full-bleed painterly hero + quiet chrome. No statement, no scroll-bait.
-// "Still, then alive": each hero is a choppy painting-loop, frozen until the cursor
-// scrubs it. Toggle cycles the set. To add a painting: drop its .mp4 in /public and
-// add the path here.
-const media = ['/ballerina.mp4', '/dog.mp4'];
+// Timeoff — home. Clean slate. Build up from here.
 ---
 <!doctype html>
 <html lang="en">
@@ -15,435 +10,307 @@ const media = ['/ballerina.mp4', '/dog.mp4'];
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&display=swap" rel="stylesheet" />
-    <script is:inline>
-      // Mobile still hero: pick a random painting AND a random frame from its loop,
-      // frozen. Only the one chosen ~55KB frame downloads (no video), so it stays cheap.
-      // Runs before paint and sets --still-src on :root so there's no flash of a default.
-      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
-        document.documentElement.classList.add('is-mobile');   // first-paint mobile theme, no desktop flash
-        var paintings = ['ballerina', 'dog'];
-        var p = paintings[Math.floor(Math.random() * paintings.length)];
-        var f = 1 + Math.floor(Math.random() * 8);   // 8 frames extracted per painting
-        document.documentElement.style.setProperty('--still-src', "url('/still-" + p + "-" + f + ".jpg')");
-      }
-    </script>
-    <script is:inline>
-      // Persisted-label handoff: if we arrived from a click on the top-left nav,
-      // force that label to its enlarged size immediately (before paint) so the
-      // big word appears continuous through the page swap — only the text/color
-      // (rendered fresh per page) change. Native :hover takes back over on move.
-      if (sessionStorage.getItem('navTL')) {
-        document.documentElement.classList.add('pre-tl');
-        sessionStorage.removeItem('navTL');
-      }
-      // same handoff for the top-right (Information) nav
-      if (sessionStorage.getItem('navTR')) {
-        document.documentElement.classList.add('pre-tr');
-        sessionStorage.removeItem('navTR');
-      }
-    </script>
-  </head>
-  <body>
-    <main class="hero">
-      {media.map((src, idx) => (
-        <video class="layer" data-idx={idx} muted playsinline preload="auto">
-          <source src={src} type="video/mp4" />
-        </video>
-      ))}
-    </main>
-
-    {/* Mobile-only "still" hero — the painterly loop frozen to a single frame.
-        No cursor to bring it alive, so mobile is the permanent still state:
-        full-bleed art direction + quiet corner chrome, StudioSmall-style.
-        Swap the painting by changing --still-src (dog-still.jpg is the alt). */}
-    <div class="hero-still" aria-hidden="true"></div>
-
-    <button class="bg-toggle" id="bgToggle" type="button" aria-label="switch background">
-      <span class="cur">01</span><span class="sep">/</span><span class="tot">02</span>
-    </button>
-
-    {/* The .mbr breaks only render on mobile (hidden ≥769px), so the tagline reads as
-        4 wide lines on desktop and stacks into 6 taller/narrower lines on a phone. */}
-    <h1 class="statement">Timeoff<br />a design <br class="mbr" />&amp; product<br />studio by <br class="mbr" />RJ Rivera<br />born in NYC</h1>
-    <h1 class="statement ghost" aria-hidden="true">Timeoff<br />a design <br class="mbr" />&amp; product<br />studio by <br class="mbr" />RJ Rivera<br />born in NYC</h1>
-
-    <nav class="chrome" aria-label="site">
-      <a class="label tl work grow" href="/work">Work</a>
-      <a class="label tr info grow" href="/information">Information</a>
-      <span class="label br">Est. 2026</span>
-    </nav>
-
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --bg: #131210;
-        --fg: #ece9e2;
-        --muted: #b9b3a8;     /* chrome over imagery — needs to stay legible */
+        --ground: #ffffff;
+        --ink: #101113;
+        --font: "Host Grotesk", system-ui, -apple-system, sans-serif;
       }
-      /* Registered so they INTERPOLATE. Animating these scalars (not the whole
-         transform matrix) keeps the squish axis fixed — a straight directional
-         compression instead of the arc you get from matrix-decomposition tweening. */
-      @property --sqV { syntax: '<number>'; inherits: false; initial-value: 1; }
-      @property --sqH { syntax: '<number>'; inherits: false; initial-value: 1; }
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+      * { box-sizing: border-box; }
       html, body { height: 100%; }
-      html { background: var(--bg); }   /* dark base so there's no white flash on load */
       body {
-        min-height: 100vh;
-        background: var(--bg);
-        color: var(--fg);
-        font-family: 'Inter', sans-serif;
-        overflow: hidden;
+        margin: 0;
+        background: var(--ground);
+        color: var(--ink);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
       }
 
-      .hero { position: fixed; inset: 0; }
-      .layer {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
-        opacity: 0;
-      }
-      .layer.show { opacity: 1; }
-
-      .bg-toggle {
+      .nav-link {
         position: fixed;
-        top: 1.9rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.01em;
+        color: var(--ink);
+        text-decoration: none;
+        z-index: 2;
+      }
+      .brand {
+        top: 1.1rem;
         left: 50%;
         transform: translateX(-50%);
-        z-index: 3;
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.6rem 0.8rem;       /* bigger hit target */
-        font-family: inherit;
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
-        color: #fff;
-        mix-blend-mode: difference;
-        display: inline-flex;
-        gap: 0.42em;
-        transition: letter-spacing 0.3s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-      .bg-toggle .sep { opacity: 0.45; }
-      .bg-toggle .cur { transition: opacity 0.25s ease; }
-      .bg-toggle:hover { letter-spacing: 0.3em; }
-      .bg-toggle:active { transform: translateX(-50%) scale(0.9); }
-      .bg-toggle.tick .cur { opacity: 0; }   /* brief flash on switch */
-      /* subtle vignette so corner chrome stays readable over any image */
-      .hero::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(120% 120% at 50% 50%, transparent 55%, rgba(8,7,6,0.55) 100%),
-          linear-gradient(to bottom, rgba(8,7,6,0.35) 0%, transparent 22%, transparent 78%, rgba(8,7,6,0.45) 100%);
-        pointer-events: none;
       }
 
-      .wordmark {
+      /* scattered, gently drifting letter clusters */
+      .scatter {
+        position: fixed;
+        top: 50%;
+        width: 175px;
+        height: 150px;
+        margin-top: -75px;          /* vertical center */
+        z-index: 2;
+        cursor: pointer;
+      }
+      .scatter.left  { left: 1rem; }
+      .scatter.right { right: 1rem; }
+      .scatter, .scatter:visited { color: var(--ink); text-decoration: none; }
+
+      /* outer layer: holds position — scattered by default, assembled on hover */
+      .scatter .pos {
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: translate(var(--bx), var(--by));
+        transition: transform 520ms cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform;
+      }
+      .scatter:hover .pos,
+      .scatter:focus-visible .pos {
+        transform: translate(var(--ax), var(--ay));
+      }
+
+      /* inner layer: the glyph (static — no drift) */
+      .scatter .gl {
+        display: inline-block;
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--ink);
+      }
+
+      .hero {
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 6rem 1.5rem;
+        text-align: left;
         position: relative;
         z-index: 1;
+      }
+      .hero-text {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-width: min(880px, 88vw);
+      }
+      .hero p {
+        margin: 0;
+        font-size: clamp(1.05rem, 1.5vw, 1.25rem);
         font-weight: 400;
-        font-size: clamp(1.05rem, 1.6vw, 1.4rem);
-        letter-spacing: 0.42em;
-        text-indent: 0.42em;
-        color: var(--fg);
-        text-shadow: 0 1px 24px rgba(0,0,0,0.5);
+        line-height: 1.35;
+        letter-spacing: -0.01em;
+      }
+      .hero .cta {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .cta-arrow {
+        display: inline-block;
+        width: 0.62em;
+        height: 0.62em;
+        margin-left: 0.18em;
+        vertical-align: 0.28em;
+        opacity: 0.5;
       }
 
-      .statement {
+      /* ——— identity art piece: a soft, slow bleed that grows from the click ———
+         An animatable mask radius (@property) feathers the reveal edge, so the
+         image seeps in organically without distorting the artwork itself. */
+      @property --bleed-r {
+        syntax: '<length>';
+        inherits: false;
+        initial-value: 0px;
+      }
+      .artpiece {
         position: fixed;
-        left: 2.2rem;
-        bottom: 1.9rem;
-        z-index: 2;
-        font-weight: 800;
-        font-size: clamp(3.4rem, 8vw, 7.5rem);
-        line-height: 0.95;
-        letter-spacing: -0.02em;
-        color: #fff;
-        mix-blend-mode: difference;   /* inverts against the image — always legible */
-        transform-origin: left bottom;
-        /* Composite both presses on fixed axes; each hover drives only its own scalar.
-           At rest both scalars are 1 → scaleX(1) and scaleY(1) → identity. */
-        --sqV: 1;       /* vertical squish amount (1 = none) */
-        --sqH: 1;       /* horizontal squish amount (1 = none) */
-        transform: scaleX(var(--sqH)) scaleY(var(--sqV));
-        transition:
-          --sqV 0.62s cubic-bezier(0.16, 1, 0.3, 1),
-          --sqH 0.62s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      /* reactive squish — clean axis compression, anchored bottom-left (no shear).
-         Work presses straight down: one strong axis (scaleY 0.93). Information keeps the
-         strong VERTICAL squish (letters get shorter, same feel as Work) but adds only a
-         GENTLE horizontal compression — the disproportion (V < H) is what makes it read
-         as a squish rather than a uniform shrink, while the slight H pull + bottom-left
-         origin still draws it into the corner. */
-      body:has(.work:hover) .statement { --sqV: 0.93; }
-      body:has(.info:hover) .statement { --sqV: 0.93; --sqH: 0.97; }
-
-      /* A faint flat-white copy stacked exactly over the blended statement.
-         The base layer keeps the mix-blend-difference shimmer; this ghost adds
-         a uniform white wash on top so the letters read brighter/whiter.
-         Shares .statement so it squishes in perfect sync; just no blend. */
-      .statement.ghost {
-        mix-blend-mode: normal;
-        color: #fff;
-        opacity: 0.2;
-        z-index: 3;
+        inset: 0;
+        z-index: 0;
+        background: #101113 url('/identity-room.png') center / cover no-repeat;
+        --bleed-r: 0px;
+        -webkit-mask-image: radial-gradient(circle var(--bleed-r) at var(--cx, 50%) var(--cy, 50%), #000 58%, rgba(0,0,0,0) 100%);
+        mask-image: radial-gradient(circle var(--bleed-r) at var(--cx, 50%) var(--cy, 50%), #000 58%, rgba(0,0,0,0) 100%);
+        transition: --bleed-r 1.4s cubic-bezier(0.22, 1, 0.3, 1);
         pointer-events: none;
       }
-      .mbr { display: none; }   /* mobile-only tagline breaks; shown in the @media below */
-
-      .chrome { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
-      .label {
-        position: fixed;
-        font-size: 0.7rem;
-        letter-spacing: 0.18em;
-        text-transform: uppercase;
-        color: #fff;
-        mix-blend-mode: difference;
-      }
-      /* The two nav labels (Work / Information) grow on hover — a system, not a
-         one-off. Each swells from a tiny tracked micro-label to near-statement scale.
-         The gesture lives in the easing: a long, weighted expo-out so it *unfurls*
-         rather than snaps; weight tweens up to 800 (variable Inter) and tracking
-         tightens to match the bottom-left statement exactly. Each is pinned to its
-         own corner, so Work grows down-right and Information grows down-left. */
-      .grow {
-        pointer-events: auto;           /* re-enable over .chrome (which is none) */
-        text-decoration: none;
-        white-space: nowrap;
-        line-height: 1;                 /* keep the top edge pinned as it grows */
-        will-change: font-size;
-        transition:
-          font-size 0.62s cubic-bezier(0.16, 1, 0.3, 1),
-          letter-spacing 0.62s cubic-bezier(0.16, 1, 0.3, 1),
-          font-weight 0.62s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      .grow:hover {
-        font-weight: 800;                        /* matches the bottom-left statement */
-        letter-spacing: -0.02em;                 /* same tracking as the statement */
-      }
-      .work:hover { font-size: clamp(2.4rem, 6vw, 5.6rem); }  /* primary — loudest */
-      .info:hover { font-size: clamp(1.8rem, 4vw, 3.9rem); }  /* longer word, kept a notch smaller */
-
-      /* forced-enlarged on arrival (set by the is:inline head script), instant
-         and untweened so the persisted TL label appears already-big — matches
-         the .work:hover state exactly so the handoff is seamless. */
-      html.pre-tl .grow { transition: none; }
-      html.pre-tl .work {
-        font-size: clamp(2.4rem, 6vw, 5.6rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-      /* ...and pre-apply the Work-hover squish to the statement, instantly. Returning
-         to home still-hovering the TL label, the bottom text arrives already squished
-         instead of snapping into it on the first cursor jiggle. Hands back to native
-         :hover on pointermove (which drops .pre-tl) exactly like the label does. */
-      html.pre-tl .statement { transition: none; --sqV: 0.93; }
-      /* top-right (Information) persisted enlarge — mirrors .info:hover exactly */
-      html.pre-tr .grow { transition: none; }
-      html.pre-tr .info {
-        font-size: clamp(1.8rem, 4vw, 3.9rem);
-        font-weight: 800;
-        letter-spacing: -0.02em;
-      }
-      html.pre-tr .statement { transition: none; --sqV: 0.93; --sqH: 0.97; }
-
-      .tl { top: 1.9rem; left: 2.2rem; }
-      .tr { top: 1.9rem; right: 2.2rem; }
-      .bl { bottom: 1.9rem; left: 2.2rem; }
-      .br { bottom: 1.9rem; right: 2.2rem; }
-
-      /* ——— Mobile: the permanent "still" state ———
-         No pointer, so none of the desktop drama (cursor-scrub video, hover-squish,
-         toggle) applies. Mobile is one full-bleed painterly still + quiet corner chrome
-         + the tagline stacked tall in the bottom-left. Hidden ≥769px. */
-      .hero-still { display: none; }
-
-      /* First-paint mobile theme (html.is-mobile set by the head script): show the still
-         hero + stacked tagline on the very first frame so there's no reflow flash on
-         navigation, before the @media rules resolve. */
-      html.is-mobile .hero, html.is-mobile .bg-toggle { display: none; }
-      html.is-mobile .mbr { display: inline; }
-      html.is-mobile .hero-still {
-        display: block; position: fixed; inset: 0; z-index: 0;
-        background: var(--still-src, url('/still-ballerina-1.jpg')) center / cover no-repeat, var(--bg);
-      }
-      html.is-mobile .statement {
-        left: 1.5rem; bottom: 1.5rem;
-        font-size: clamp(3.4rem, 14vw, 4.2rem); line-height: 1.0;
-        transform: none; transition: none;
-      }
-      html.is-mobile .br { display: none; }
-
-      @media (max-width: 768px) {
-        /* retire the desktop, pointer-driven video hero + toggle */
-        .hero, .bg-toggle { display: none; }
-        .mbr { display: inline; }   /* activate the extra tagline breaks → taller stack */
-
-        /* full-bleed frozen painting — src chosen at random by the head script.
-           Falls back to a ballerina frame if JS is off. */
-        .hero-still {
-          display: block;
-          position: fixed;
-          inset: 0;
-          z-index: 0;
-          background: var(--still-src, url('/still-ballerina-1.jpg')) center / cover no-repeat, var(--bg);
-        }
-        /* same vignette as desktop so corner chrome stays legible over any frame */
-        .hero-still::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(120% 120% at 50% 50%, transparent 45%, rgba(8,7,6,0.6) 100%),
-            linear-gradient(to bottom, rgba(8,7,6,0.5) 0%, transparent 26%, transparent 62%, rgba(8,7,6,0.72) 100%);
-          pointer-events: none;
-        }
-
-        /* tagline, bottom-left, static — no squish. Force identity transform so the
-           hover/persisted-squish states can never apply on touch. Sized to sit a notch
-           smaller than desktop min so the 6-line stack breathes on a phone. */
-        .statement {
-          left: 1.5rem;
-          bottom: 1.5rem;
-          font-size: clamp(3.4rem, 14vw, 4.2rem);
-          line-height: 1.0;
-          transform: none;
-          transition: none;
-        }
-
-        /* corner chrome stays, but static — no hover-grow on touch. Tighten to the
-           phone edges and drop to a comfortable tap size. */
-        .label { font-size: 0.72rem; letter-spacing: 0.16em; }
-        .grow { will-change: auto; transition: none; }
-        .tl { left: 1.5rem; }
-        .tr { right: 1.5rem; }
-        .tl, .tr { top: 1.6rem; }
-        .br { display: none; }   /* Est. 2026 — no clean home on mobile; the tagline carries the identity */
-      }
-      /* Touch devices have no hover, so the nav enlarge — both the :hover growth and
-         the persisted cross-page handoff (pre-tl/pre-tr) — only reads as a broken
-         giant word. Keep the nav labels small and static on mobile. */
-      @media (hover: none) {
-        .grow, .grow:hover, html.pre-tl .grow, html.pre-tr .grow {
-          font-size: 0.72rem !important;
-          font-weight: 600 !important;
-          letter-spacing: 0.16em !important;
-        }
+      body.art .artpiece {
+        --bleed-r: 2800px;
+        pointer-events: auto;
+        cursor: pointer;
       }
 
+      /* text stays legible over the art: white, a touch heavier, soft shadow */
+      .hero p, .hero .cta, .nav-link, .scatter .gl {
+        transition: color 0.45s ease;
+      }
+      body.art .hero p { color: #fff; font-weight: 600; text-shadow: 0 1px 22px rgba(0,0,0,0.45); }
+      body.art .hero .cta { color: #fff; }
+      body.art .nav-link,
+      body.art .scatter .gl { color: #fff; text-shadow: 0 1px 16px rgba(0,0,0,0.5); }
+
+      @media (prefers-reduced-motion: reduce) {
+        .artpiece { -webkit-mask-image: none; mask-image: none; opacity: 0; transition: opacity 0.4s ease; }
+        body.art .artpiece { opacity: 1; }
+      }
     </style>
+  </head>
+  <body>
+    <div class="artpiece" aria-hidden="true"></div>
+    <a class="nav-link brand" href="/">timeoff</a>
+    <a class="scatter left" href="/work" aria-label="Work"
+      ><span>W</span><span>o</span><span>r</span><span>k</span></a>
+    <a class="scatter right" href="/information" aria-label="Information"
+      ><span>I</span><span>n</span><span>f</span><span>o</span><span>r</span><span>m</span><span>a</span><span>t</span><span>i</span><span>o</span><span>n</span></a>
 
-    <script>
-      const vids = Array.from(document.querySelectorAll('.hero video')) as HTMLVideoElement[];
+    <main class="hero">
+      <div class="hero-text">
+        <p>Timeoff helps companies stand out through experimental design.</p>
+        <p>We work with ambitious companies that care about how they show up.</p>
+        <p>Putting people first and <a class="cta" href="#">challenging the expected.<svg class="cta-arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M9 3H4M9 3V8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+      </div>
+    </main>
 
-      // Mobile shows the frozen still instead of the scrubbable video hero — so abort
-      // the heavy .mp4 fetches (preload="auto") and skip all the pointer-driven setup.
-      const isMobile = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
-      if (isMobile) {
-        vids.forEach((v) => {
-          v.removeAttribute('preload');
-          v.querySelectorAll('source').forEach((s) => s.remove());
-          v.load();   // aborts any in-flight download
+    <script is:inline>
+      // Scattered letter clusters that gather into the word on hover.
+      // Each cluster RE-scatters to a fresh arrangement when the pointer leaves,
+      // so it feels novel without ever being sporadic (same tight, safe ranges).
+      (function () {
+        var BOX_W = 175, BOX_H = 150;
+        var advance = 14;   // horizontal step per letter — keeps reading order
+        var midY = 75;      // vertical center
+        var minGapX = 16, minGapY = 22;   // clearance to count letters as "clear"
+
+        // one-time: wrap each letter as .pos (position) > .gl (drift), measure widths
+        function build(el) {
+          var items = [];
+          Array.prototype.forEach.call(el.querySelectorAll('span'), function (s) {
+            var ch = s.textContent;
+            s.textContent = '';
+            s.className = 'pos';
+            var gl = document.createElement('span');
+            gl.className = 'gl';
+            gl.textContent = ch;
+            // copy Astro's scope attribute so the scoped .gl CSS rules apply
+            // (JS-created elements don't get it automatically)
+            Array.prototype.forEach.call(s.attributes, function (a) {
+              if (a.name.indexOf('data-astro-cid') === 0) gl.setAttribute(a.name, '');
+            });
+            s.appendChild(gl);
+            items.push({ pos: s, gl: gl, w: gl.offsetWidth });
+          });
+          return items;
+        }
+
+        // (re)assign scattered base positions + drift. Positions only —
+        // the assembled word target is locked separately so it never moves.
+        // rnd() -> 0..1; pass a fresh source each time for a new arrangement.
+        function scatter(items, rnd) {
+          var cursor = 6;
+          var placed = [];
+          items.forEach(function (it) {
+            var bx = cursor + (rnd() * 2 - 1) * 3;   // small x jitter around the step
+            cursor += advance;
+            var by, best = 0, bestGap = -1;          // pick a clear vertical spot
+            for (var t = 0; t < 40; t++) {
+              var cand = midY + (rnd() * 2 - 1) * 40;
+              var worst = 999;
+              for (var i = 0; i < placed.length; i++) {
+                if (Math.abs(placed[i].x - bx) < minGapX)
+                  worst = Math.min(worst, Math.abs(placed[i].y - cand));
+              }
+              if (worst >= minGapY) { by = cand; break; }
+              if (worst > bestGap) { bestGap = worst; best = cand; }
+            }
+            if (by === undefined) by = best;
+            placed.push({ x: bx, y: by });
+
+          });
+
+          // recenter the cluster's vertical centre of mass to the box middle,
+          // so both blobs sit at the same height (and assembled words are level)
+          var meanY0 = placed.reduce(function (a, p) { return a + p.y; }, 0) / placed.length;
+          var shift = midY - meanY0;
+          items.forEach(function (it, i) {
+            placed[i].y += shift;
+            it.pos.style.setProperty('--bx', placed[i].x.toFixed(1) + 'px');
+            it.pos.style.setProperty('--by', placed[i].y.toFixed(1) + 'px');
+          });
+          return placed;
+        }
+
+        // lock the assembled word position ONCE — same settle spot every hover
+        function lockAssembled(items, placed) {
+          var total = items.reduce(function (a, it) { return a + it.w; }, 0);
+          var meanX = placed.reduce(function (a, p) { return a + p.x; }, 0) / placed.length;
+          var meanY = placed.reduce(function (a, p) { return a + p.y; }, 0) / placed.length;
+          var ax = meanX - total / 2;
+          var ay = Math.min(Math.max(meanY, 12), BOX_H - 24);
+          items.forEach(function (it) {
+            it.pos.style.setProperty('--ax', ax.toFixed(1) + 'px');
+            it.pos.style.setProperty('--ay', ay.toFixed(1) + 'px');
+            ax += it.w;
+          });
+        }
+
+        // seeded PRNG for the initial arrangement (stable first paint)
+        function mulberry32(seed) {
+          return function () {
+            seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+            var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        function init(el, seed) {
+          if (!el) return;
+          var items = build(el);
+          var placed = scatter(items, mulberry32(seed));  // stable first arrangement
+          lockAssembled(items, placed);                   // fixed settle spot, set once
+          // re-scatter on leave: gather -> drift out to a fresh (random) spread
+          el.addEventListener('mouseleave', function () {
+            scatter(items, Math.random);                  // positions vary; word target does not
+          });
+        }
+
+        init(document.querySelector('.scatter.left'), 1017);
+        init(document.querySelector('.scatter.right'), 2620);
+      })();
+
+      // Identity art piece: clicking "challenging the expected." bleeds the image
+      // out from the click point to fill the screen; text turns white. Click the
+      // link again, click the art, or press Esc to reverse.
+      (function () {
+        var cta = document.querySelector('.cta');
+        var art = document.querySelector('.artpiece');
+        if (!cta || !art) return;
+
+        function setOrigin(x, y) {
+          art.style.setProperty('--cx', (x / window.innerWidth * 100).toFixed(1) + '%');
+          art.style.setProperty('--cy', (y / window.innerHeight * 100).toFixed(1) + '%');
+        }
+        function open(e) {
+          var r = cta.getBoundingClientRect();
+          setOrigin(e && e.clientX ? e.clientX : r.left + r.width / 2,
+                    e && e.clientY ? e.clientY : r.top + r.height / 2);
+          document.body.classList.add('art');
+        }
+        function close() { document.body.classList.remove('art'); }
+
+        cta.addEventListener('click', function (e) {
+          e.preventDefault();
+          if (document.body.classList.contains('art')) close(); else open(e);
         });
-      }
-
-      const TOTAL = vids.length;
-      let i = 0;
-
-      const toggle = document.getElementById('bgToggle')!;
-      const cur = toggle.querySelector('.cur')!;
-      const tot = toggle.querySelector('.tot')!;
-      tot.textContent = `0${TOTAL}`;
-
-      vids.forEach((v) => v.pause());
-
-      function render() {
-        vids.forEach((v, idx) => v.classList.toggle('show', idx === i));
-        // reset the flywheel so the new painting starts from a clean frozen frame
-        phase = 0; target = 0;
-      }
-
-      toggle.addEventListener('click', () => {
-        i = (i + 1) % TOTAL;
-        render();
-        toggle.classList.add('tick');
-        setTimeout(() => {
-          cur.textContent = `0${i + 1}`;
-          toggle.classList.remove('tick');
-        }, 130);
-      });
-
-      // ——— cursor-scrub with momentum: cursor adds intent, playback eases toward it ———
-      // A weighted "flywheel" model — fast flicks become smooth sweeps, never a whip.
-      let last: { x: number; y: number } | null = null;
-      let phase = 0;          // eased playback position (monotonic)
-      let target = 0;         // where the cursor wants it to be
-      const SCRUB = 0.004;    // seconds added per px of cursor travel
-      const MAX_STEP = 0.08;  // cap how much one move event can add (anti-whip)
-      const EASE = 0.3;       // how quickly playback catches up to target
-      const MAX_FRAME = 0.09; // hard ceiling on seconds advanced per frame
-
-      window.addEventListener('pointermove', (e) => {
-        if (last) {
-          const d = Math.hypot(e.clientX - last.x, e.clientY - last.y);
-          target += Math.min(d * SCRUB, MAX_STEP);
-        }
-        last = { x: e.clientX, y: e.clientY };
-      });
-
-      function tick() {
-        const v = vids[i];
-        const dur = v?.duration;
-        if (dur) {
-          let step = (target - phase) * EASE;
-          if (step > MAX_FRAME) step = MAX_FRAME;
-          phase += step;
-          v.currentTime = ((phase % dur) + dur) % dur;
-        }
-        requestAnimationFrame(tick);
-      }
-      render();
-      if (!isMobile) requestAnimationFrame(tick);   // no scrub loop on the still mobile hero
-
-      // top-left nav: flag the persisted-enlarge handoff, then navigate normally
-      document.querySelector('a.work')?.addEventListener('click', () => {
-        sessionStorage.setItem('navTL', '1');
-      });
-      // Hand the persisted enlarge + squish back to native :hover only once the
-      // pointer actually LEAVES the top-left label. While you stay parked on it
-      // (e.g. you returned from /work still hovering), pre-tl holds the big word
-      // AND the bottom-statement squish frozen — so there's no :has recompute to
-      // snap on the first jiggle. Moving off the label eases everything out.
-      const tlLabel = document.querySelector('a.work');
-      const releasePreTL = () => document.documentElement.classList.remove('pre-tl');
-      if (tlLabel) {
-        tlLabel.addEventListener('pointerleave', releasePreTL, { once: true });
-        // if the very first move is already off the label, hand back right away
-        window.addEventListener('pointermove', (e) => {
-          if (!tlLabel.contains(e.target as Node)) releasePreTL();
-        }, { once: true });
-      }
-
-      // top-right nav (Information): same persisted-enlarge handoff + release
-      document.querySelector('a.info')?.addEventListener('click', () => {
-        sessionStorage.setItem('navTR', '1');
-      });
-      const trLabel = document.querySelector('a.info');
-      const releasePreTR = () => document.documentElement.classList.remove('pre-tr');
-      if (trLabel) {
-        trLabel.addEventListener('pointerleave', releasePreTR, { once: true });
-        window.addEventListener('pointermove', (e) => {
-          if (!trLabel.contains(e.target as Node)) releasePreTR();
-        }, { once: true });
-      }
+        art.addEventListener('click', close);
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') close();
+        });
+      })();
     </script>
   </body>
 </html>

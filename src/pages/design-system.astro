@@ -1,0 +1,373 @@
+---
+// Timeoff Design System — living source-of-truth doc.
+// Standalone, self-contained page (no shared layout) so the old site's
+// design never bleeds into it. View at /design-system.
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Timeoff Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap" />
+<style>
+  :root {
+    --ground:      #F4F4F1;
+    --surface:     #FBFBF9;
+    --surface-sunk:#EEEDE8;
+    --ink:         #1B1B18;
+    --ink-soft:    #6B6A62;
+    --ink-faint:   #9C9B92;
+    --line:        #E2E1DA;
+    --line-strong: #D3D2C9;
+    --accent:      #2E4A46;
+    --accent-soft: #E4ECE8;
+    --draft:       #8A6A2A;
+    --draft-soft:  #F1E7D2;
+    --final:       #2E4A46;
+    --final-soft:  #DCEAE3;
+
+    --maxw: 42rem;
+    --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+    --font-body: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:      #15161A;
+      --surface:     #1B1D22;
+      --surface-sunk:#101115;
+      --ink:         #E9E8E2;
+      --ink-soft:    #9B9C95;
+      --ink-faint:   #6A6B66;
+      --line:        #2A2C31;
+      --line-strong: #3A3C42;
+      --accent:      #86B0A2;
+      --accent-soft: #1E2A28;
+      --draft:       #C7A25C;
+      --draft-soft:  #2A241A;
+      --final:       #86B0A2;
+      --final-soft:  #1E2A28;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground:      #15161A;
+    --surface:     #1B1D22;
+    --surface-sunk:#101115;
+    --ink:         #E9E8E2;
+    --ink-soft:    #9B9C95;
+    --ink-faint:   #6A6B66;
+    --line:        #2A2C31;
+    --line-strong: #3A3C42;
+    --accent:      #86B0A2;
+    --accent-soft: #1E2A28;
+    --draft:       #C7A25C;
+    --draft-soft:  #2A241A;
+    --final:       #86B0A2;
+    --final-soft:  #1E2A28;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 6vw, 5rem) 1.5rem 6rem;
+  }
+
+  .mast {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 7vw, 3.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  h1 em { font-style: italic; color: var(--ink-soft); }
+  .lede {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 34rem;
+    margin: 0;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-faint);
+  }
+  .meta-row b { color: var(--ink-soft); font-weight: 500; }
+
+  .note {
+    margin-top: 2rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .note b { color: var(--ink); font-weight: 600; }
+
+  .toc {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .toc-title {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0 0 0.75rem;
+  }
+  .toc a {
+    display: grid;
+    grid-template-columns: 2rem 1fr auto;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .toc a:last-child { border-bottom: 1px solid var(--line); }
+  .toc a:hover { color: var(--accent); }
+  .toc .num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+  .toc .label { font-size: 1rem; }
+  .toc a:hover .label { text-decoration: underline; text-underline-offset: 3px; }
+
+  section {
+    margin-top: 4.5rem;
+    scroll-margin-top: 2rem;
+  }
+  .sec-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line-strong);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .sec-num {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-faint);
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.75rem;
+    letter-spacing: -0.01em;
+    margin: 0;
+    flex: 1 1 auto;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.22rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+  .chip.empty { color: var(--ink-soft); background: var(--surface-sunk); border: 1px solid var(--line); }
+  .chip.draft { color: var(--draft); background: var(--draft-soft); }
+  .chip.final { color: var(--final); background: var(--final-soft); }
+
+  .prompt {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    max-width: 36rem;
+    margin: 0 0 1.25rem;
+  }
+
+  .empty-state {
+    border: 1px dashed var(--line-strong);
+    border-radius: 3px;
+    padding: 1.6rem 1.5rem;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent, transparent 9px,
+      var(--surface) 9px, var(--surface) 18px
+    );
+    color: var(--ink-faint);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    text-align: center;
+  }
+
+  footer {
+    margin-top: 6rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: var(--ink-faint);
+  }
+  footer b { color: var(--ink-soft); font-weight: 500; }
+
+  a { color: var(--accent); }
+
+  @media (max-width: 480px) {
+    .toc a { grid-template-columns: 1.5rem 1fr; }
+    .toc .chip { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Studio Source of Truth</p>
+    <h1>Timeoff <em>Design System</em></h1>
+    <p class="lede">The single reference for how the studio looks, sounds, and moves. Decisions live here so we stop re-making them.</p>
+    <div class="meta-row">
+      <span><b>Version</b> 0.1</span>
+      <span><b>Updated</b> Aug 24, 2026</span>
+      <span><b>Status</b> Scaffold — sections empty</span>
+    </div>
+  </header>
+
+  <p class="note"><b>How this doc works.</b> It's living. When something new gets finalized, it's added here; when something goes stale, it's removed. Each section carries a status — <span class="chip empty" style="display:inline-block">empty</span> nothing decided yet · <span class="chip draft" style="display:inline-block">draft</span> in play, not locked · <span class="chip final" style="display:inline-block">final</span> settled. We fill these in as we go — one decision at a time.</p>
+
+  <nav class="toc">
+    <p class="toc-title">Contents</p>
+    <a href="#s1"><span class="num">01</span><span class="label">What Timeoff Is</span><span class="chip empty">empty</span></a>
+    <a href="#s2"><span class="num">02</span><span class="label">Voice &amp; Tone</span><span class="chip empty">empty</span></a>
+    <a href="#s3"><span class="num">03</span><span class="label">Typography</span><span class="chip draft">draft</span></a>
+    <a href="#s4"><span class="num">04</span><span class="label">Color &amp; Light</span><span class="chip empty">empty</span></a>
+    <a href="#s5"><span class="num">05</span><span class="label">Motion Principles</span><span class="chip empty">empty</span></a>
+    <a href="#s6"><span class="num">06</span><span class="label">Signature Elements</span><span class="chip empty">empty</span></a>
+    <a href="#s7"><span class="num">07</span><span class="label">Asset Index</span><span class="chip empty">empty</span></a>
+  </nav>
+
+  <section id="s1">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2>What Timeoff Is</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">One paragraph. The positioning the whole doc serves: what the studio is, who it's for, and what it stands for. Everything downstream answers to this.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <section id="s2">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2>Voice &amp; Tone</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">How Timeoff talks. Person (I / we / neutral), register, and a short set of do / don't example lines. Every page's copy depends on this.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <section id="s3">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2>Typography</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">The typefaces and their roles — display, body, caption, nav-label — with the actual sizes and weights in use. Writes down what's true so it stops drifting.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <section id="s4">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2>Color &amp; Light</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">The palette as named tokens, plus the rules for using them — what's ground, what's ambient glow, what's ink. Not a swatch dump; the logic.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <section id="s5">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2>Motion Principles</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">The laws of movement. Still, then alive. What earns drama, what stays plain, and what is never allowed to autoplay.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <section id="s6">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2>Signature Elements</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">The recurring devices that make the look itself — framing, nav, layout signatures. Short entries, enough to stay consistent across new pages.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <section id="s7">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2>Asset Index</h2>
+      <span class="chip empty">empty</span>
+    </div>
+    <p class="prompt">A plain table of the real files — renders, backgrounds, demo videos, thumbnails — what each is and where it's used. So it isn't only in one person's head.</p>
+    <div class="empty-state">awaiting direction</div>
+  </section>
+
+  <footer>
+    <div><b>Timeoff Design System</b> · v0.1 · living document</div>
+    <div>Clean start — the old site's design does not carry over. Reuse limited to project demo videos, write-ups, and thumbnails.</div>
+  </footer>
+
+</div>
+</body>
+</html>
