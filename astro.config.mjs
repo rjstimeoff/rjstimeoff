@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://rjstimeoff.com',
+  site: 'https://www.rjstimeoff.com',
   // The old /timeoff route was promoted to the home page (/).
   redirects: {
     '/timeoff': '/',
