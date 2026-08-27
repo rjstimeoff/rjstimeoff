@@ -189,6 +189,34 @@
       }
       /* mobile-only radial-expand layer; off on desktop */
       .art-radial { display: none; }
+
+      /* WebKit/Safari "ink bleed" layer — a full-cover image div revealed by a
+         procedural organic clip-path (JS-driven). Off by default; shown only under
+         html.wk, where it REPLACES both the SVG bloom and the circle radial. Initial
+         clip is a zero circle at the origin so nothing shows before the JS runs. */
+      /* WebKit ink-bleed = 2 synchronized layers sharing one organic shape from the same
+         origin. .art-blob-soft (behind) is the SAME image, fully blurred — its blurred
+         organic edge is a continuous soft feather (image dissolving into the page). The
+         sharp .art-blob core sits ON TOP, clipped a little SMALLER, so it hides its own
+         hard edge inside the soft layer and keeps the painting interior crisp. One blur
+         layer → smooth falloff, no concentric rings. Same center/cover → pixel-aligned. */
+      .art-blob, .art-blob-soft {
+        display: none;
+        position: fixed; inset: 0; z-index: 0;
+        background: url(/identity-room.jpg) center / cover no-repeat;
+        pointer-events: none;
+        clip-path: circle(0px at var(--cx, 50%) var(--cy, 50%));
+        will-change: clip-path;
+      }
+      /* soft layer's dissolve is driven by a radial ALPHA-fade mask (set in JS), so the
+         image fades to transparent over a long band — bleeding into the white, not a
+         blurred smear. A light blur just smooths the gradient. */
+      .art-blob-soft { filter: blur(6px); }
+      html.wk .artpiece,
+      html.wk .art-radial { display: none; }
+      html.wk .art-blob,
+      html.wk .art-blob-soft { display: block; }
+      body.art html.wk .art-blob { pointer-events: auto; cursor: pointer; }
       /* The reveal circle: grows from the click point (--cx/--cy, viewport px). r is
          animated on the circle itself; the mask's displacement warps its alpha edge.
          r=6000 at full open keeps the solid core past every corner (feather offscreen). */
@@ -219,6 +247,10 @@
         .art-img { mask: none; -webkit-mask: none; }
         .artpiece { opacity: 0; transition: opacity 0.4s ease; }
         body.art .artpiece { opacity: 1; }
+        /* WebKit blob: no procedural grow — clear the clip and cross-fade instead. */
+        html.wk .art-blob { clip-path: none; opacity: 0; transition: opacity 0.4s ease; }
+        body.art html.wk .art-blob { opacity: 1; }
+        html.wk .art-blob-soft { display: none; }
       }
       /* ——— mobile: swap the hover-scatter blobs for plain corner nav ——— */
       @media (max-width: 768px) {
@@ -269,6 +301,17 @@
   </head>
   <body>
     <script is:inline>
+      // Flag real WebKit (Safari desktop + ALL iOS browsers, which are WebKit under
+      // the hood) BEFORE paint. WebKit can't render the SVG displacement bleed, so it
+      // gets a procedural clip-path "ink bleed" instead (.art-blob). Blink/Chrome never
+      // matches this and keeps the SVG version untouched.
+      (function () {
+        var ua = navigator.userAgent;
+        var iOS = /iP(hone|od|ad)/.test(ua) ||
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        var desktopSafari = /Safari/.test(ua) && !/Chrome|Chromium|Android|CriOS|Edg|OPR/.test(ua);
+        if (iOS || desktopSafari) document.documentElement.classList.add('wk');
+      })();
       // Persist the hero art-piece "open" state across navigations (per session).
       // Runs before paint: if it was left open, mark the doc so the image restores
       // instantly (the .art-instant class suppresses the grow animation).
@@ -308,6 +351,12 @@
     </svg>
     {/* Mobile-only radial-expand layer (clean circle clip, no edge filter). */}
     <div class="art-radial" aria-hidden="true"></div>
+    {/* WebKit/Safari-only "ink bleed": a crisp core image div revealed by a procedural
+        organic clip-path polygon, plus a blurred translucent HALO div just beyond it
+        for the soft, feathered capillary fringe (wine-into-napkin). Both JS-driven;
+        render where the SVG filter can't. Halo first so the crisp core paints over it. */}
+    <div class="art-blob-soft" aria-hidden="true"></div>
+    <div class="art-blob" aria-hidden="true"></div>
 
     <a class="nav-link brand" href="/">timeoff</a>
     <a class="scatter left" href="/work" aria-label="Work"
@@ -441,12 +490,86 @@
       // link again, click the art, or press Esc to reverse.
       (function () {
         var cta = document.querySelector('.cta');
-        var art = document.querySelector('.artpiece');       // desktop SVG bloom
-        var radial = document.querySelector('.art-radial');  // mobile radial expand
+        var art = document.querySelector('.artpiece');       // Chrome SVG bloom
+        var radial = document.querySelector('.art-radial');  // non-WebKit mobile radial
+        var blob = document.querySelector('.art-blob');      // WebKit ink-bleed layer
         if (!cta || !art) return;
-        // Origin on <html> so both the disc (cx:var(--cx)) and the mobile clip
-        // (clip-path ... at var(--cx)) read the same tap point by inheritance.
+        // Origin on <html> so the disc (cx:var(--cx)) and the mobile clip read the
+        // same tap point by inheritance.
         var root = document.documentElement;
+        var isWk = root.classList.contains('wk');
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // —— WebKit "ink bleed": a procedural organic clip-path polygon expanding from
+        //    the tap. No SVG filters (Safari can't render those). Each of N points sits
+        //    at base·(1 + 0.13·noise(angle)), noise = 3 fixed low-freq sine harmonics
+        //    with per-reveal random phases → a smooth, irregular, restrained front. ——
+        var EASE = (function (x1, y1, x2, y2) {
+          function A(a, b) { return 1 - 3 * b + 3 * a; } function B(a, b) { return 3 * b - 6 * a; }
+          function C(a) { return 3 * a; } function cal(t, a, b) { return ((A(a, b) * t + B(a, b)) * t + C(a)) * t; }
+          function slp(t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a); }
+          return function (x) { if (x <= 0) return 0; if (x >= 1) return 1; var t = x;
+            for (var i = 0; i < 6; i++) { var s = slp(t, x1, x2); if (!s) break; t -= (cal(t, x1, x2) - x) / s; } return cal(t, y1, y2); };
+        })(0.22, 1, 0.3, 1);
+        var soft = document.querySelector('.art-blob-soft');
+        var CORE_INSET = 40, blobMaxVal = 1;
+        var NPTS = 200, blobRaf = null, blobBase = 0, blobCx = 0, blobCy = 0;
+        var blobPh = [0, 0, 0, 0, 0, 0];
+        // Precompute cos/sin per angle (constant across frames) for perf.
+        var COS = [], SIN = [], ANG = [];
+        for (var _i = 0; _i < NPTS; _i++) { var _a = (_i / NPTS) * 6.2831853; ANG.push(_a); COS.push(Math.cos(_a)); SIN.push(Math.sin(_a)); }
+        // Radius noise: low-freq lobes give the overall organic shape; high-freq terms
+        // add the fine capillary fingering (wine wicking into a napkin). extra>0 makes
+        // the halo fringe a touch rougher and larger than the crisp core.
+        // Same organic outline for both layers; `offset` (px) shrinks the sharp core so
+        // its hard edge hides inside the soft layer. Radius clamps at 0 so everything
+        // collapses cleanly to nothing on close (no residual blob).
+        function blobPoly(base, offset) {
+          var pts = [];
+          for (var i = 0; i < NPTS; i++) {
+            var a = ANG[i];
+            var lobe = Math.sin(a * 2 + blobPh[0]) * 0.55 + Math.sin(a * 3 + blobPh[1]) * 0.28 + Math.sin(a * 5 + blobPh[2]) * 0.14;
+            var fine = Math.sin(a * 9 + blobPh[3]) * 0.10 + Math.sin(a * 17 + blobPh[4]) * 0.06 + Math.sin(a * 31 + blobPh[5]) * 0.035;
+            var rr = base * (1 + 0.15 * (lobe + fine)) + offset;
+            if (rr < 0) rr = 0;
+            pts.push((blobCx + COS[i] * rr).toFixed(1) + 'px ' + (blobCy + SIN[i] * rr).toFixed(1) + 'px');
+          }
+          return 'polygon(' + pts.join(',') + ')';
+        }
+        function setClip(el, p) { if (el) { el.style.clipPath = p; el.style.webkitClipPath = p; } }
+        function blobApply(base) {
+          blobBase = base;
+          // Sharp organic core (interior).
+          setClip(blob, blobPoly(base, -CORE_INSET));
+          // Soft dissolve: a radial alpha gradient — opaque out to ~45% of the radius,
+          // then a long fade to fully transparent past the edge. The image loses alpha
+          // as it spreads, so it bleeds into the white rather than smearing.
+          if (soft) {
+            var inner = (base * 0.42).toFixed(0), outer = (base * 1.28).toFixed(0);
+            var mk = 'radial-gradient(circle at ' + blobCx + 'px ' + blobCy + 'px, #000 ' +
+                     inner + 'px, rgba(0,0,0,0.5) ' + (base * 0.85).toFixed(0) + 'px, rgba(0,0,0,0) ' + outer + 'px)';
+            soft.style.webkitMaskImage = mk; soft.style.maskImage = mk;
+            // organic outline on the faint outer edge so the dissolve isn't a round glow
+            setClip(soft, blobPoly(base, base * 0.3));
+          }
+        }
+        function blobMax() {
+          var W = window.innerWidth, H = window.innerHeight;
+          var d = Math.max(Math.hypot(blobCx, blobCy), Math.hypot(W - blobCx, blobCy),
+                           Math.hypot(blobCx, H - blobCy), Math.hypot(W - blobCx, H - blobCy));
+          return d * 1.35;   // overshoot so the -13% lobes still cover every corner
+        }
+        function blobAnim(to) {
+          if (blobRaf) cancelAnimationFrame(blobRaf);
+          var from = blobBase, start = null;
+          function frame(now) {
+            if (start === null) start = now;
+            var t = Math.min(1, (now - start) / 1700);
+            blobApply(from + (to - from) * EASE(t));
+            blobRaf = t < 1 ? requestAnimationFrame(frame) : null;
+          }
+          blobRaf = requestAnimationFrame(frame);
+        }
 
         // Restore a persisted "open" state (flagged pre-paint by .art-instant): re-apply the
         // stored origin so a later close collapses to the right point, then re-enable the grow
@@ -455,6 +578,12 @@
           var sx = sessionStorage.getItem('artCx'), sy = sessionStorage.getItem('artCy');
           if (sx) root.style.setProperty('--cx', sx);
           if (sy) root.style.setProperty('--cy', sy);
+          if (isWk && !reduce) {   // restore the blob fully open (no grow)
+            blobCx = parseFloat(sx) || window.innerWidth / 2;
+            blobCy = parseFloat(sy) || window.innerHeight / 2;
+            blobMaxVal = blobMax();
+            blobApply(blobMaxVal);
+          }
           requestAnimationFrame(function () {
             requestAnimationFrame(function () { root.classList.remove('art-instant'); });
           });
@@ -467,15 +596,23 @@
         }
         function open(e) {
           var r = cta.getBoundingClientRect();
-          setOrigin(e && e.clientX ? e.clientX : r.left + r.width / 2,
-                    e && e.clientY ? e.clientY : r.top + r.height / 2);
+          var ox = e && e.clientX ? e.clientX : r.left + r.width / 2;
+          var oy = e && e.clientY ? e.clientY : r.top + r.height / 2;
+          setOrigin(ox, oy);
           document.body.classList.add('art');
+          if (isWk && !reduce) {   // grow the procedural ink bleed from the tap
+            blobCx = ox; blobCy = oy;
+            blobPh = blobPh.map(function () { return Math.random() * 6.2831853; });
+            blobMaxVal = blobMax();
+            blobAnim(blobMaxVal);
+          }
           sessionStorage.setItem('artOpen', '1');
           sessionStorage.setItem('artCx', root.style.getPropertyValue('--cx'));
           sessionStorage.setItem('artCy', root.style.getPropertyValue('--cy'));
         }
         function close() {
           document.body.classList.remove('art');
+          if (isWk && !reduce) blobAnim(0);
           sessionStorage.removeItem('artOpen');
         }
 
@@ -485,6 +622,7 @@
         });
         art.addEventListener('click', close);
         if (radial) radial.addEventListener('click', close);
+        if (blob) blob.addEventListener('click', close);
         document.addEventListener('keydown', function (e) {
           if (e.key === 'Escape') close();
         });
