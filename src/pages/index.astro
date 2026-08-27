@@ -186,41 +186,21 @@
         z-index: 0;
         display: block;
         pointer-events: none;
-        overflow: visible;              /* let the oversized image extend offscreen */
-        filter: url(#bleed-rough);      /* organic edge as an element filter (WebKit-safe) */
       }
-      /* Radial-expand bleed — used on touch (mobile) AND in WebKit/Safari, where
-         the organic SVG bloom can't animate. A full-cover image div (.art-radial)
-         is clipped to a circle that grows from the tap (--cx/--cy) — clip-path
-         radius animates reliably on an HTML element. Its wrapper (.art-stage)
-         carries the edge-roughening filter, applied ABOVE the clipped layer so it
-         wiggles the already-clipped boundary into an organic edge without warping
-         the interior. Hidden by default; Chrome desktop uses the organic .artpiece. */
-      .art-stage {
-        display: none;
-        position: fixed; inset: 0; z-index: 0;
-        pointer-events: none;
-      }
-      .art-radial {
-        position: absolute; inset: 0;
-        background: url(/identity-room.jpg) center / cover no-repeat;
-        clip-path: circle(0px at var(--cx, 50%) var(--cy, 50%));
-        transition: clip-path 1.15s cubic-bezier(0.22, 1, 0.3, 1);
-      }
-      /* final radius pushes the boundary (and its wiggle) offscreen → full cover */
-      body.art .art-radial { clip-path: circle(200% at var(--cx, 50%) var(--cy, 50%)); }
-      body.art .art-stage { pointer-events: auto; cursor: pointer; }
-      html.art-instant .art-radial { transition: none; }
-
-      /* The reveal circle grows from the click point (--cx/--cy). Its radius is
-         driven frame-by-frame in JS (see the art script) rather than by a CSS `r`
-         transition — WebKit/Safari refuses to animate CSS `r`, but honors the `r`
-         attribute set per frame. Same circle, same displacement filter, so the
-         organic bleed is byte-for-byte identical in Chrome and Safari. */
+      /* mobile-only radial-expand layer; off on desktop */
+      .art-radial { display: none; }
+      /* The reveal circle: grows from the click point (--cx/--cy, viewport px). r is
+         animated on the circle itself; the mask's displacement warps its alpha edge.
+         r=6000 at full open keeps the solid core past every corner (feather offscreen). */
       .disc {
         cx: var(--cx, 50%);
         cy: var(--cy, 50%);
+        r: 0;
+        transition: r 1.7s cubic-bezier(0.22, 1, 0.3, 1);
       }
+      body.art .disc { r: 6000px; }
+      /* restored-open (flagged before paint): show the image instantly, skip the grow */
+      html.art-instant .disc { transition: none; }
       body.art .artpiece { pointer-events: auto; cursor: pointer; }
 
       /* text stays legible over the art: white, a touch heavier, soft shadow */
@@ -251,10 +231,24 @@
         .hero p { font-size: 0.95rem; line-height: 1.45; }
         .cta-arrow { vertical-align: 0.2em; }
 
-        /* Mobile: use the clean radial-expand layer (styled above, no edge filter)
-           instead of the organic SVG bloom. */
+        /* Bleed on mobile: a clean radial expand from the tapped text. Clip a
+           plain full-cover <div> to a circle that grows from the tap point
+           (--cx/--cy). clip-path radius animates reliably on an HTML element
+           (unlike on the SVG <image>). No edge filter — just a clean circle. */
         .artpiece { display: none; }
-        .art-stage { display: block; }
+        .art-radial {
+          display: block;
+          position: fixed; inset: 0; z-index: 0;
+          background: url(/identity-room.jpg) center / cover no-repeat;
+          pointer-events: none;
+          clip-path: circle(0px at var(--cx, 50%) var(--cy, 50%));
+          transition: clip-path 1.1s cubic-bezier(0.22, 1, 0.3, 1);
+        }
+        body.art .art-radial {
+          clip-path: circle(150% at var(--cx, 50%) var(--cy, 50%));
+          pointer-events: auto; cursor: pointer;
+        }
+        html.art-instant .art-radial { transition: none; }
       }
 
       /* ——— cross-page swipe (native view transitions) ——— */
@@ -283,24 +277,21 @@
         document.body.classList.add('art');
       }
     </script>
-    {/* Identity art piece. A growing circular <mask> reveals the painting; the organic
-        wet edge is added by a displacement filter on the WHOLE .artpiece (CSS filter),
-        NOT inside the mask — WebKit/Safari renders a filtered mask as blank, but renders
-        an element-level displacement fine. The filter displaces the alpha silhouette and
-        composites the original image back through it, so the interior never warps. The
-        <image> is oversized (−30%…130%) with overflow visible so the displaced boundary
-        stays offscreen at full open (full coverage, no ragged screen edges). */}
+    {/* Identity art piece. The painting is a plain cover <image> at true viewport
+        scale — never filtered, so it can't warp or zoom. It's revealed through an SVG
+        <mask> whose circle grows and whose ALPHA is displaced into an organic wet front.
+        Image and mask being separate layers is what lets the front reach (and oversize
+        past the edges to avoid tearing) with zero cost to the image. */}
     <svg class="artpiece" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true"
       xmlns:xlink="http://www.w3.org/1999/xlink">
       <defs>
         {/* Broad lobes (scale 180) = reaching tendrils; fine grain (scale 22) = fibre.
-            Operates on SourceAlpha, then composites the crisp SourceGraphic through it. */}
-        <filter id="bleed-rough" x="-45%" y="-45%" width="190%" height="190%" color-interpolation-filters="sRGB">
+            in="SourceGraphic" keeps the mask WHITE so its luminance still reveals. */}
+        <filter id="bleed-edge" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
           <feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="2" seed="4" result="lobes" />
-          <feDisplacementMap in="SourceAlpha" in2="lobes" scale="180" xChannelSelector="R" yChannelSelector="G" result="reach" />
+          <feDisplacementMap in="SourceGraphic" in2="lobes" scale="180" xChannelSelector="R" yChannelSelector="G" result="reach" />
           <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" seed="9" result="fibre" />
-          <feDisplacementMap in="reach" in2="fibre" scale="22" xChannelSelector="R" yChannelSelector="G" result="rough" />
-          <feComposite in="SourceGraphic" in2="rough" operator="in" />
+          <feDisplacementMap in="reach" in2="fibre" scale="22" xChannelSelector="R" yChannelSelector="G" />
         </filter>
         {/* Soft-edged disc (feather + damp halo) — objectBoundingBox so it scales with r. */}
         <radialGradient id="disc-grad">
@@ -308,16 +299,15 @@
           <stop offset="80%" stop-color="#fff" stop-opacity="0.5" />
           <stop offset="100%" stop-color="#fff" stop-opacity="0" />
         </radialGradient>
-        <mask id="bleed-mask" maskUnits="userSpaceOnUse" x="-40%" y="-40%" width="180%" height="180%">
-          <circle class="disc" cx="50%" cy="50%" r="0" fill="url(#disc-grad)" />
+        <mask id="bleed-mask" maskUnits="userSpaceOnUse" x="-20%" y="-20%" width="140%" height="140%">
+          <circle class="disc" cx="50%" cy="50%" r="0" fill="url(#disc-grad)" filter="url(#bleed-edge)" />
         </mask>
       </defs>
       <image class="art-img" href="/identity-room.jpg" xlink:href="/identity-room.jpg"
-        x="-30%" y="-30%" width="160%" height="160%" preserveAspectRatio="xMidYMid slice" mask="url(#bleed-mask)" />
+        x="0" y="0" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" mask="url(#bleed-mask)" />
     </svg>
-    {/* Mobile-only plain radial-expand bleed (clean circle, no edge filter).
-        Desktop (Chrome + Safari) uses the organic .artpiece above. */}
-    <div class="art-stage" aria-hidden="true"><div class="art-radial"></div></div>
+    {/* Mobile-only radial-expand layer (clean circle clip, no edge filter). */}
+    <div class="art-radial" aria-hidden="true"></div>
 
     <a class="nav-link brand" href="/">timeoff</a>
     <a class="scatter left" href="/work" aria-label="Work"
@@ -451,44 +441,12 @@
       // link again, click the art, or press Esc to reverse.
       (function () {
         var cta = document.querySelector('.cta');
-        var art = document.querySelector('.artpiece');     // desktop SVG bloom
-        var radial = document.querySelector('.art-stage'); // mobile plain radial
+        var art = document.querySelector('.artpiece');       // desktop SVG bloom
+        var radial = document.querySelector('.art-radial');  // mobile radial expand
         if (!cta || !art) return;
         // Origin on <html> so both the disc (cx:var(--cx)) and the mobile clip
         // (clip-path ... at var(--cx)) read the same tap point by inheritance.
         var root = document.documentElement;
-
-        // Drive the disc radius frame-by-frame (setAttribute) rather than via a CSS
-        // `r` transition — WebKit won't animate the latter. Same circle + filter, so
-        // the organic bleed animates identically in Chrome and Safari.
-        var disc = art.querySelector('.disc');
-        var OPEN_R = 6000, DUR = 1700, rafId = null;
-        var ease = (function (x1, y1, x2, y2) {   // cubic-bezier(0.22,1,0.3,1)
-          function A(a, b) { return 1 - 3 * b + 3 * a; }
-          function B(a, b) { return 3 * b - 6 * a; }
-          function C(a) { return 3 * a; }
-          function calc(t, a, b) { return ((A(a, b) * t + B(a, b)) * t + C(a)) * t; }
-          function slope(t, a, b) { return 3 * A(a, b) * t * t + 2 * B(a, b) * t + C(a); }
-          return function (x) {
-            if (x <= 0) return 0; if (x >= 1) return 1;
-            var t = x;
-            for (var i = 0; i < 6; i++) { var s = slope(t, x1, x2); if (!s) break; t -= (calc(t, x1, x2) - x) / s; }
-            return calc(t, y1, y2);
-          };
-        })(0.22, 1, 0.3, 1);
-        function curR() { return parseFloat(disc.getAttribute('r')) || 0; }
-        function setR(v) { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } disc.setAttribute('r', v); }
-        function animateR(to) {
-          if (rafId) cancelAnimationFrame(rafId);
-          var from = curR(), start = null;
-          function frame(now) {
-            if (start === null) start = now;
-            var t = Math.min(1, (now - start) / DUR);
-            disc.setAttribute('r', from + (to - from) * ease(t));
-            rafId = t < 1 ? requestAnimationFrame(frame) : null;
-          }
-          rafId = requestAnimationFrame(frame);
-        }
 
         // Restore a persisted "open" state (flagged pre-paint by .art-instant): re-apply the
         // stored origin so a later close collapses to the right point, then re-enable the grow
@@ -497,7 +455,6 @@
           var sx = sessionStorage.getItem('artCx'), sy = sessionStorage.getItem('artCy');
           if (sx) root.style.setProperty('--cx', sx);
           if (sy) root.style.setProperty('--cy', sy);
-          setR(OPEN_R);   // restore fully-open instantly (no grow)
           requestAnimationFrame(function () {
             requestAnimationFrame(function () { root.classList.remove('art-instant'); });
           });
@@ -513,14 +470,12 @@
           setOrigin(e && e.clientX ? e.clientX : r.left + r.width / 2,
                     e && e.clientY ? e.clientY : r.top + r.height / 2);
           document.body.classList.add('art');
-          animateR(OPEN_R);
           sessionStorage.setItem('artOpen', '1');
           sessionStorage.setItem('artCx', root.style.getPropertyValue('--cx'));
           sessionStorage.setItem('artCy', root.style.getPropertyValue('--cy'));
         }
         function close() {
           document.body.classList.remove('art');
-          animateR(0);
           sessionStorage.removeItem('artOpen');
         }
 
