@@ -1,0 +1,45 @@
+---
+// Site-wide SEO / social metadata.
+// Emits: meta description, canonical, Open Graph, Twitter card, favicon.
+// Drop <Seo /> into any page <head>. Pass title/description/image to override
+// the Timeoff defaults per page.
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;               // path relative to site root, e.g. /hero.jpg
+  type?: 'website' | 'article';
+}
+
+const {
+  title = 'Timeoff — design studio',
+  description = 'Timeoff is the studio of RJ Rivera — a designer and builder crafting interfaces, brand, and product experiences people remember.',
+  image = '/hero.jpg',
+  type = 'website',
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://rjstimeoff.com');
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const canonical = new URL(path, site).href;
+const ogImage = new URL(image, site).href;
+---
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content="Timeoff" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={title} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<!-- Icons -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="alternate icon" href="/favicon.ico" sizes="any" />

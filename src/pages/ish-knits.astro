@@ -1,4 +1,5 @@
 ---
+import Seo from '../components/Seo.astro';
 // Timeoff — Ish Knits project page. SCAFFOLD (graphic-design variant of the system).
 // A CONTAINER: project header, then each client piece as its own left-write-up /
 // right-image-grid section (more can stack below over time). Real images.
@@ -28,7 +29,7 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Ish Knits — Timeoff</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Seo title="Ish Knits — Timeoff" type="article" description="Ish Knits — graphic design client work from Timeoff." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />

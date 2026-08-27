@@ -1,4 +1,5 @@
 ---
+import Seo from '../components/Seo.astro';
 // Timeoff — Berneron project page. SCAFFOLD (graphic-design variant of the system).
 // Same 3fr/5fr split, but the right column is an image grid that adapts to aspect
 // ratio (wide = full width, portrait = 2-up), and the left holds one write-up.
@@ -26,7 +27,7 @@ const nextProject = { title: 'Ish Knits', href: '/ish-knits' };
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Berneron — Timeoff</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Seo title="Berneron — Timeoff" type="article" description="Berneron — a graphic design concept from Timeoff." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />

@@ -1,4 +1,5 @@
 ---
+import Seo from '../components/Seo.astro';
 // Timeoff — Cove project page. SCAFFOLD (same system as Cosign).
 // 5 demos: full page, hero, four pillars, demo, closing CTA.
 // Media are placeholders. Copy = RJ's voice, condensed from the write-up.
@@ -34,7 +35,7 @@ const nextProject = { title: 'Stripe Redesign', href: '/stripe-redesign' };
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cove — Timeoff</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Seo title="Cove — Timeoff" type="article" image="/cove-og.png" description="Cove — a landing page and front-end case study from Timeoff." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />

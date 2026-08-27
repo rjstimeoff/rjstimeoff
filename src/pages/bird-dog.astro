@@ -1,4 +1,5 @@
 ---
+import Seo from '../components/Seo.astro';
 // Timeoff — Bird Dog project page. SCAFFOLD (same system as Cosign).
 // The old browser-tab mockup is dropped: the 5 app-screen demos are now their
 // own paired beats. 5 demos: Home, Profile, Jobs, Resume Workshop, Tracker.
@@ -34,7 +35,7 @@ const nextProject = { title: 'Stripe Redesign', href: '/stripe-redesign' };
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bird Dog — Timeoff</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Seo title="Bird Dog — Timeoff" type="article" description="Bird Dog — a tool design and product strategy case study from Timeoff." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
