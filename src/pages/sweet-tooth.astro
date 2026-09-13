@@ -1,48 +1,26 @@
 ---
 import Seo from '../components/Seo.astro';
-// Timeoff — Ish Knits project page. SCAFFOLD (graphic-design variant of the system).
-// A CONTAINER: project header, then each client piece as its own left-write-up /
-// right-image-grid section (more can stack below over time). Real images.
-// Copy = RJ's voice (verbatim write-up).
-const meta = 'Brand Direction · Client';
-const projectNote = 'Ongoing design work for Ish Knits — a knitwear studio and its events.';
+const meta = 'Graphic Design · Concept';
 const works = [
   {
-    title: 'Brand Direction',
-    note: ['Logo and brand direction exploration.'],
-    brandGrid: true,
+    title: 'Poster Study',
+    note: ['If A24 made a horror anime. Concept Work.'],
     plates: [
-      { src: '/ish-knits/brand-direction-v1.jpg', width: 2912, height: 1632, alt: 'Brand direction — expressive wordmark over a gathering framed by a green doorway', span: 3 },
-      { src: '/ish-knits/brand-direction-v2.jpg', width: 2912, height: 1632, alt: 'Brand direction — expressive wordmark over a sunlit knitting circle', span: 3 },
-      { src: '/ish-knits/brand-direction-v1.2.jpg', width: 2912, height: 1632, alt: 'Brand direction — playful Ish Knits wordmark over the doorway gathering', span: 3 },
-      { src: '/ish-knits/brand-direction-v2.2.jpg', width: 2912, height: 1632, alt: 'Brand direction — playful Ish Knits wordmark over the knitting circle', span: 3 },
-      { src: '/ish-knits/brand-direction-v1.3.jpg', width: 2912, height: 1632, alt: 'Brand direction — geometric Ish Knits wordmark over the doorway gathering', span: 3 },
-      { src: '/ish-knits/brand-direction-v2.3.jpg', width: 2912, height: 1632, alt: 'Brand direction — geometric Ish Knits wordmark over the knitting circle', span: 3 },
-    ],
-  },
-  {
-    title: 'Sip & Stitch Flyer',
-    note: [
-      "Flyer / advert design for Ish Knits's Sip & Stitch Night — aimed at getting young people to socialize at local bars and partake in “grandma hobbies.” I thought it'd be fun to make some Midjourney images of a pretty young lady dressed up as an old lady at a bar, then brought them into Figma for the actual design.",
-      "I went with this bold, semi-playful font that fit the vibe and could be reused across cases. The headline blends bold visuals with an intriguing tagline that invites curiosity; the QR code sits right in that same sight line, so the next instinct is to scan; and the “sip & stitch” tagline below offers a hint more context. I love how these turned out.",
-    ],
-    plates: [
-      { src: '/ish-knits/sip-stitch-1.png', width: 595, height: 842, alt: 'Sip & Stitch flyer — “Grandma was right”, green beret', span: 2 },
-      { src: '/ish-knits/sip-stitch-2.png', width: 595, height: 842, alt: 'Sip & Stitch flyer — “Grandma was right”, seated portrait', span: 2 },
-      { src: '/ish-knits/sip-stitch-3.png', width: 595, height: 842, alt: 'Sip & Stitch flyer — “Grandma was right”, party candid', span: 2 },
-      { src: '/ish-knits/sip-stitch-billboard.png', width: 1537, height: 1023, alt: 'Sip & Stitch flyers wheatpasted on a street barrier in the city', span: 6 },
+      { src: '/sweet-tooth-poster.jpg', width: 2025, height: 2700, alt: 'Sweet Tooth — concept horror anime poster', span: 6 },
+      { src: '/sweet-tooth-mockup.jpg', width: 2244, height: 2804, alt: 'Sweet Tooth poster displayed on an illuminated street advertising panel at night', span: 6 },
+      { src: '/sweet-tooth-still.png', width: 896, height: 1344, alt: 'Sweet Tooth — horror anime illustration with an exaggerated grin against a red background', span: 6 },
     ],
   },
 ];
-const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
+const nextProject = { title: 'Berneron', href: '/berneron' };
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Ish Knits — Timeoff</title>
-    <Seo title="Ish Knits — Timeoff" type="article" description="Ish Knits — graphic design client work from Timeoff." />
+    <title>Sweet Tooth — Timeoff</title>
+    <Seo title="Sweet Tooth — Timeoff" type="article" description="Sweet Tooth — a horror anime poster study from Timeoff." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
@@ -65,11 +43,10 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
       .back { transition: opacity 0.2s ease; }
       .back:hover { opacity: 0.55; }
 
-      .works { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.5rem; row-gap: 3.5rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
+      .works { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.5rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
       .work-text { max-width: 38ch; }
       .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
-      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 0.9rem; }
-      .proj-note { font-size: 0.98rem; color: var(--ink); margin: 0 0 1.8rem; }
+      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 1.8rem; }
       .work-title {
         font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
         color: var(--ink-soft); margin: 0 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--line);
@@ -79,9 +56,7 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
 
       .plates { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; }
       .plate { grid-column: span var(--span, 6); }
-      .plate img { width: 100%; height: auto; display: block; border-radius: 2px; }
-      .brand-plates { margin-inline: 40px; }
-      .brand-plates .plate { margin: 0; min-width: 0; }
+      .plate img { width: 75%; height: auto; display: block; border-radius: 2px; }
 
       .next { grid-column: 1 / -1; display: inline-flex; flex-direction: column; gap: 0.3rem; margin-top: 3rem; text-decoration: none; color: inherit; width: max-content; }
       .next-kicker { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-faint); }
@@ -102,8 +77,8 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
       @media (max-width: 600px) {
         .works { grid-template-columns: minmax(0, 1fr); padding: 5rem 1.25rem 3rem; row-gap: 2rem; }
         .plates { min-width: 0; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-        .brand-plates { margin-inline: 0; }
-        .plate { grid-column: 1 / -1; min-width: 0; margin: 0; }
+        .plate { grid-column: 1; min-width: 0; margin: 0; }
+        .plate img { width: 100%; }
         .next { margin-top: 1rem; }
       }
     </style>
@@ -116,16 +91,15 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
       {works.map((w, i) => (
         <>
           <div class="work-text" style={`--i:${i}`}>
-            {i === 0 && <h1 class="proj-title">Ish Knits</h1>}
+            {i === 0 && <h1 class="proj-title">Sweet Tooth</h1>}
             {i === 0 && <p class="proj-meta">{meta}</p>}
-            {i === 0 && <p class="proj-note">{projectNote}</p>}
             <h2 class="work-title">{w.title}</h2>
             {w.note.map((para) => <p>{para}</p>)}
           </div>
-          <div class:list={['plates', { 'brand-plates': w.brandGrid }]} style={`--i:${i}`}>
+          <div class="plates" style={`--i:${i}`}>
             {w.plates.map((p, imageIndex) => (
               <figure class="plate" style={`--span:${p.span}`}>
-                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={i === 0 && imageIndex < 2 ? "eager" : "lazy"} decoding="async" />
+                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={i === 0 && imageIndex === 0 ? "eager" : "lazy"} decoding="async" />
               </figure>
             ))}
           </div>

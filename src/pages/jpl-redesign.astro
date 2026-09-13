@@ -129,7 +129,7 @@ const nextProject = { title: 'Cove', href: '/cove-landing' };
               </div>
             )}
             {media[i].type === 'image' && (
-              <img class="media-img" src={media[i].src} alt="" loading="lazy" />
+              <img class="media-img" src={media[i].src} width={media[i].width} height={media[i].height} alt="" loading="lazy" decoding="async" />
             )}
           </div>
         </>

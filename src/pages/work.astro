@@ -6,8 +6,10 @@ import Seo from '../components/Seo.astro';
 // Thumbnails are placeholders for now; titles are the real projects.
 // Ordered newest → oldest (top-left is newest); grid renders in this order.
 const projects = [
+  { title: 'Rebase Labs', href: '/rebase-labs', tags: ['Brand Direction'], year: '2026', src: '/rebase-labs-thumb.mp4' },
+  { title: 'Sweet Tooth', href: '/sweet-tooth', tags: ['Graphic Design'], year: '2026', src: '/sweet-tooth-still.png' },
   { title: 'Berneron', href: '/berneron', tags: ['Graphic Design'], year: '2026', src: '/berneron-thumb.mp4' },
-  { title: 'Ish Knits', href: '/ish-knits', tags: ['Graphic Design'], year: '2026', src: '/ish-knits-thumb.mp4' },
+  { title: 'Ish Knits', href: '/ish-knits', tags: ['Brand Direction'], year: '2026', src: '/ish-knits-thumb-12fps.mp4', poster: '/ish-knits-friends-poster.jpg' },
   { title: 'Cosign', href: '/cosign', tags: ['Product Design'], year: '2026', src: '/cosign-thumb.mp4' },
   { title: 'Cove', href: '/cove-landing', tags: ['Web Design'], year: '2026', src: '/cove-thumb.mp4' },
   { title: 'JPL Redesign', href: '/jpl-redesign', tags: ['Web Design'], year: '2026', src: '/jpl-redesign.mp4' },
@@ -15,7 +17,7 @@ const projects = [
   { title: 'UI Playground', href: '/ui-playground', tags: ['Product Design'], year: '2026', src: '/ui-playground.mov' },
   { title: 'Bird Dog', href: '/bird-dog', tags: ['Product Design'], year: '2025', src: '/bird-dog.mov' },
 ];
-const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
+const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design', 'Brand Direction'];
 ---
 <!doctype html>
 <html lang="en">
@@ -170,11 +172,13 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
       /* right gallery */
       .gallery {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        min-width: 0;
         column-gap: 2.75rem;
         row-gap: 3.5rem;
       }
       .item {
+        min-width: 0;
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
@@ -182,12 +186,16 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         color: inherit;
       }
       .thumb {
+        position: relative;
+        width: 100%;
         aspect-ratio: 3 / 4;
         background: var(--placeholder);
         border-radius: 2px;
         overflow: hidden;
       }
-      .thumb-vid {
+      .thumb-vid, .thumb-img {
+        position: absolute;
+        inset: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -218,7 +226,7 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
       @media (max-width: 900px) {
         .layout { grid-template-columns: 1fr; }
         .col-text { position: static; }
-        .gallery { grid-template-columns: repeat(2, 1fr); }
+        .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
       @media (max-width: 768px) {
         .layout { padding: 5rem 1.2rem 4rem; gap: 1.75rem; }
@@ -259,11 +267,15 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design'];
         {projects.map((p) => (
           <a class="item" href={p.href} data-tags={p.tags.join('|')}>
             <div class="thumb">
-              <video class="thumb-vid" src={p.src} poster={p.src.replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              {/\.(mp4|mov)$/.test(p.src) ? (
+                <video class="thumb-vid" src={p.src} poster={p.poster ?? p.src.replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="metadata" aria-hidden="true"></video>
+              ) : (
+                <img class="thumb-img" src={p.src} alt="" loading="lazy" />
+              )}
             </div>
             <div class="caption">
               <div class="title">{p.title}</div>
-              <div class="subtitle">{p.tags[0]}, {p.year}</div>
+              <div class="subtitle">{p.tags.join(' · ')}, {p.year}</div>
             </div>
           </a>
         ))}
