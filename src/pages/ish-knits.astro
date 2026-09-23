@@ -1,5 +1,6 @@
 ---
 import Seo from '../components/Seo.astro';
+import ProjectHeader from '../components/ProjectHeader.astro';
 // Timeoff — Ish Knits project page. SCAFFOLD (graphic-design variant of the system).
 // A CONTAINER: project header, then each client piece as its own left-write-up /
 // right-image-grid section (more can stack below over time). Real images.
@@ -67,8 +68,7 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
 
       .works { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.5rem; row-gap: 3.5rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
       .work-text { max-width: 38ch; }
-      .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
-      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 0.9rem; }
+
       .proj-note { font-size: 0.98rem; color: var(--ink); margin: 0 0 1.8rem; }
       .work-title {
         font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
@@ -116,10 +116,9 @@ const nextProject = { title: 'JPL Redesign', href: '/jpl-redesign' };
       {works.map((w, i) => (
         <>
           <div class="work-text" style={`--i:${i}`}>
-            {i === 0 && <h1 class="proj-title">Ish Knits</h1>}
-            {i === 0 && <p class="proj-meta">{meta}</p>}
+            {i === 0 && <ProjectHeader title="Ish Knits" tags={meta} />}
             {i === 0 && <p class="proj-note">{projectNote}</p>}
-            <h2 class="work-title">{w.title}</h2>
+            {i > 0 && <h2 class="work-title">{w.title}</h2>}
             {w.note.map((para) => <p>{para}</p>)}
           </div>
           <div class:list={['plates', { 'brand-plates': w.brandGrid }]} style={`--i:${i}`}>

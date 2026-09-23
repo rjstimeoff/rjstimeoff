@@ -1,5 +1,6 @@
 ---
 import Seo from '../components/Seo.astro';
+import ProjectHeader from '../components/ProjectHeader.astro';
 const meta = 'Brand Direction';
 const works = [
   {
@@ -48,12 +49,6 @@ const nextProject = { title: 'Sweet Tooth - A24 Concept', href: '/sweet-tooth' }
 
       .works { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 5fr); column-gap: 2.5rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
       .work-text { max-width: 38ch; }
-      .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
-      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 1.8rem; }
-      .work-title {
-        font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-        color: var(--ink-soft); margin: 0 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--line);
-      }
       .work-text p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
       .work-text p + p { margin-top: 1.1rem; }
 
@@ -94,9 +89,8 @@ const nextProject = { title: 'Sweet Tooth - A24 Concept', href: '/sweet-tooth' }
       {works.map((w, i) => (
         <>
           <div class="work-text" style={`--i:${i}`}>
-            {i === 0 && <h1 class="proj-title">Rebase Labs</h1>}
-            {i === 0 && <p class="proj-meta">{meta}</p>}
-            <h2 class="work-title">{w.title}</h2>
+            {i === 0 && <ProjectHeader title="Rebase Labs" tags={meta} />}
+            {i > 0 && <h2 class="work-title">{w.title}</h2>}
             {w.note.map((para) => <p>{para}</p>)}
           </div>
           <div class="plates" style={`--i:${i}`}>

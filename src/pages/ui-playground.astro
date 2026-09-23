@@ -1,5 +1,6 @@
 ---
 import Seo from '../components/Seo.astro';
+import ProjectHeader from '../components/ProjectHeader.astro';
 // Timeoff — UI Playground project page. SCAFFOLD (same system as Cosign).
 // 3 demos: core workflow, saving to gallery, Midjourney art.
 // Media are placeholders. Copy = RJ's voice, condensed from the write-up.
@@ -58,9 +59,9 @@ const nextProject = { title: 'Cosign', href: '/cosign' };
       .beats { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.75rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
       .fn { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink-faint); font-variant-numeric: tabular-nums; margin-bottom: 0.7rem; }
       .beat-text { max-width: 36ch; }
-      .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
+
       .proj-sub { font-size: 0.98rem; color: var(--ink); margin: 0 0 0.4rem; }
-      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 1.4rem; }
+
       .beat-text p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
       .beat-text p + p { margin-top: 1.1rem; }
       .media { aspect-ratio: 16 / 9; background: var(--placeholder); border-radius: 2px; width: 100%; overflow: hidden; position: relative; }
@@ -95,14 +96,13 @@ const nextProject = { title: 'Cosign', href: '/cosign' };
       {beats.map((paras, i) => (
         <>
           <div class="beat-text" style={`--i:${i}`}>
-            <div class="fn">{String(i + 1).padStart(2, '0')}</div>
-            {i === 0 && <h1 class="proj-title">UI Playground</h1>}
+            {i > 0 && <div class="fn">{String(i + 1).padStart(2, '0')}</div>}
+            {i === 0 && <ProjectHeader title="UI Playground" tags={meta} />}
             {i === 0 && <p class="proj-sub">{sub}</p>}
-            {i === 0 && <p class="proj-meta">{meta}</p>}
             {paras.map((para) => <p>{para}</p>)}
           </div>
           <div class="beat-media" style={`--i:${i}`}>
-            <div class="fn">{String(i + 1).padStart(2, '0')}</div>
+            {i > 0 && <div class="fn">{String(i + 1).padStart(2, '0')}</div>}
             {media[i].type === 'vimeo' && (
               <div class="media">
                 <iframe class="demo-frame" data-src={`https://player.vimeo.com/video/${media[i].id}?background=1&muted=1&loop=1&autoplay=1`} loading="lazy" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" title=""></iframe>

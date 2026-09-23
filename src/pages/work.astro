@@ -1,11 +1,14 @@
 ---
 import Seo from '../components/Seo.astro';
+import MintedLogo from '../components/MintedLogo.astro';
 // Timeoff — Work.
 // Right-side gallery (~5/8 width), rows of 3, StudioSmall-style portrait
 // thumbnails. Left column (~3/8) reserved for text — built later.
 // Thumbnails are placeholders for now; titles are the real projects.
 // Ordered newest → oldest (top-left is newest); grid renders in this order.
 const projects = [
+  { title: 'Sporty&Rich', href: '/sporty-and-rich', tags: ['Brand Direction'], year: '2026', src: '/sporty-and-rich/thumbnail.jpg' },
+  { title: 'Minted New York', href: '/minted-new-york', tags: ['Brand Direction', 'Graphic Design'], year: '2026', src: '/minted-new-york/thumbnail.mp4', logo: true },
   { title: 'Rebase Labs', href: '/rebase-labs', tags: ['Brand Direction'], year: '2026', src: '/rebase-labs-thumb.mp4' },
   { title: 'Sweet Tooth - A24 Concept', href: '/sweet-tooth', tags: ['Graphic Design'], year: '2026', src: '/sweet-tooth-thumb.webp' },
   { title: 'Berneron', href: '/berneron', tags: ['Graphic Design'], year: '2026', src: '/berneron-thumb.mp4' },
@@ -272,6 +275,7 @@ const filters = ['All', 'Product Design', 'Web Design', 'Graphic Design', 'Brand
               ) : (
                 <img class="thumb-img" src={p.src} alt="" loading={index < 3 ? 'eager' : 'lazy'} decoding="async" />
               )}
+              {p.logo && <MintedLogo />}
             </div>
             <div class="caption">
               <div class="title">{p.title}</div>

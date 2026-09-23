@@ -1,5 +1,6 @@
 ---
 import Seo from '../components/Seo.astro';
+import ProjectHeader from '../components/ProjectHeader.astro';
 // Timeoff — Cosign project page. SCAFFOLD.
 // Same split as /work (left 3fr text / right 5fr media). Right column = stacked
 // landscape demo placeholders, each footnoted; left = matching numbered text
@@ -111,13 +112,7 @@ const pad = (n) => String(n + 1).padStart(2, '0');
       }
 
       .beat-text { max-width: 36ch; }
-      .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.35rem; }
-      .title-row { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; margin: 0 0 0.35rem; }
-      .title-row .proj-title { margin: 0; }
-      .live-link { font-size: 0.78rem; font-weight: 500; color: var(--ink-faint); text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; transition: color 0.15s ease; }
-      .live-link:hover { color: var(--ink); }
-      .live-link svg { width: 0.72em; height: 0.72em; }
-      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 1.4rem; }
+
       .beat-text p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
       .beat-text p + p { margin-top: 1.1rem; }
 
@@ -156,18 +151,12 @@ const pad = (n) => String(n + 1).padStart(2, '0');
       {beats.map((paras, i) => (
         <>
           <div class="beat-text" style={`--i:${i}`}>
-            <div class="fn">{pad(i)}</div>
-            {i === 0 && (
-              <div class="title-row">
-                <h1 class="proj-title">Cosign</h1>
-                <a class="live-link" href={liveUrl} target="_blank" rel="noopener noreferrer">Live<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M9 3H4M9 3V8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-              </div>
-            )}
-            {i === 0 && <p class="proj-meta">{meta}</p>}
+            {i > 0 && <div class="fn">{pad(i)}</div>}
+            {i === 0 && <ProjectHeader title="Cosign" tags={meta} liveUrl={liveUrl} />}
             {paras.map((para) => <p>{para}</p>)}
           </div>
           <div class="beat-media" style={`--i:${i}`}>
-            <div class="fn">{pad(i)}</div>
+            {i > 0 && <div class="fn">{pad(i)}</div>}
             <div class="media">
               <video class="demo" src={demoSrcs[i]} poster={demoSrcs[i].replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="none"></video>
             </div>

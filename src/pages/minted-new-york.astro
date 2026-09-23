@@ -1,27 +1,27 @@
 ---
 import Seo from '../components/Seo.astro';
 import ProjectHeader from '../components/ProjectHeader.astro';
-const meta = 'Graphic Design · Concept';
+const meta = 'Brand Direction · Graphic Design';
 const works = [
   {
-    title: 'Poster Study',
-    note: ['If A24 made a horror anime. Concept Work.'],
+    title: 'Brand Direction',
+    note: ["Conceptual designs for a Minted New York Cycling Program and refreshed men's wear branding."],
     plates: [
-      { src: '/sweet-tooth-poster.webp', width: 2025, height: 2700, alt: 'Sweet Tooth — concept horror anime poster', span: 6 },
-      { src: '/sweet-tooth-mockup.webp', width: 2244, height: 2804, alt: 'Sweet Tooth poster displayed on an illuminated street advertising panel at night', span: 6 },
-      { src: '/sweet-tooth-still.webp', width: 896, height: 1344, alt: 'Sweet Tooth — horror anime illustration with an exaggerated grin against a red background', span: 6 },
+      { src: '/minted-new-york/minted_poster_2.jpg', width: 2051, height: 2564, alt: 'Minted Cycling Program concept poster with a halftone cyclist portrait and white M logo' },
+      { src: '/minted-new-york/minted_poster_1.jpg', width: 1931, height: 2564, alt: 'Minted Cycling Program concept poster with a close-up of cycling glasses and a blue cycling kit' },
+      { src: '/minted-new-york/minted_poster_3.jpg', width: 2051, height: 2564, alt: "Minted New York menswear concept poster with a blue striped shirt on a green background" },
     ],
   },
 ];
-const nextProject = { title: 'Berneron', href: '/berneron' };
+const nextProject = { title: 'Rebase Labs', href: '/rebase-labs' };
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sweet Tooth - A24 Concept — Timeoff</title>
-    <Seo title="Sweet Tooth - A24 Concept — Timeoff" type="article" description="Sweet Tooth - A24 Concept — a horror anime poster study from Timeoff." />
+    <title>Minted New York — Timeoff</title>
+    <Seo title="Minted New York — Timeoff" type="article" description="Conceptual designs for a Minted New York Cycling Program and refreshed men’s wear branding." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
@@ -53,7 +53,7 @@ const nextProject = { title: 'Berneron', href: '/berneron' };
       .plate { grid-column: span var(--span, 6); }
       .plate img { width: 75%; height: auto; display: block; border-radius: 2px; }
 
-      .next { grid-column: 1 / -1; display: inline-flex; flex-direction: column; gap: 0.3rem; margin-top: 3rem; text-decoration: none; color: inherit; width: max-content; }
+      .next { grid-column: 1 / -1; display: inline-flex; flex-direction: column; gap: 0.3rem; margin-top: 1rem; text-decoration: none; color: inherit; width: max-content; }
       .next-kicker { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-faint); }
       .next-title { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
       .next:hover .next-title { transform: translateX(0.4rem); }
@@ -86,14 +86,14 @@ const nextProject = { title: 'Berneron', href: '/berneron' };
       {works.map((w, i) => (
         <>
           <div class="work-text" style={`--i:${i}`}>
-            {i === 0 && <ProjectHeader title="Sweet Tooth - A24 Concept" tags={meta} />}
+            {i === 0 && <ProjectHeader title="Minted New York" tags={meta} />}
             {i > 0 && <h2 class="work-title">{w.title}</h2>}
             {w.note.map((para) => <p>{para}</p>)}
           </div>
           <div class="plates" style={`--i:${i}`}>
-            {w.plates.map((p, imageIndex) => (
-              <figure class="plate" style={`--span:${p.span}`}>
-                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={i === 0 && imageIndex === 0 ? "eager" : "lazy"} decoding="async" />
+            {w.plates.map((p, index) => (
+              <figure class="plate">
+                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
               </figure>
             ))}
           </div>
@@ -105,6 +105,8 @@ const nextProject = { title: 'Berneron', href: '/berneron' };
         <span class="next-title">{nextProject.title}</span>
       </a>
     </main>
+
+
 
     <script is:inline>
       (function () {

@@ -1,0 +1,26 @@
+---
+interface Props {
+  title: string;
+  tags: string;
+  liveUrl?: string;
+}
+const { title, tags, liveUrl } = Astro.props;
+---
+
+<header class="project-header">
+  <div class="project-title-row">
+    <h1>{title}</h1>
+    {liveUrl && <a href={liveUrl} target="_blank" rel="noopener noreferrer">Live<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M9 3H4M9 3V8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" /></svg></a>}
+  </div>
+  <div class="project-tags">{tags}</div>
+</header>
+
+<style>
+  .project-header { margin-bottom: 1.5rem; }
+  .project-title-row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.55rem; }
+  h1 { margin: 0; font-size: 2rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; }
+  .project-tags { margin-top: 0.6rem; font-size: 0.82rem; line-height: 1.5; color: var(--ink-soft, #6f6f68); }
+  a { display: inline-flex; align-items: center; gap: 0.2rem; font-size: 0.78rem; font-weight: 500; color: var(--ink-faint, #a5a49c); text-decoration: none; transition: color 0.15s ease; }
+  a:hover { color: var(--ink, #101113); }
+  svg { width: 0.72em; height: 0.72em; }
+</style>

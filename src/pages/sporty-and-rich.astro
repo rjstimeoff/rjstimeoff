@@ -1,0 +1,225 @@
+---
+import Seo from '../components/Seo.astro';
+import ProjectHeader from '../components/ProjectHeader.astro';
+const meta = 'Brand Direction';
+const works = [
+  {
+    title: 'Brand Direction',
+    note: ["Conceptual brand direction for a Sporty&Rich cycling collection."],
+    plates: [
+      {
+            "src": "/sporty-and-rich/frame-17.jpg",
+            "width": 813,
+            "height": 1219,
+            "alt": "Sporty&Rich — Cyclist with arms raised and white Sa.R typography",
+            "span": 3,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/frame-16.jpg",
+            "width": 813,
+            "height": 1219,
+            "alt": "Sporty&Rich — Cyclist leaning over a bicycle with white Sa.R typography",
+            "span": 3,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/frame-15.jpg",
+            "width": 960,
+            "height": 1200,
+            "alt": "Sporty&Rich — Overhead cycling campaign on a sunlit road",
+            "span": 3,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/frame-14.jpg",
+            "width": 960,
+            "height": 1200,
+            "alt": "Sporty&Rich — Cyclist taking a break outside a café",
+            "span": 3,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/blue.jpg",
+            "width": 1200,
+            "height": 1200,
+            "alt": "Sporty&Rich — Blue Sa.R brand and typography study",
+            "span": 2,
+            "sectionStart": true
+      },
+      {
+            "src": "/sporty-and-rich/black.jpg",
+            "width": 1200,
+            "height": 1200,
+            "alt": "Sporty&Rich — Black Sa.R brand and typography study",
+            "span": 2,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/green.jpg",
+            "width": 1200,
+            "height": 1200,
+            "alt": "Sporty&Rich — Green Sa.R brand and typography study",
+            "span": 2,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/tan-1.jpg",
+            "width": 1200,
+            "height": 1200,
+            "alt": "Sporty&Rich — Tan Sa.R brand and typography study",
+            "span": 2,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/pattern-1.jpg",
+            "width": 1200,
+            "height": 1200,
+            "alt": "Sporty&Rich — Navy polka-dot Sa.R pattern study",
+            "span": 2,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/pattern-2.jpg",
+            "width": 1200,
+            "height": 1200,
+            "alt": "Sporty&Rich — Pink and white Sa.R stripe study",
+            "span": 2,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/jersey-v2.jpg",
+            "width": 1341,
+            "height": 1676,
+            "alt": "Sporty&Rich — Blue cycling jersey concept, front view",
+            "span": 2,
+            "sectionStart": true
+      },
+      {
+            "src": "/sporty-and-rich/jersey-v2-1.jpg",
+            "width": 1341,
+            "height": 1676,
+            "alt": "Sporty&Rich — Blue cycling jersey concept, back view",
+            "span": 2,
+            "sectionStart": false
+      },
+      {
+            "src": "/sporty-and-rich/jersey-v1.jpg",
+            "width": 1341,
+            "height": 1676,
+            "alt": "Sporty&Rich — Pink cycling jersey concept with a white chest stripe",
+            "span": 2,
+            "sectionStart": false
+      }
+],
+  },
+];
+const nextProject = { title: 'Minted New York', href: '/minted-new-york' };
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sporty&amp;Rich — Timeoff</title>
+    <Seo title="Sporty&amp;Rich — Timeoff" type="article" description="Conceptual brand direction for a Sporty&Rich cycling collection." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --ground: #ffffff; --ink: #101113; --ink-soft: #6f6f68; --ink-faint: #a5a49c;
+        --placeholder: #ECEBE7; --line: #e6e5e0; --font: "Host Grotesk", system-ui, -apple-system, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+      .brand {
+        position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%) translateY(0);
+        font-size: 0.95rem; font-weight: 500; letter-spacing: 0.01em; color: var(--ink);
+        text-decoration: none; z-index: 3;
+        transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease;
+      }
+      .brand.tucked { transform: translateX(-50%) translateY(-160%); opacity: 0; pointer-events: none; }
+      .back { position: fixed; top: 1.1rem; left: 1.25rem; font-size: 0.95rem; font-weight: 500; color: var(--ink); text-decoration: none; z-index: 3; }
+      .back { transition: opacity 0.2s ease; }
+      .back:hover { opacity: 0.55; }
+
+      .works { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 5fr); column-gap: 2.5rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
+      .work-text { max-width: 38ch; }
+      .work-text p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
+      .work-text p + p { margin-top: 1.1rem; }
+
+      .plates { display: grid; min-width: 0; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1.25rem; align-items: start; }
+      .plate { grid-column: span var(--span, 3); min-width: 0; margin: 0; }
+      .plate.section-start { grid-column: 1 / span var(--span, 3); }
+      .plate img { width: 100%; height: auto; display: block; border-radius: 2px; }
+
+      .next { grid-column: 1 / -1; display: inline-flex; flex-direction: column; gap: 0.3rem; margin-top: 1rem; text-decoration: none; color: inherit; width: max-content; }
+      .next-kicker { font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-faint); }
+      .next-title { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1); }
+      .next:hover .next-title { transform: translateX(0.4rem); }
+
+      .work-text, .plates, .next {
+        opacity: 0; transform: translateY(14px);
+        animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; animation-delay: calc(var(--i) * 90ms);
+      }
+      @keyframes rise { to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        .work-text, .plates, .next { opacity: 1; transform: none; animation: none; }
+        .brand { transition: opacity 0.3s ease; }
+        .brand.tucked { transform: translateX(-50%) translateY(0); }
+      }
+      @media (max-width: 900px) { .works { grid-template-columns: 1fr; row-gap: 2.5rem; } .work-text { max-width: none; } }
+      @media (max-width: 600px) {
+        .works { grid-template-columns: minmax(0, 1fr); padding: 5rem 1.25rem 3rem; row-gap: 2rem; }
+        .plates { min-width: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+        .plate, .plate.section-start { grid-column: 1 / -1; min-width: 0; margin: 0; }
+        .plate.square { grid-column: span 1; }
+        .plate img { width: 100%; }
+        .next { margin-top: 1rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="back" href="/work">Work</a>
+    <a class="brand" href="/">timeoff</a>
+
+    <main class="works">
+      {works.map((w, i) => (
+        <>
+          <div class="work-text" style={`--i:${i}`}>
+            {i === 0 && <ProjectHeader title="Sporty&Rich" tags={meta} />}
+            {i > 0 && <h2 class="work-title">{w.title}</h2>}
+            {w.note.map((para) => <p>{para}</p>)}
+          </div>
+          <div class="plates" style={`--i:${i}`}>
+            {w.plates.map((p, index) => (
+              <figure class:list={["plate", { "section-start": p.sectionStart, "square": p.width === p.height }]} style={`--span:${p.span}`}>
+                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={index < 2 ? 'eager' : 'lazy'} decoding="async" />
+              </figure>
+            ))}
+          </div>
+        </>
+      ))}
+
+      <a class="next" href={nextProject.href}>
+        <span class="next-kicker">Next</span>
+        <span class="next-title">{nextProject.title}</span>
+      </a>
+    </main>
+
+
+
+    <script is:inline>
+      (function () {
+        var brand = document.querySelector('.brand');
+        if (!brand) return;
+        var THRESHOLD = 6, ticking = false;
+        function update() { brand.classList.toggle('tucked', window.scrollY > THRESHOLD); ticking = false; }
+        window.addEventListener('scroll', function () { if (!ticking) { window.requestAnimationFrame(update); ticking = true; } }, { passive: true });
+        update();
+      })();
+    </script>
+  </body>
+</html>

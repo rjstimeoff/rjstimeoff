@@ -1,5 +1,6 @@
 ---
 import Seo from '../components/Seo.astro';
+import ProjectHeader from '../components/ProjectHeader.astro';
 // Timeoff — Cove project page. SCAFFOLD (same system as Cosign).
 // 5 demos: full page, hero, four pillars, demo, closing CTA.
 // Media are placeholders. Copy = RJ's voice, condensed from the write-up.
@@ -61,14 +62,9 @@ const nextProject = { title: 'Stripe Redesign', href: '/stripe-redesign' };
       .beats { display: grid; grid-template-columns: 3fr 5fr; column-gap: 2.75rem; row-gap: 6rem; align-items: start; padding: 5.5rem 1.5rem 6rem; max-width: 1600px; margin: 0 auto; }
       .fn { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; color: var(--ink-faint); font-variant-numeric: tabular-nums; margin-bottom: 0.7rem; }
       .beat-text { max-width: 36ch; }
-      .proj-title { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 0.3rem; }
-      .title-row { display: flex; align-items: baseline; gap: 0.55rem; flex-wrap: wrap; margin: 0 0 0.3rem; }
-      .title-row .proj-title { margin: 0; }
-      .live-link { font-size: 0.78rem; font-weight: 500; color: var(--ink-faint); text-decoration: none; display: inline-flex; align-items: center; gap: 0.2rem; transition: color 0.15s ease; }
-      .live-link:hover { color: var(--ink); }
-      .live-link svg { width: 0.72em; height: 0.72em; }
+
       .proj-sub { font-size: 0.98rem; color: var(--ink); margin: 0 0 0.4rem; }
-      .proj-meta { font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 1.4rem; }
+
       .beat-text p { margin: 0; font-size: 0.98rem; line-height: 1.6; }
       .beat-text p + p { margin-top: 1.1rem; }
       .media { aspect-ratio: 1672 / 1080; background: var(--placeholder); border-radius: 2px; width: 100%; overflow: hidden; }
@@ -101,19 +97,13 @@ const nextProject = { title: 'Stripe Redesign', href: '/stripe-redesign' };
       {beats.map((paras, i) => (
         <>
           <div class="beat-text" style={`--i:${i}`}>
-            <div class="fn">{String(i + 1).padStart(2, '0')}</div>
-            {i === 0 && (
-              <div class="title-row">
-                <h1 class="proj-title">Cove</h1>
-                <a class="live-link" href={liveUrl} target="_blank" rel="noopener noreferrer">Live<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M9 3H4M9 3V8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-              </div>
-            )}
+            {i > 0 && <div class="fn">{String(i + 1).padStart(2, '0')}</div>}
+            {i === 0 && <ProjectHeader title="Cove" tags={meta} liveUrl={liveUrl} />}
             {i === 0 && <p class="proj-sub">{sub}</p>}
-            {i === 0 && <p class="proj-meta">{meta}</p>}
             {paras.map((para) => <p>{para}</p>)}
           </div>
           <div class="beat-media" style={`--i:${i}`}>
-            <div class="fn">{String(i + 1).padStart(2, '0')}</div>
+            {i > 0 && <div class="fn">{String(i + 1).padStart(2, '0')}</div>}
             <div class="media">
               <video class="demo" src={demoSrcs[i]} poster={demoSrcs[i].replace(/\.(mp4|mov)$/, '.jpg')} muted loop playsinline preload="none"></video>
             </div>
