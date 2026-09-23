@@ -7,12 +7,16 @@ const works = [
     title: 'Brand Direction',
     note: ["Conceptual designs for a Minted New York Cycling Program and refreshed men's wear branding."],
     plates: [
-      { src: '/minted-new-york/minted_poster_2.jpg', width: 2051, height: 2564, alt: 'Minted Cycling Program concept poster with a halftone cyclist portrait and white M logo' },
-      { src: '/minted-new-york/minted_poster_1.jpg', width: 1931, height: 2564, alt: 'Minted Cycling Program concept poster with a close-up of cycling glasses and a blue cycling kit' },
-      { src: '/minted-new-york/minted_poster_3.jpg', width: 2051, height: 2564, alt: "Minted New York menswear concept poster with a blue striped shirt on a green background" },
+      { src: '/minted-new-york/minted_poster_2.webp', width: 2051, height: 2564, alt: 'Minted Cycling Program concept poster with a halftone cyclist portrait and white M logo' },
+      { src: '/minted-new-york/minted_poster_1.webp', width: 1931, height: 2564, alt: 'Minted Cycling Program concept poster with a close-up of cycling glasses and a blue cycling kit' },
+      { src: '/minted-new-york/minted_poster_3.webp', width: 2051, height: 2564, alt: "Minted New York menswear concept poster with a blue striped shirt on a green background" },
     ],
   },
 ];
+const imageSrcSet = (p) => {
+  const width = Math.min(p.width, 1600);
+  return [...[480, 800, 1200].filter(w => w < width).map(w => `${p.src.replace('.webp', `-${w}.webp`)} ${w}w`), `${p.src} ${width}w`].join(', ');
+};
 const nextProject = { title: 'Rebase Labs', href: '/rebase-labs' };
 ---
 <!doctype html>
@@ -93,7 +97,7 @@ const nextProject = { title: 'Rebase Labs', href: '/rebase-labs' };
           <div class="plates" style={`--i:${i}`}>
             {w.plates.map((p, index) => (
               <figure class="plate">
-                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+                <img src={p.src} srcset={imageSrcSet(p)} sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 900px) 75vw, (min-width: 1600px) 690px, 47vw" alt={p.alt} width={p.width} height={p.height} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
               </figure>
             ))}
           </div>

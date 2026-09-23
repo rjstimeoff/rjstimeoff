@@ -8,7 +8,7 @@ const works = [
     note: ["Conceptual brand direction for a Sporty&Rich cycling collection."],
     plates: [
       {
-            "src": "/sporty-and-rich/frame-17.jpg",
+            "src": "/sporty-and-rich/frame-17.webp",
             "width": 813,
             "height": 1219,
             "alt": "Sporty&Rich — Cyclist with arms raised and white Sa.R typography",
@@ -16,7 +16,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/frame-16.jpg",
+            "src": "/sporty-and-rich/frame-16.webp",
             "width": 813,
             "height": 1219,
             "alt": "Sporty&Rich — Cyclist leaning over a bicycle with white Sa.R typography",
@@ -24,7 +24,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/frame-15.jpg",
+            "src": "/sporty-and-rich/frame-15.webp",
             "width": 960,
             "height": 1200,
             "alt": "Sporty&Rich — Overhead cycling campaign on a sunlit road",
@@ -32,7 +32,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/frame-14.jpg",
+            "src": "/sporty-and-rich/frame-14.webp",
             "width": 960,
             "height": 1200,
             "alt": "Sporty&Rich — Cyclist taking a break outside a café",
@@ -40,7 +40,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/blue.jpg",
+            "src": "/sporty-and-rich/blue.webp",
             "width": 1200,
             "height": 1200,
             "alt": "Sporty&Rich — Blue Sa.R brand and typography study",
@@ -48,7 +48,7 @@ const works = [
             "sectionStart": true
       },
       {
-            "src": "/sporty-and-rich/black.jpg",
+            "src": "/sporty-and-rich/black.webp",
             "width": 1200,
             "height": 1200,
             "alt": "Sporty&Rich — Black Sa.R brand and typography study",
@@ -56,7 +56,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/green.jpg",
+            "src": "/sporty-and-rich/green.webp",
             "width": 1200,
             "height": 1200,
             "alt": "Sporty&Rich — Green Sa.R brand and typography study",
@@ -64,7 +64,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/tan-1.jpg",
+            "src": "/sporty-and-rich/tan-1.webp",
             "width": 1200,
             "height": 1200,
             "alt": "Sporty&Rich — Tan Sa.R brand and typography study",
@@ -72,7 +72,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/pattern-1.jpg",
+            "src": "/sporty-and-rich/pattern-1.webp",
             "width": 1200,
             "height": 1200,
             "alt": "Sporty&Rich — Navy polka-dot Sa.R pattern study",
@@ -80,7 +80,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/pattern-2.jpg",
+            "src": "/sporty-and-rich/pattern-2.webp",
             "width": 1200,
             "height": 1200,
             "alt": "Sporty&Rich — Pink and white Sa.R stripe study",
@@ -88,7 +88,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/jersey-v2.jpg",
+            "src": "/sporty-and-rich/jersey-v2.webp",
             "width": 1341,
             "height": 1676,
             "alt": "Sporty&Rich — Blue cycling jersey concept, front view",
@@ -96,7 +96,7 @@ const works = [
             "sectionStart": true
       },
       {
-            "src": "/sporty-and-rich/jersey-v2-1.jpg",
+            "src": "/sporty-and-rich/jersey-v2-1.webp",
             "width": 1341,
             "height": 1676,
             "alt": "Sporty&Rich — Blue cycling jersey concept, back view",
@@ -104,7 +104,7 @@ const works = [
             "sectionStart": false
       },
       {
-            "src": "/sporty-and-rich/jersey-v1.jpg",
+            "src": "/sporty-and-rich/jersey-v1.webp",
             "width": 1341,
             "height": 1676,
             "alt": "Sporty&Rich — Pink cycling jersey concept with a white chest stripe",
@@ -114,6 +114,10 @@ const works = [
 ],
   },
 ];
+const imageSrcSet = (p) => {
+  const width = Math.min(p.width, 1600);
+  return [...[480, 800, 1200].filter(w => w < width).map(w => `${p.src.replace('.webp', `-${w}.webp`)} ${w}w`), `${p.src} ${width}w`].join(', ');
+};
 const nextProject = { title: 'Minted New York', href: '/minted-new-york' };
 ---
 <!doctype html>
@@ -196,7 +200,7 @@ const nextProject = { title: 'Minted New York', href: '/minted-new-york' };
           <div class="plates" style={`--i:${i}`}>
             {w.plates.map((p, index) => (
               <figure class:list={["plate", { "section-start": p.sectionStart, "square": p.width === p.height }]} style={`--span:${p.span}`}>
-                <img src={p.src} alt={p.alt} width={p.width} height={p.height} loading={index < 2 ? 'eager' : 'lazy'} decoding="async" />
+                <img src={p.src} srcset={imageSrcSet(p)} sizes={p.span === 2 ? (p.width === p.height ? '(max-width: 600px) calc(50vw - 28px), (max-width: 900px) 33vw, (min-width: 1600px) 302px, 21vw' : '(max-width: 600px) calc(100vw - 40px), (max-width: 900px) 33vw, (min-width: 1600px) 302px, 21vw') : '(max-width: 600px) calc(100vw - 40px), (max-width: 900px) 50vw, (min-width: 1600px) 463px, 32vw'} alt={p.alt} width={p.width} height={p.height} loading={index < 2 ? 'eager' : 'lazy'} decoding="async" />
               </figure>
             ))}
           </div>
